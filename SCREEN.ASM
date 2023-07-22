@@ -2,10 +2,24 @@
 
 	.MODEL large
 	.CODE
-	PUBLIC _cls,_setmode;
+	PUBLIC _cls,_setmode,_setpalettex;
 
 SCREEN_WIDTH 	equ 320
 SCREEN_HEIGHT 	equ 200
+
+_setpalettex PROC
+	ARG 	regs:DWORD
+	push	bp
+	mov		bp,sp
+	les		dx,regs
+	mov		ah,10h
+	mov		al,12h
+	mov		bx,0
+	mov		cx,100h
+	int 	10h
+	pop		bp
+	ret
+_setpalettex ENDP
 
 ; setpalette (char far *color_regs, int firstreg, int numregs)
 ;	Atribui a registradores de cor VGA, comecando com FIRSTREG e

@@ -5,5 +5,6 @@ extern "C" {
     void cls(char far *screen_adr);
 	void setmode(int mode);
 	void setpalette(char far *color_regs, int firstreg, int numregs);
+	void setpalettex(char far *color_regs);
 }
 #endif
