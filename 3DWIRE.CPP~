@@ -4,6 +4,7 @@
 #include "screen.h"
 #include "wire.h"
 
+
 vertex_type cube_vertices[] =  {
 	-10, -10, 10, 1, // Vertex 0
 	  0,   0,  0, 1,
@@ -56,37 +57,24 @@ shape_type shape = {
 
 void main()
 {
+
 	float matrix[4][4];
-	float xangle=0, yangle=0, zangle=0;
-    float xrot=0.1, yrot=0.1, zrot=0.1;
-
-    char far *screen_buffer = (char far *)MK_FP(0xa000, 0);///new unsigned char[64000];
-
+	char far *screen = (char far *)MK_FP(0xa000,0);
+	cls(screen);
 	int oldmode = *(int *)MK_FP(0x40, 0x49);
 	setmode(0x13);
+	inittrans();
 
-    while (!kbhit())
-    {
-        cls(screen_buffer);
-        inittrans();
-        
-        scale(1.5);
+//	scale(4);
 
-        rotate(xangle, yangle, zangle);
-        xangle += xrot;
-        yangle += yrot;
-        zangle += zrot;
+//	rotate(1.1, 0.7, 0.3);
 
-        translate(0, 0, 50);
+//	translate(0, 0, 100);
 
-        transform(&shape);
-        project(&shape, 100);
+//	project(&shape, 150);
 
-        draw_shape(shape, screen_buffer);
-
-        putwindow(0, 0, 320, 200, screen_buffer);
-
-    }
+	draw_shape(shape, screen);
+	while(!kbhit());
 
 	setmode(oldmode);
 }

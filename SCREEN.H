@@ -6,5 +6,7 @@ extern "C" {
 	void setmode(int mode);
 	void setpalette(char far *color_regs, int firstreg, int numregs);
 	void setpalettex(char far *color_regs);
+    void putwindow(int, int, int, int, char far *);
+    void clrwin(int, int, int, int, char far *);
 }
 #endif

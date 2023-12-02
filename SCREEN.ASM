@@ -2,7 +2,7 @@
 
 	.MODEL large
 	.CODE
-	PUBLIC _cls,_setmode,_setpalettex;
+	PUBLIC _cls,_setmode,_setpalettex, _putwindow, _clrwin;
 
 SCREEN_WIDTH 	equ 320
 SCREEN_HEIGHT 	equ 200
@@ -76,6 +76,80 @@ int		10h	; Chamar interrupcao 10h
 pop		bp	; Restaurar BP
 ret
 _setmode ENDP
+
+_putwindow PROC
+    ARG xpos:WORD, ypos:WORD, xsize:WORD, ysize:WORD, buf_off:WORD, buf_seg:WORD
+    push    bp
+    mov     bp,sp
+    push    ds
+    push    di
+    push    si
+    mov     ax,ypos
+    mov     dx,320
+    mul     dx
+    add     ax,x1
+    mov     di,ax
+    add     ax,buf_off
+    mov     si,ax
+    mov     dx,0a000h
+    mov     es,dx
+    mov     dx,buf_seg
+    mov     ds,dx
+    mov     dx,ysize
+    cld
+ploop1:
+    mov     cx,xsize
+    shr     cx,1
+    push    di
+    push    si
+    rep     movsw
+    pop     si
+    pop     di
+    add     si,320
+    add     di,320
+    dec     dx
+    jnz     ploop1
+    pop     si
+    pop     di
+    pop     ds
+    pop     bp
+    ret
+_putwindow ENDP
+
+_clrwin PROC
+    arg x1:WORD, y1:WORD, w:WORD, h:WORD, scr_off:WORD, scr_seg:WORD
+    push    bp
+    mov     bp,sp
+    push    di
+    mov     cx,w
+    shr     cx,1
+    mov     bx,h
+    mov     ax,y1
+    mov     dx,320
+    mul     dx    
+    add     ax,x1
+    add     ax,scr_off
+    mov     di,ax
+    mov     ax,scr_seg
+    mov     es,ax
+    mov     ax,0
+cwloop:
+    push    cx
+    push    di
+    rep     stosw
+    pop     di
+    pop     cx
+    add     di,320
+    dec     bx
+    jnz     cwloop
+    pop     di
+    pop     bp
+    ret
+_clrwin ENDP
+END
+    
+
+    
 
 
 

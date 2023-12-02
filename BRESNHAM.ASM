@@ -76,8 +76,7 @@ yline1:
 	sub ax,ydiff
 	jc 	yline2					; Se negativo, continuar
 	mov	error_term,ax
-	sub ax,ydiff
-	jc	yline2					; Se negativo, mover 1 pixel para direita ou esquerda
+	add bx,x_unit
 yline2:
 	loop yline1					; Loop ate contador (em CX) completar
 linedone:

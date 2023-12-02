@@ -106,7 +106,7 @@ void rotate(float ax, float ay, float az)
 
 	zmat[0][0] = cos(az); zmat[0][1] = sin(az); zmat[0][2] = 0; zmat[0][3] = 0;
 	zmat[1][0] = -sin(az);zmat[1][1] = cos(az); zmat[1][2] = 0; zmat[1][3] = 0;
-	zmat[2][0] = 0;       zmat[2][1] = 0;		zmat[2][2] = 1; zmat[2][3] = 1;
+	zmat[2][0] = 0;       zmat[2][1] = 0;		zmat[2][2] = 1; zmat[2][3] = 0;
 	zmat[3][0] = 0;       zmat[3][1] = 0;    	zmat[3][2] = 0; zmat[3][3] = 1;
 
 	matmult(matrix, zmat, mat2);
