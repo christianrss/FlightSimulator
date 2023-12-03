@@ -23,7 +23,7 @@ _setpalettex ENDP
 
 ; setpalette (char far *color_regs, int firstreg, int numregs)
 ;	Atribui a registradores de cor VGA, comecando com FIRSTREG e
-;		continuando por NUMEROS, os valroes de cor em COLOR_REGS
+;		continuando por NUMEROS, os valores de cor em COLOR_REGS
 _setpalette PROC
 	ARG 	regoff:WORD,regseg:WORD,firstreg:WORD,numregs:WORD
 	push    bp			; Salvar BP
