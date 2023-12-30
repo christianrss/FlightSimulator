@@ -1,0 +1,13 @@
+MAKE Version 3.6  Copyright (c) 1991 Borland International
+
+Available memory 582992 bytes
+
+	bcc +FSIM.CFG -c c:\projetos\flight~1\drawpoly.cpp 
+Borland C++  Version 2.0 Copyright (c) 1991 Borland International
+c:\projetos\flight~1\drawpoly.cpp:
+Error c:\projetos\flight~1\drawpoly.cpp 116: Undefined symbol 'xdiff' in function drawpoly(polygon_type,char far*)
+Error c:\projetos\flight~1\drawpoly.cpp 146: Undefined symbol 'count' in function drawpoly(polygon_type,char far*)
+Error c:\projetos\flight~1\drawpoly.cpp 258: Undefined symbol 'errorterm' in function drawpoly(polygon_type,char far*)
+*** 3 errors in Compile ***
+
+	Available memory 252264

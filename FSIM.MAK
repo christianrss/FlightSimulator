@@ -22,19 +22,27 @@ INCLUDEPATH = C:\BORLANDC\INCLUDE;C:\BORLANDC\TVISION\INCLUDE
 
 
 EXE_dependencies =  \
- c:\projetos\flight~1\3dwire.obj \
- c:\projetos\flight~1\wire.obj \
+ c:\projetos\flight~1\polydemo.obj \
+ c:\projetos\flight~1\loadpoly.obj \
+ c:\projetos\flight~1\poly.obj \
+ c:\projetos\flight~1\drawpoly.obj \
  c:\projetos\flight~1\sprite.obj \
  c:\projetos\flight~1\screen.obj \
  c:\projetos\flight~1\bresnham.obj \
- c:\projetos\flight~1\pcx.obj
+ c:\projetos\flight~1\pcx.obj 
 
 #		*Explicit Rules*
 c:\projetos\flight~1\fsim.exe: fsim.cfg $(EXE_dependencies)
   $(TLINK) /v/x/c/P-/L$(LIBPATH) @&&|
 c0l.obj+
-c:\projetos\flight~1\3dwire.obj+
-c:\projetos\flight~1\wire.obj+
+#c:\projetos\flight~1\3dwire.obj+
+#c:\projetos\flight~1\wire.obj+
+c:\projetos\flight~1\polydemo.obj +
+c:\projetos\flight~1\loadpoly.obj +
+c:\projetos\flight~1\poly.obj +
+#c:\projetos\flight~1\polydemo.obj +
+c:\projetos\flight~1\drawpoly.obj+
+#c:\projetos\flight~1\polydemo.obj+
 c:\projetos\flight~1\sprite.obj+
 c:\projetos\flight~1\screen.obj+
 c:\projetos\flight~1\bresnham.obj+
@@ -49,9 +57,17 @@ cl.lib
 
 
 #		*Individual File Dependencies*
-c:\projetos\flight~1\3dwire.obj: fsim.cfg 3dwire.cpp 
+c:\projetos\flight~1\polydemo.obj: fsim.cfg polydemo.cpp
+c:\projetos\flight~1\loadpoly.obj: fsim.cfg loadpoly.cpp
+c:\projetos\flight~1\poly.obj: fsim.cfg poly.cpp
 
-c:\projetos\flight~1\wire.obj: fsim.cfg wire.cpp 
+c:\projetos\flight~1\drawpoly.obj: fsim.cfg drawpoly.cpp
+
+#c:\projetos\flight~1\polydemo.obj: fsim.cfg polydemo.cpp
+
+#c:\projetos\flight~1\3dwire.obj: fsim.cfg 3dwire.cpp 
+
+#c:\projetos\flight~1\wire.obj: fsim.cfg wire.cpp 
 
 c:\projetos\flight~1\sprite.obj: fsim.cfg sprite.cpp 
 
