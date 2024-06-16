@@ -1,0 +1,231 @@
+# ObjectWindows - (C) Copyright 1991 by Borland International
+
+.autodepend
+.swap
+
+!if $d(DEBUG)
+DBG = -v
+!endif
+
+!if !$d(MODEL)
+!if $d(DLL)
+MODEL = l
+!else
+MODEL = s
+!endif
+!endif
+
+!if $d(DLL)
+WIN = -WDE -D_CLASSDLL
+D = d
+!else
+WIN = -WE
+D = w
+!endif
+
+!if !$d(BCROOT)
+BCROOT=c:\borlandc
+!endif
+
+!if !$d(OWLROOT)
+OWLROOT=$(BCROOT)\owl
+!endif
+
+!if !$d(CLASSDIR)
+CLASSDIR = $(BCROOT)\classlib
+!endif
+
+KEY = $(D)$(MODEL)
+OBJDIR = $(OWLROOT)\object\$(KEY)
+
+.path.obj = $(OBJDIR)
+
+!if $d(DEBUG)
+TLIB = $(BCROOT)\bin\tlib /P64
+!else
+TLIB = $(BCROOT)\bin\tlib /0
+!endif
+
+CC = $(BCROOT)\bin\bccx
+TLINK = $(BCROOT)\bin\tlinkx
+
+INCLUDE = $(OWLROOT)\include;$(CLASSDIR)\include;$(BCROOT)\include
+LIBDIR = $(OWLROOT)\lib
+
+!if $d(DLL)
+CFLAGS = -c -v -vi $(WIN) -m$(MODEL) -n$(OBJDIR) -2
+!else
+CFLAGS = -c $(DBG) $(WIN) -m$(MODEL) -n$(OBJDIR) -2
+!endif
+
+BCC = $(CC) $(CFLAGS)
+!if $d(DLL)
+TBCC = $(CC) $(CFLAGS) -Td_CLASSDLL
+!else
+TBCC = $(CC) $(CFLAGS)
+!endif
+
+#used for linking DLL
+LFLAGS = /v /Twd /n /x /c /C
+BCLIBDIR = $(BCROOT)\lib
+CLASSLIB = $(CLASSDIR)\lib\tclassw$(MODEL).lib
+DCLASSLIB = $(CLASSDIR)\lib\tclassd$(MODEL).lib
+STDLIBS =  $(BCLIBDIR)\import $(BCLIBDIR)\crtl$(MODEL)
+
+OBJS = 	module.obj \
+	applicat.obj  \
+	window.obj \
+	owl.obj \
+	dd.obj \
+	dialog.obj \
+	scroller.obj \
+    owlmath.obj \
+	control.obj \
+	button.obj \
+	checkbox.obj \
+	static.obj \
+	edit.obj \
+ 	groupbox.obj \
+	radiobut.obj \
+	listbox.obj \
+	combobox.obj \
+	scrollba.obj \
+	mdiframe.obj \
+	mdiclien.obj \
+	inputdia.obj \
+	filedial.obj \
+	editwnd.obj \
+	filewnd.obj \
+	bbutton.obj \
+	bchkbox.obj \
+	bradio.obj \
+	bdivider.obj \
+	bgrpbox.obj \
+	bstatic.obj \
+	bstatbmp.obj \
+	bwindow.obj \
+	safepool.obj \
+    objstrm.obj \
+    tcollect.obj \
+    tsortcol.obj \
+    appdict.obj \
+	version.obj \
+	windobj.obj \
+    swindobj.obj
+
+.cpp.obj: 
+	$(BCC) $.
+
+.c.obj: 
+	$(BCC) $.
+
+.asm.obj: 
+	$(TBCC) $.
+
+!if $d(DLL)
+all: config $(LIBDIR)\owl.lib
+!else
+all: config $(LIBDIR)\owl$(KEY).lib
+!endif
+
+config:
+	echo -I$(INCLUDE) >turboc.cfg
+
+$(LIBDIR)\owl.lib: $(OBJS) $(DCLASSLIB) dllref.obj
+ $(TLINK) $(LFLAGS) @&&!
+$(BCLIBDIR)\c0$(KEY)	+
+$(OBJDIR)\windobj		+
+$(OBJDIR)\swindobj		+
+$(OBJDIR)\applicat		+
+$(OBJDIR)\window		+
+$(OBJDIR)\owl		    +
+$(OBJDIR)\dialog		+
+$(OBJDIR)\scroller		+
+$(OBJDIR)\owlmath		+
+$(OBJDIR)\inputdia		+
+$(OBJDIR)\filedial		+
+$(OBJDIR)\control		+
+$(OBJDIR)\button		+
+$(OBJDIR)\checkbox		+
+$(OBJDIR)\static		+
+$(OBJDIR)\edit		    +
+$(OBJDIR)\radiobut		+
+$(OBJDIR)\groupbox		+
+$(OBJDIR)\listbox		+
+$(OBJDIR)\combobox		+
+$(OBJDIR)\mdiframe		+
+$(OBJDIR)\mdiclien		+
+$(OBJDIR)\scrollba		+
+$(OBJDIR)\editwnd		+
+$(OBJDIR)\filewnd		+
+$(OBJDIR)\module		+
+$(OBJDIR)\dd		    +
+$(OBJDIR)\bbutton		+
+$(OBJDIR)\bchkbox		+
+$(OBJDIR)\bradio		+
+$(OBJDIR)\bdivider		+
+$(OBJDIR)\bgrpbox		+
+$(OBJDIR)\bstatic		+
+$(OBJDIR)\bstatbmp		+
+$(OBJDIR)\bwindow		+
+$(OBJDIR)\safepool		+
+$(OBJDIR)\objstrm	    +
+$(OBJDIR)\tcollect	    +
+$(OBJDIR)\tsortcol      +
+$(OBJDIR)\appdict       +
+$(OBJDIR)\version
+! $(LIBDIR)\owl.dll,, @&&!
+/v- $(DCLASSLIB) $(STDLIBS)
+!,owldll.def
+ rc -K $(LIBDIR)\owl.dll
+ implib $(LIBDIR)\owl.lib $(LIBDIR)\owl.dll 
+ $(TLIB) $(LIBDIR)\owl.lib +$(OBJDIR)\dllref.obj
+ tdstrip -s $(LIBDIR)\owl.dll
+
+$(LIBDIR)\owl$(KEY).lib: $(OBJS)
+     del $(LIBDIR)\owl$(KEY).lib
+     $(TLIB) $(LIBDIR)\owl$(KEY).lib @&&!
++$(OBJDIR)\windobj 	    &
++$(OBJDIR)\swindobj	    &
++$(OBJDIR)\window 		&
++$(OBJDIR)\applicat 	&
++$(OBJDIR)\owl 		&
++$(OBJDIR)\dialog 		&
++$(OBJDIR)\scroller 	&
++$(OBJDIR)\owlmath 	&
++$(OBJDIR)\inputdia 	&
++$(OBJDIR)\filedial 	&
++$(OBJDIR)\control 	&
++$(OBJDIR)\button 		&
++$(OBJDIR)\checkbox 	&
++$(OBJDIR)\static 		&
++$(OBJDIR)\edit 		&
++$(OBJDIR)\radiobut 	&
++$(OBJDIR)\groupbox 	&
++$(OBJDIR)\listbox 	&
++$(OBJDIR)\combobox 	&
++$(OBJDIR)\mdiframe 	&
++$(OBJDIR)\mdiclien 	&
++$(OBJDIR)\scrollba 	&
++$(OBJDIR)\editwnd 	&
++$(OBJDIR)\filewnd 	&
++$(OBJDIR)\module 	&
++$(OBJDIR)\dd     	&
++$(OBJDIR)\bbutton	&
++$(OBJDIR)\bchkbox	&
++$(OBJDIR)\bradio	&
++$(OBJDIR)\bdivider	&
++$(OBJDIR)\bgrpbox	&
++$(OBJDIR)\bstatic	&
++$(OBJDIR)\bstatbmp	&
++$(OBJDIR)\bwindow	&
++$(OBJDIR)\safepool	&
++$(OBJDIR)\objstrm	&
++$(OBJDIR)\tcollect	&
++$(OBJDIR)\tsortcol	&
++$(OBJDIR)\appdict	&
++$(OBJDIR)\version
+!
+
+clean:
+	del $(OBJDIR)\*.obj

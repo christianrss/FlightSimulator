@@ -1,0 +1,736 @@
+		   Welcome to ObjectWindows for C++
+		   --------------------------------
+
+  This README file contains important information about ObjectWindows
+  for C++, an application framework that will ease the development of
+  applications for Windows 3.0.  For the latest information about
+  ObjectWindows for C++, and the accompanying source files,
+  example programs, and manuals, read this entire file.
+
+
+TABLE OF CONTENTS
+-----------------
+
+1.  How to Get Help
+2.  Installation
+3.  Features
+4.  Important Information
+
+
+ 1. HOW TO GET HELP
+-------------------
+
+  If you have any problems, please read this file, the
+  HELPME!.DOC and other files in your OWL\DOC subdirectory, and the
+  ObjectWindows for C++ manuals first. If you still have a question and
+  need assistance, help is available from the following sources:
+
+  1. Type GO BPROGB on the CompuServe bulletin board system for
+     instant access to the Borland forums with their libraries of
+     technical information and answers to common questions.
+
+     If you are not a member of CompuServe, see the enclosed
+     special offer, and write for full details on how to receive
+     a free IntroPak containing a $15 credit toward your first
+     month's on-line charges.
+
+  2. Check with your local software dealer or users' group.
+
+  3. Write to us at the following address:
+
+     Borland International
+     Borland C Technical Support
+     1800 Green Hills Road
+     P.O. Box 660001
+     Scotts Valley, CA  95066-0001
+
+     Please remember to include your serial number or we will be
+     unable to process your letter.
+
+  4. If you have an urgent problem that cannot wait and you have
+     sent in the license agreement that came with the package,
+     you may call the Borland Technical Support Department at
+     (408) 438-5300. Please have the following information ready
+     before calling:
+
+     a. Product name and serial number on your original
+	distribution disk.  Please have your serial number ready
+	or we will be unable to process your call.
+
+     b. Product version number. The version number for ObjectWindows
+	for C++ is 1.0.
+
+     c. Computer brand, model, and the brands and model numbers of
+	any additional hardware.
+
+     d. Operating system and version number. (The version number of DOS
+	can be determined by typing VER at the MSDOS prompt.
+	The version of MS Windows can be determined from the "About
+	Program Manager" dialog box that you can bring up from the
+	Program Manager's "Help" menu.)
+
+     e. Contents of your AUTOEXEC.BAT file.
+
+     f. Contents of your CONFIG.SYS file.
+
+
+ 2. INSTALLATION
+----------------
+
+  You MUST use the INSTALL program to install ObjectWindows for C++.
+  The files on the distribution disks are all archived and have to be
+  properly assembled.  You cannot do this by hand!
+
+  To start the installation, change your current drive to the one
+  that has the install program on it and type INSTALL.  You will
+  be given instructions in a box at the bottom of the screen for
+  each prompt. For example, if you will be installing from drive
+  A:, type:
+
+    A:
+    INSTALL
+
+  -  You must have Borland C++ Version 2.0 to use ObjectWindows for
+     C++.
+
+  -  This INSTALL includes patches to the BIN, LIB, INCLUDE, and
+     CLASSLIB subdirectories of Borland C++ Version 2.0.
+     These patches are required in order to build and run your
+     ObjectWindows applications.
+
+     Back up your existing versions of these directories before running
+     the install program if you need to save any changes you may
+     have made to them.  More information on the specific patches
+     appears in the PATCHES discussion under IMPORTANT INFORMATION.
+
+  -  Note: The list of files is contained in a separate file
+     called FILELIST.DOC, which will appear in the target
+     directory you specify during installation.
+
+  You should read the rest of this README file to get further
+  information about this release before you do the installation.
+
+
+
+
+ 3. FEATURES
+------------
+
+  ObjectWindows for C++, also known as the ObjectWindows libraries (OWL)
+  includes the following important features:
+
+
+
+    - DYNAMIC DISPATCH VIRTUAL TABLES (DDVTs).
+
+      DDVTs provide a simple alternative to the traditional method
+      of writing a window procedure to responding to Windows messages.
+      Typically, a window procedure consists of a lengthy switch
+      statement with a case for every Windows message to which you
+      require a response.  By using DDVTs, you respond to a Windows
+      message by writing a member function of the C++ class associated
+      with your window.  Using DDVTs, your derived classes will not
+      be encumbered with virtual table entries for all windows
+      messages handled by the derived class and all base classes.
+      DDVTs encode only the changed virtual member functions to keep
+      virtual tables small.
+
+
+    - SUPPORT FOR STREAMABLE OBJECTS.
+
+      OWL includes support for streamable (persistent) objects.
+      The stream manager lets you save objects either in memory
+      or file streams so that they persist beyond their normal lifespan.
+
+
+
+    - BORLAND CUSTOM CONTROLS.
+
+      The Borland Windows Custom Control Library (BWCC.DLL) provided
+      with this release allows you to build your own Windows programs
+      using the fancy dialog boxes and controls provided with such
+      Borland Windows products as the Resource Workshop and Turbo
+      Pascal for Windows.
+
+
+
+    - DYNAMIC LINK LIBRARIES (DLLs).
+
+    - The OWL library is provided in two forms:
+      as a DLL (OWL.DLL) and as the usual static link
+      libraries (OWLWx.LIB where x is the memory model).
+
+    - OWL provides the ability to produce your own OWL DLLs and use
+      classes and functions from these DLLs in your OWL applications.
+
+    - In addition to OWL.DLL, this version includes dynamic link
+      library versions of BWCC (Borland Windows Custom Controls),
+      and BCRTL (the Borland C++ run-time libraries within a DLL).
+      More information on these appears below.
+
+    - We also provide the file OWL.TDS which contains symbolic
+      debugger information for OWL.DLL.
+
+      With this file present, you can step through the ObjectWindows
+      library functions when you debug your programs with Turbo
+      Debugger for Windows (TDW).
+
+
+
+    - SOURCE CODE.
+
+      We provide the complete source code and makefiles needed for
+      building the ObjectWindows (static and dynamic link) libraries.
+      We also provide the source code and makefiles needed to build
+      the container class libraries.
+
+
+
+    - ONLINE HELP.
+
+      We provide help files containing reference information on
+      the ObjectWindows and Streamable classes.
+
+      The help files are provided in two formats: one that is
+      compatible with THELP and one that is compatible with the
+      Windows help engine (WINHELP).
+
+
+
+    - GLOBAL HEAP SUBALLOCATION.
+
+      To significantly improve the performance of dynamic heap
+      allocations under Windows, OWL provides new versions of the
+      farmalloc, farfree, farrealloc, and farcalloc functions.
+      These new versions suballocate Windows global heap blocks.
+
+
+
+ 4. IMPORTANT INFORMATION
+-------------------------
+
+  Be sure to look at the files in the OWL\DOC subdirectory for more
+  information about ObjectWindows for C++. These files have additional
+  information about OWL as well as corrections to the manuals.
+
+
+  PATCHES
+
+    The install program will update your Borland C++ BIN, LIB,
+    INCLUDE, and CLASSLIB subdirectories.
+
+    *** Important: If you need to preserve existing versions of
+    the files in these directories, back up these files before
+    running the install.
+
+    In the BIN directory, TLINK.EXE, TLINKX.OVY, BC.EXE, and BCX.OVY
+    will be replaced.  They fix several linker errors and prevent
+    warnings such as:
+
+      TWindowsObject:: conflicts with module WINDOW in module WINDOBJ
+
+    Although these warnings can be safely ignored, other linker fixes
+    are more critical to link large OWL applications, especially
+    with regard to building DLLs.
+
+    In the LIB directory, the file CRTLL.LIB will be added.  This is
+    the import library for the BCRTL.DLL added to your BIN directory.
+
+    Many files in the INCLUDE directory will be updated.  The primary
+    change is to use the new file _DEFS.H, which defines various
+    macros used by the run-time library (RTL).  All RTL header files which
+    explicitly defined these macros have been changed to include
+    _DEFS.H.  In a few cases, use of the _FAR macro has been
+    corrected.  All of the include files which define C++ classes
+    have been updated to use the new _CLASSDEF and _CLASSTYPE macros.
+
+    You should use the files provided with OWL in place of the CLASSLIB
+    files provided with Borland C++ 2.0.  The new files contain
+    several corrections as well as support for use within DLLs.
+
+
+  OBJECTWINDOWS MANUALS
+
+
+    The Programmer's Guide includes a step-by-step tutorial
+    that quickly introduces readers to many of the important
+    features of OWL and gets them off to a good start in
+    OWL programming.
+
+    In your OWL\DOC directory, there is a MANUAL.DOC file that contains
+    updated information and corrections for the ObjectWindows
+    Programmer's Guide and Reference Guide.
+
+    In OWL\DOC, you will also find a file, DLL.DOC, that contains a
+    new chapter of the Programmer's Guide on using and building
+    dynamic link libraries.
+
+    In OWL\DOC, the BWCC-OWL.DOC, BWCCAPI.DOC, and BWCCSTYL.DOC files
+    contain information on using the Borland Custom Controls with OWL.
+
+    If you have any questions that are not answered in the manuals,
+    check out this README file and the HELPME!.DOC file, which
+    discusses questions and problems that OWL programmers may
+    encounter.
+
+
+
+  BORLAND CUSTOM CONTROLS
+
+    The Borland Windows Custom Control Library (BWCC.DLL) is provided
+    with this release, along with its import library (BWCC.LIB).
+    To use BWCC, you must specify the Windows class name of any
+    control you want to use in your resource files.
+
+    Whether you use BWCC from an OWL program or not, you will have to
+    ensure that BWCC.DLL is dynamically loaded along with your
+    program.  The suggested way to do this is to update your program
+    to make a call to BWCCGetVersion (defined in OWL\INCLUDE\BWCC.H) from
+    somewhere within your program.  This will cause an imported
+    reference to BWCC.DLL which will, in turn, cause the Windows
+    loader to load BWCC.DLL along with your program (if it is not
+    already loaded).
+
+    The CHECKERS and TTT (TicTacToe) games in the OWL\EXAMPLES directory
+    use the Borland Windows Custom Controls.
+
+    See the files BWCC-OWL.DOC, BWCCAPI.DOC, and BWCCSTYL.DOC in the
+    OWL\DOC subdirectory for more information on using the Borland
+    Custom Controls.
+
+
+  DLL SUPPORT
+
+
+    If you use DLLs, remember that they must be located in
+    a directory in your path (eg, c:\BORLANDC\BIN or c:\WINDOWS) or in
+    the directory of the .EXE which invokes them.
+
+    By default, the INSTALL program will place OWL.DLL, OWL.TDS, BWCC.DLL,
+    and BCRTL.DLL in your BORLANDC\BIN directory;
+
+
+    If you want to build the example programs to use the statically
+    linked libraries rather than OWL.DLL (the default for the makefile
+    in OWL\EXAMPLES), you should define the USESTATIC macro on the
+    make command line:
+
+	make -DUSESTATIC
+
+
+    If you are using OWL.DLL, or any ObjectWindows DLL that you have
+    built, you must use large model for both the DLLs and the EXEs
+    which use them.  Also, if you link your program to you use OWL.DLL,
+    then it should also be linked to use BCRTL.DLL; CRTLL.LIB is the
+    import library for BCRTL.DLL.
+
+
+    If you want to build your own DLLs with OWL, we recommend that
+    you check out the USECDLL and CALLDLL example programs.
+
+    The USECDLL example program demonstrates the use of a cooperating
+    OWL EXE and DLL using an object interface (that is, shared classes).
+    The CALLDLL example program shows an OWL EXE making a call
+    into an OWL DLL using a functional interface.  The USECDLL2 shows
+    a non-OWL EXE calling into an OWL DLL.
+
+    If you want to define your own shared classes, define the
+    _CLASSDLL macro on the compiler command line to signify that the
+    module being compiled will use classes in a DLL or will pass
+    classes into a DLL.  Other macros, notably _CLASSTYPE, _EXPORT,
+    and _FAR, will check to see if _CLASSDLL has been defined.
+
+    Use the _EXPORT macro (defined in OWL\INCLUDE\OWLDEFS.H) in the
+    definitions of your shared classes.  It will expand into either
+    '_CLASSTYPE' (when compiling an .EXE file) or '_export' (when
+    compiling a .DLL module).  Typical usage might be:
+
+	_CLASSDEF(TMyClass)
+	class _EXPORT TMyClass
+	{
+		// whatever...
+	};
+
+    The _CLASSTYPE macro (defined in BORLANDC\INCLUDE\_DEFS.H)
+    expands into either "huge", "far", or "near" as appropriate.
+    If the __DLL__ or _CLASSDLL macro is defined, _CLASSTYPE
+    expands into "huge", since huge classes are required when
+    classes are passed between an EXE and a DLL or between two
+    DLLs (a huge class is a class which has a far 'this' pointer
+    and a far virtual table pointer).
+
+    External functions that are exported from a library when it is built
+    as a DLL should be declared with _EXPFUNC.  This macro is defined
+    in OWLDEFS.H and expands into '_export' when the source it appears
+    in is compiled for a DLL (-WDE or -WD would be used if built with
+    the command line compiler); otherwise, _EXPFUNC is replaced with
+    the null string.  For example, the following declaration appears
+    in the WINDOBJ.H header file:
+
+	extern PTApplication _EXPFUNC GetApplicationObject();
+
+
+    Note that, DLLs may only be built in large model;
+    BC++ 2.0 only supports C++ DLLs in compact and large model
+    (C DLLs may be built in small and medium as well),
+    and OWL is not supported in compact model.
+
+    Also note that, if you build an OWL application (.EXE) that
+    uses one or more OWL DLLs, you must dynamically link your EXE
+    with OWL and BCRTL.  You cannot statically link your EXE with
+    the OWLWx.LIB static link libraries.
+
+
+    More information on DLLs appears in the DLL.DOC file in OWL\DOCS.
+
+
+
+  EXAMPLE PROGRAMS
+
+
+    The OWL\EXAMPLES subdirectory contains many sample programs that
+    will help you get started in writing OWL programs.
+    The 'test' apps are typically short programs providing
+    code samples that demonstrate various OWL classes and
+    their features; these often correspond to discussions in
+    the Programmer's Guide.  The longer, more useful and interesting
+    apps include MFILEAPP (an MDI editor), BONK (a game), and
+    PROGTALK (a DDE client that can add items and groups to
+    the Windows program manager (a DDE server)).
+    The EXAMPLES\STEPS subdirectory contains the source files
+    and resource scripts needed to build the programs described
+    in the OWL tutorial (part one of the Programmer's Guide).
+    The TTT (TicTacToe) and CHECKERS examples make use of the Borland
+    Windows Custom Controls.  Using a dialog as a main window of a
+    program is demostrated in the SYSINFO (system information), CALC
+    (calculator), and CURSOR (window information) examples.
+
+    We provide a MAKEFILE for building the examples.  You may want to
+    use this as a template for writing your own makefiles.  The
+    MAKEFILE uses a make include file, MAKEFILE.INC, which defines
+    the macros used by the makefiles in OWL\EXAMPLES and its
+    subdirectories.  If you installed OWL under your BORLANDC
+    directory (the default), and if your BORLANDC subdirectories use
+    the default names (BIN, INCLUDE, LIB, CLASSLIB), then you will
+    only have to redefine the BCROOT macro within MAKEFILE.INC to use
+    these makefiles.    
+
+    The OWL\EXAMPLES subdirectory also contains project (.PRJ) files
+    for building the sample programs with the Borland C++ IDE.
+    If you didn't use the standard directories when you installed
+    Borland C++ or OWL, and you want to build example programs that
+    come with .PRJ files, you may have to change the .PRJ
+    file to reflect your actual directory setup.  Do this from
+    inside BC.EXE or BCX.EXE with Alt-O/D (Options|Directories...).
+    The .PRJ files will build the examples in large model and link
+    with OWL.DLL.
+
+
+
+ SOURCE CODE
+
+
+    The source code for building the OWL libraries is included.
+    The dynamic dispatching mechanism is provided in DD.ASM and
+    OWL.CPP. When building the OWL libraries yourself, the .OBJ
+    files produced will be placed in appropriate subdirectories
+    of OWL\OBJECT by the makefile.
+
+    For example, the .OBJ files for the small memory model will
+    be put in OWL\OBJECT\WS, while those for large model DLL
+    will be placed in in OWL\OBJECT\DL.
+
+
+    OWL provides an updated version of the Borland C++ container class
+    library which supercedes the version previously shipped with
+    Borland C++ 2.0.  You must use this version to build the OWL libraries.
+
+    Note that the INSTALL program will write this new version
+    over the one provided with Borland C++ 2.0 if default
+    paths were used in both installations.
+
+
+    We provide the libraries TCLASSWx.lib (where x is the memory
+    model) and TCLASSDL.LIB for use when building DLLs.  We also
+    provide a library (TCLASSS.LIB) for building small model DOS
+    programs.  As with the OWL source, the BORLANDC\CLASSLIB\OBJECT
+    directory contains subdirectories in which the makefile places
+    the .OBJ files if you decide to rebuild these libraries yourself.
+
+
+
+
+
+ BUILDING THE LIBRARIES AND SAMPLE CODE
+
+
+    The OWL directory contains a batch file BUILDOWL.BAT which
+    you can use to build both the class libraries and the OWL
+    libraries. This batch file invokes first the makefile in the
+    BORLANDC\CLASSLIB\SOURCE directory and then the makefile in the
+    OWL\SOURCE directory.
+
+    If you cannot use BCCX and TLINKX to build programs (eg, if
+    you do not have any extended memory), you will need to make
+    some changes to the batch file and makefiles.  In
+    BUILDOWL.BAT and the batch files used to build the sample
+    programs, the two lines that use TKERNEL should be 'rem'oved.
+    In the makefiles, you will have to make these changes:
+
+	CC = bccx
+	TLINK = tlinkx
+
+    should become
+
+	CC = bcc
+	TLINK = tlink
+
+
+    If you installed BC++ 2.0 in a directory other than the
+    default (C:\BORLANDC), you will need to change the macro
+    definition
+
+	BCROOT=c:\borlandc
+
+    in the makefiles to use that other directory.
+
+
+    The install program installs OWL, by default, in C:\BORLANDC\OWL.
+    The makefiles are currently set up to assume OWL was installed in
+    the directory OWL under your Borland C++ directory (the macro BCROOT).
+    You will need to update the OWLROOT macro (which defaults to
+    $(BCROOT)\OWL) in all the
+    makefiles to read:
+
+	OWLROOT=d:\owl
+
+    (or wherever) if you told INSTALL to place OWL somewhere else.
+
+
+    These changes are necessary to enable the makefile and the compiler
+    to find the appropriate include files and libraries that are
+    needed to build your OWL programs.  If you do not want to edit
+    the makefile to make this change, you can redefine these on the
+    make command line; for example,
+
+	make -DBCROOT=d:\borlandc -DOWLROOT=d:\owl
+
+    would change the definitions of the BCROOT and OWLROOT make
+    macros to "d:\borlandc" and "d:\owl", respectively.
+    Defining environment variables named BCROOT and OWLROOT is
+    equivalent to redefining these make macros on the make command
+    line.
+
+
+    In addition to the makefiles, the example programs each have
+    a project file.  After you have opened a project in the IDE, you
+    should check the Options|Directories dialog; you may have to
+    change part of the INCLUDE and LIB selections if C:\BORLANDC
+    is not the directory in which you installed BC++ 2.0.
+
+    If you are in a directory containing source or sample code,
+    you can build it by simply running
+
+	make
+
+
+    To build the programs using the static link libraries for a
+    specific memory model, use
+
+	make -DUSESSTATIC -DMODEL=x
+
+    where x is one of s, m, or l.  The makefiles in the OWL\EXAMPLES
+    directory default to small model when the OWL static libraries
+    are used and to large model when the OWL DLL is used.
+
+
+    To build the examples using OWL.DLL, use
+
+	make -DMODEL=l -DUSEDLL
+
+    or simply,
+
+	make
+
+    (the USEDLL macro is defined by default; if USEDLL is defined,
+    MODEL is defined to be "l").
+
+
+    Note that only large model can be used with ObjectWindows
+    DLLs (including OWL.DLL).
+
+
+    To build the code with debug information turned on, use
+
+	make -DDEBUG
+
+    Building with debug information can be very useful.  If you
+    have built the libraries with debug info, you will learn a
+    great deal about how the class hierarchy works and interacts
+    if you step through your programs in TDW.
+
+
+    To build the ObjectWindows DLL (OWL.DLL),
+    use the following command line in your BORLANDC\OWL\SOURCE
+    directory:
+
+	make -DMODEL=l -DDLL
+
+    To build the version of the CLASSLIB for use in OWL.DLL (TCLASSDL.LIB),
+    use the following command line in your BORLANDC\CLASSLIB\SOURCE
+    directory:
+
+	make -DMODEL=l -DWINDOWS -DDLL
+
+
+    For faster compilations, we recommend that you use the
+    precompiled headers option.  You can add this to a makefile,
+    by adding
+
+	-H
+
+    to the CFLAGS macro in the makefile.
+    (For more information on precompiled headers, see Appendix A
+    in the Borland C++ User's Guide).
+
+    You can also use make to build single files for which the
+    makefile has a rule.  In the OWL\EXAMPLES subdirectory,
+    you could build a single program, say, helloapp.exe, by running
+
+	make helloapp.exe
+
+    For more information on the MAKE utility, makefiles, and the
+    constructs within the makefiles (macros, linker response
+    files, make inline response files), see chapter 7, Utilities,
+    in the Borland C++ User's Guide.
+
+
+
+
+  ONLINE HELP
+
+
+    Part 1 of the ObjectWindows Reference (the ObjectWindows hierarchy,
+    the Streamable class hierarchy, and miscellanea) is provided in
+    online Help files, OWLWHELP.HLP and OWLTHELP.OWH.
+
+    OWLWHELP.HLP is a help file that is compatible with the
+    Windows help engine.
+    To install it, enter Windows and click your mouse once on
+    the Program Manager group to which you want to add the OWL help
+    item.  Then from the Program Manager menu, choose
+
+	File|New
+
+    A dialog box appears; choose "Program Item", then "OK".
+    A different dialog box entitled "Program Item Properties" will
+    appear; enter a description ("OWL Help") and the following
+    command line:
+
+	winhelp.exe c:\borlandc\owl\owlwhelp.hlp
+
+    Then choose "OK".
+    A "Winhelp" icon is added to the chosen group with the given
+    description ("OWL Help").
+
+
+    OWLTHELP.OWH is a help file compatible with the Turbo Help
+    TSR, THELP.EXE, which is located in your BORLANDC\BIN directory.
+    To load THELP with this file, type
+
+	THELP /Fc:\borlandc\owl\owlthelp.owh
+
+    Then, you can activate THELP at any time. If you are in your editor
+    looking at an OWL source file, you can position the cursor
+    under the item you want information on, then press the THELP hot key.
+    The default hot key is 5 on the numeric keypad.  THELP requires
+    about 58K bytes of memory.  For further information on using
+    THELP, refer to the file UTIL.DOC in your BORLANDC\DOC directory.
+
+
+
+
+  DEBUGGING OWL APPLICATIONS WITH TDW
+
+
+    We strongly recommend stepping through OWL programs in TDW
+    as a means of furthering your understanding of the
+    inter-relationships between application and window objects, and
+    the construction of window objects and the creation of associated
+    window elements.  Start with a simple example such as HELLOAPP.
+
+
+    The file OWL.TDS contains the TDW symbolic debugging information
+    for OWL.DLL.  If you build your OWL program to dynamically link
+    with OWL.DLL, you can use TDW to step through not only your own
+    code but also OWL.DLL.  TDW will find it automatically provided
+    that either the file OWL.TDS is located in the same directory as
+    OWL.DLL or that you explicitly load the symbol file into TDW.
+    You will also have to set the TDW option that indicates the
+    path to the source code; remember to include the path to the
+    OWL source.
+
+    If you build your program with a statically linked library
+    (OWLWx.lib) and you want to be able to step through the OWL source
+    when you debug your programs while in TDW, you must:
+    1) rebuild the library with debug information turned on, then
+    2) link your program with that rebuilt library.
+
+    If you want to rebuild a program or library so that inline functions
+    are taken out of line (so that they can be stepped through), simply
+    compile the source with -v.  If you want inline functions to
+    remain inline when debug information is generated, compile
+    with -v -vi.
+
+    For more information on building the statically linked and
+    dynamically linked libraries, see the makefile in the
+    OWL\SOURCE subdirectory.
+
+
+    NOTE: TWindowsObject has two virtual functions,
+    BeforeDispatchHandler and AfterDispatchHandler,
+    that are invoked before and after, respectively, performing a
+    dynamic dispatch.  In TWindowsObject, these virtual functions
+    are inline and default to doing nothing.  However, when
+    redefined in a derived class, they are useful for debugging
+    (because they are possible places for setting breakpoints)
+    and for global processing on receipt of any message.
+
+
+
+  GLOBAL HEAP SUBALLOCATION
+
+
+    The static link libraries SALLOCWS.LIB, SALLOCWM.LIB, and
+    SALLOCWL.LIB replace the farmalloc, farfree, farrealloc, and
+    farcalloc functions with versions that suballocate Windows global
+    heap blocks.  These functions are contained in BCRTL.DLL if
+    you link with DLLs.  These replacement functions significantly
+    improve the performance of dynamic heap allocations.
+
+    To take advantage of these functions, you need only use
+    'new' and 'delete' as usual.
+
+
+
+  OTHER IMPORTANT NOTES
+
+
+  - OWL programs are not supported in compact model with Borland C++ 2.0.
+
+
+  - Note that correct usage of the transfer mechanism for TComboBox
+    and TListBox differs somewhat from transfer buffer usage for
+    otherwindow objects.  The CBXTTEST.CPP and LBXTTEST.CPP
+    example programs demonstrate the correct usage of the
+    transfer mechanism with TComboBoxData and TListBoxData.
+
+  - The TListBox functions which are described as being for
+    single-selection list boxes are inherited by TComboBox and
+    can also be used by combo boxes.
+
+  - The ObjectWindows source code is provided for your use and
+    modification.  IMPORTANT: Borland Technical Support will not
+    answer questions or provide any assistance relating to the
+    source code.  Essentially, the sources are provided "as is" and you
+    are on your own.

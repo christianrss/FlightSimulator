@@ -1,0 +1,68 @@
+               Welcome to Turbo Vision for C++
+               -------------------------------
+
+  This README file contains important information about 
+  Turbo Vision for C++.  Please read this file in its entirety
+  for the latest information on Turbo Vision, the accompanying 
+  programs, and the manual.
+
+
+TABLE OF CONTENTS
+-----------------
+1.  Important Information
+2.  Corrections to the Documents
+
+ 1. IMPORTANT INFORMATION
+-------------------------
+  - For information on the Help compiler, and how to build a help
+    document, please refer to the comments in the file TVHC.CPP in
+    the help directory.  Also, see TVDemo for an example of how to
+    add help to your applications.
+
+  - Before running TVForms, you must run the batch file GENFORMS.BAT,
+    which will build the necessary files for TVForms.
+
+  - Due to the complex interactions among the Turbo Vision classes,
+    certain situations can arise involving deletion of objects that
+    cannot be properly handled through destructors.  Therefore, we
+    provide a static member function void destroy( TObject * ) to
+    the class TObject.  Whenever an object of a type derived from
+    TObject is to be deleted, the function destroy() should be called
+    instead.  This will take care of terminating the object,
+    correctly freeing the memory that it occupied.  For example:
+    
+             TDialog *dlg = new TDialog( ... );
+             //delete dlg;    // DON'T DO THIS
+             destroy( dlg );  // DO IT THIS WAY
+
+  - The Turbo Vision Source Code is provided for your use and
+    modification.  IMPORTANT: Borland Technical Support will not
+    answer questions or provide any assistance relating to this
+    product.  Essentially, the Sources are provided "as is" and you
+    are on your own.
+
+  - In order to build the library, you must have Tasm available.
+
+  - When building or modifying the library it is better to place
+    debug info in only those modules in which you are interested.
+    If you place debug info all the modules, Tlink (ver. 3.01 and
+    4.01) will not be able to link your application.
+
+ 2.  CORRECTIONS TO THE DOCUMENTS
+---------------------------------
+  - cmOk has been changed to cmOK to be consistent with all other
+    uses of 'OK'.
+
+  - TView.writeCStr() is not available.  Use TView.writeStr(). All
+    documentation for TView.writeCStr applies exactly to TView.writeStr.
+
+  - TProgram has two additional member functions, suspend() and
+    resume().  They do the same thing as the corresponding functions
+    in TMouse, TEventQueue, etc.  They take care of internal
+    housekeeping when doing things like a DOS shell.
+
+  - The parameter list for the constructor for TSubMenu has been
+    changed from 
+            TSubMenu( const char *, int, int = 0 )
+    to 
+            TSubMenu( const char *, ushort, ushort = hcNoContext )

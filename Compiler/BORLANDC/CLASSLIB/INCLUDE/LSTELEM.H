@@ -1,0 +1,84 @@
+// Borland C++ - (C) Copyright 1991 by Borland International
+
+// Contents ----------------------------------------------------------------
+//
+//      ListElement
+//
+// Description
+//
+//      Defines the class ListElement.  ListElements are used in objects
+//      which link other objects together and nowhere else.
+//
+// End ---------------------------------------------------------------------
+
+// Interface Dependencies ---------------------------------------------------
+
+#ifndef __LSTELEM_H
+#define __LSTELEM_H
+
+#ifndef __IOSTREAM_H
+#include <iostream.h>
+#define __IOSTREAM_H
+#endif
+
+#ifndef __CLSTYPES_H
+#include "clstypes.h"
+#endif
+
+#ifndef __OBJECT_H
+#include "object.h"
+#endif
+
+// End Interface Dependencies ------------------------------------------------
+
+_CLASSDEF(ListElement)
+
+// Class //
+
+class _CLASSTYPE ListElement
+{
+public:
+    ListElement( PObject o ) { data = o; next = 0; }
+    ~ListElement() { delete data; }
+
+private:
+    PListElement next;
+    PObject data;
+    friend class _CLASSTYPE List;
+    friend class _CLASSTYPE ListIterator;
+};
+
+// Description -------------------------------------------------------------
+//
+// 	Defines the abstract class ListElement. 
+//
+// 	ListElement objects, i.e. objects instantiated of classes derived from
+// 	ListElement, are used in sequences where insertions and deletions
+// 	are defined.
+//
+// Public Members
+//
+//  none
+//
+// Private Members
+//
+// 	next
+//
+// 	Pointer to the next list element.
+//
+// 	data
+//
+// 	Pointer to the list element's data.
+//
+// Friends
+//
+// 	class List
+//
+// 	The class which uses class ListElement, class List, is declared
+// 	as a friend.
+//
+// End ---------------------------------------------------------------------
+
+
+#endif // ifndef __LSTELEM_H //
+

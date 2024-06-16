@@ -1,0 +1,10 @@
+STRINGTABLE
+BEGIN
+  100, "Button controls are used to allow"
+  101, "the user to enter a command.  The\r\n"
+  102, "user \"presses\" a button by clicking\r\n"
+  103, "upon it with the mouse.  Button\r\n"
+  104, "controls display a text string which\r\n" 
+  105, "indicates the action performed when\r\n"
+  106, "the button is pressed.";
+END

@@ -1,0 +1,527 @@
+================================================================== 
+ObjectWindows for C++ Reference Guide  CORRECTIONS & ADDITIONS 
+================================================================== 
+
+*****PART 1*****
+
+Chapter 1, "ObjectWindows classes"
+----------------------------------
+
+Page 15 (TButton class):
+
+Add the following data member:
+
+BOOL IsDefPB;
+Indicates whether the button is to be considered the default push 
+button. Used for owner-draw buttons. Set by (non-resource) TButton constructor
+based on BS_DEFPUSHBUTTON style setting.
+
+Page 16 (TButton class):
+
+Add the following member functions:
+
+virtual void BMSetStyle(RTMessage Msg) = [WM_FIRST + BM_SETSTYLE];
+For owner-draw buttons keeps track of whether the owner-draw button
+is the default push button when Windows tries to set the style to 
+BS_DEFPUSHBUTTON. Otherwise just calls DefWndProc.
+
+virtual void SetupWindow();                               protected
+Sends a DM_SETDEFID message to the parent window if the button is the
+default push button and an owner-draw button.
+
+virtual void WMGetDlgCode(RTMessage Msg) = [WM_FIRST + WM_GETDLGCODE];
+Responds to WM_GETDLGCODE messages from the dialog manager. For
+owner-draw buttons returns information as to whether the button is the
+default button. Otherwise it just calls DefWndProc.
+
+Page 22 (TComboBox class): 
+
+Add the following member functions: 
+
+void Clear(); 
+Clears the text of the associated edit control.
+
+int GetEditSel(Rint StartPos, Rint EndPos); 
+Returns, in the specified reference parameters, the starting and
+ending positions of the text selected in the associated edit control.
+Returns CB_ERR if the combo box has no edit control.
+
+int GetText(LPSTR AString, int MaxChars); 
+Fills the specified string with the text of the associated edit
+control (up to MaxChars). Returns the number of characters copied.
+
+int GetTextLen(); 
+Returns the length of the text in the associated edit control.
+
+int SetEditSel(int StartPos, int EndPos); 
+Selects characters which are between StartPos and EndPos in the
+edit control of the combo box. Returns CB_ERR if the combo box 
+does not have an edit control.
+
+void SetText(LPSTR AString); 
+Selects the first string in the associated list box which begins
+with the supplied AString. If there is no match, sets the contents
+of the associated edit control to the supplied string (and selects
+it).
+
+Pages 24 and 25 (TControl class):
+
+Change see also reference from TWindowsObject::WMDrawItem to 
+TControl::WMDrawItem.
+
+Change see also references TWindow::DrawItem and TWindow::WMDrawitem
+to TWindowsObject::DrawItem and TWindowsObject::DrawItem.
+
+Pages 52 and 53 (TListBox class):
+
+The TListBox member functions which are described as being for
+single-selection list boxes are inherited by TComboBox and can also
+be used by combo boxes. Also, these member functions return -1 for
+multiple-selection list boxes. (See GetSelIndex, GetSelString, SetSelIndex,
+and SetSelString.)
+
+int GetSelString(LPSTR AString, int Index); 
+Change the words: "as long as it is no longer than MaxChars" to "(up to
+MaxChars in length)."
+
+Add the following member functions: 
+
+int GetSelCount();
+Returns the number of selected items in the list box. For single- or
+multiple-selection list boxes (and combo boxes).
+
+int GetSelIndexes(Pint Indexes, int MaxCount);
+For multiple-selection list boxes. Fills the Indexes array with the indexes of
+up to MaxCount selected strings. Returns the number of items put in 
+Indexes (-1 for single-selection list boxes and combo boxes).
+
+int GetSelStrings(LPSTR *Strings, int MaxCount, int MaxChars);
+For multiple-selection list boxes. Retrieves the currently selected 
+items, putting up to MaxCount of them in Strings. Each entry in the Strings
+array should have space for MaxChars characters and a terminating 
+null. Returns the number of items put into Strings (-1 for 
+single-selection list boxes and combo boxes).
+
+Page 53 (TListBox class): 
+
+Add the following member functions:
+
+int SetSelIndexes(Pint Indexes, int NumSelections, BOOL ShouldSet);
+For multiple-selection list boxes. Selects/deselects the strings in 
+the associated list box at the indexes specified in the Indexes array.
+If ShouldSet is TRUE, the indexed strings are selected and highlighted, if 
+ShouldSet is FALSE the highlight is removed and they are no longer selected.
+Returns the number of strings successfully selected or deselected (-1 for 
+single-selection list boxes and combo boxes). If NumSelections
+is less than zero, all strings are selected or deselected, and a
+negative value is returned on failure.
+
+int SetSelStrings(LPSTR *Prefixes, int NumSelections, BOOL ShouldSet);
+For multiple-selection list boxes. Selects the strings in the associated 
+list box which begin with the prefixes specified in the Prefixes array.
+For each string the search begins at the beginning of the list and continues
+until a match is found or until the list has been completely traversed. If
+ShouldSet is TRUE, the matched strings are selected and highlighted, if
+ShouldSet is FALSE the highlight is removed from the matched strings
+and they are no longer selected. Returns the number of strings
+successfully selected or deselected (-1 for single-selection list boxes
+and combo boxes). If NumSelections is less than zero, all strings are
+selected or deselected, and a negative value is returned on failure.
+
+Page 54 (TMDIClient class):
+
+Correct the second form of the constructor as follows:
+
+TMDIClient(PTMDIFrame AParent, HWND AnHWindow, PTModule AModule = NULL);
+When invoking TWindow's constructor, passes AHWindow and AModule.
+
+Page 55:
+
+Correct the destructor as follows: virtual ~TMDIClient();
+
+Add the following member function: 
+
+virtual void WMMDIActivate (RTMessage) = [WM_FIRST + 
+                     WM_MDIACTIVATE];                     protected
+
+Responds to an incoming WM_MDIACTIVATE message. Overrides
+TWindow::WMMDIActivate and instead calls DefWndProc. If you redefine
+WMMDIActivate in a derived class, be sure to invoke the WMMDIActivate
+of the base class after any other processing (unless you have a 
+special reason for invoking it previously).
+
+Page 56 (TMDIFrame class):
+
+Add the following data member:
+
+PTWindow ActiveChild;
+ActiveChild points to the TMDIFrame's active MDI child window.
+ActiveChild is set by the child in its WMMDIActivate message response
+member function. TMDIFrame's constructors initialize ActiveChild and it
+is read and written by the read and write functions.
+ 
+Page 60 (TMDIFrame class):
+
+Add the following member function: 
+
+virtual void WMActivate(RTMessage Msg) = [WM_FIRST + WM_ACTIVATE]; protected
+
+Responds to an incoming WM_ACTIVATE message. Since an MDI child
+doesn't get WM_MDIACTIVATE messages when its frame window gets
+activated and deactivated, the active child's ActivationResponse
+member function is called here.
+See also TWindow::ActivationResponse, TWindowsObject::WMActivate
+
+Page 64 (TRadioButton class):
+
+virtual void BNClicked(RTMessage Msg) = [NF_FIRST + BN_CLICKED];   protected
+
+Responds to an incoming BN_CLICKED Windows message.
+
+Page 73 (TScroller::AutoScroll): 
+Delete see also: TWindow::WMTimer (WMTimer does not exist).
+
+Page 79 (TStatic class): 
+
+Add the following member function:
+
+int GetTextLen() 
+Returns the length of the static control's text.
+
+Page 81 (TWindow class):
+
+Add to the description of the constructor:
+
+TWindow(PTWindowsObject AParent, LPSTR ATitle, PTModule AModule = NULL);
+
+If AParent is an MDI frame window, this is created as a MDI
+child window (the WB_MDICHILD flag is set).  If the new TWindow is
+a popup window (and therefore should not be created as a MDI
+child window) then SetFlags(WB_MDICHILD, FALSE) must be called
+after this is constructed, and before it is created.
+
+Correct the second form of the constructor as follows:
+
+TWindow(HWND AnHWindow, PTModule AModule = NULL);
+Invokes TWindowsObject constructor passing AnHWindow and AModule.
+
+Page 82 (TWindow class):
+
+Add the following member function:
+
+virtual void ActivationResponse(WORD Activated,  BOOL IsIconified);
+Called by WMActivate and WMMDIActivate to provide a keyboard interface
+for the controls of a window. First calls TWindowsObject::ActivationResponse.
+When the window is deactivated (Activated equals zero) saves 
+the handle of  the child control that currently has the focus in 
+FocusChildHandle. When the window is activated, sets the focus to the
+child whose handle was stored. 
+See also: TWindowsObject::EnableKBHandler, TWindow::WMMDIActivate
+
+Page 84: (TWindow class):
+
+Replace WMActivate with the following member function:
+
+virtual void WMMDIActivate (RTMessage) = [WM_FIRST + 
+                     WM_MDIACTIVATE];                       protected
+
+Calls DefWndProc, then responds to an incoming WM_MDIACTIVATE message by setting
+the parent's (TMDIFrame) ActiveChild to the window handle sent in the message.
+Calls ActivationResponse to provide a keyboard interface for the controls of a 
+window. If you redefine WMMDIActivate in a derived class, be sure to invoke
+the WMMDIActivate of the base class after any other processing (unless you 
+have a special reason for invoking it elsewhere).
+See also: TWindow::ActivationResponse
+
+Replace WMLButtonDown's declaration with the following:
+
+virtual void WMLButtonDown(RTMessage Msg) = [WM_FIRST + WM_LBUTTONDOWN];
+
+Page 88 (TWindowsObject class):
+
+Following the TWindowsObject constructor description, delete the see also
+reference to TWindowsObject::AddChild (does not exist).
+
+Add the following member function:
+
+virtual void ActivationResponse(WORD Activated, BOOL IsIconified);
+
+Called by TWindowsObject::WMActivate and TWindow::ActivationResponse.
+If this is being activated (Activated is non-zero) and keyboard
+handling has been requested for this, enables keyboard handling
+by calling GetApplication()->SetKBHandler; otherwise disables it.
+IsIconified is TRUE if the window is minimized, FALSE otherwise.
+See also: TWindowsObject::WMActivate, TWindowsObject::EnableKBHandler,
+          TApplication::SetKBHandler, TWindow::ActivationResponse
+
+Page 91 (TWindowsObject class):
+
+Correct the DispatchAMessage member function as follows:
+
+virtual void DispatchAMessage(WORD AMsg, RTMessage AMessage,
+                     void (TWindowsObject::* _FAR) (RTMessage));
+
+Page 98 (TWindowsObject class):
+
+Replace description and see also of the WMActivate member function as follows:
+
+Responds to an incoming WM_ACTIVATE message. Enables or disables keyboard 
+handling by calling ActivationResponse. 
+
+Change the WMDrawItem see also TControl::DrawItem to TControl::WMDrawItem.
+
+Chapter 2, "Streamable classes"
+--------------------------------
+
+See online Help for more detailed information on streamable class
+member functions with more than one form.
+
+Pages 106 and 110 (iopstream, ipstream, and opstream classes):
+
+Add to the following to the iopstream(), ipstream(), and opstream()
+constructor descriptions:
+
+This second form of the constructor (for each of these classes) does
+not initialize the buffer pointer bp. Use init to set the buffer and state.
+See also: pstream::init
+
+Page 107 (ipstream class):
+
+Replace descriptions for the following member functions:
+
+readString();
+Allocates a buffer large enough to contain the
+string at the current stream position. Reads the string from the
+stream into the buffer. The caller must free the buffer.
+
+readString(Pchar buf, unsigned maxLen);
+Reads the string at the current stream position
+into the buffer specified by buf. Does not read more than maxLen bytes.
+
+
+Chapter 3, "ObjectWindows miscellaneous components"
+----------------------------------------------------
+
+Page 120: 
+
+Correct BUILDER type definition as follows:
+
+                 typedef PTStreamable (_FAR *BUILDER)();
+
+Page 124:
+
+Correct the _FAR macro header file name as follows: _DEFS.H.
+
+Page 125:
+
+Add the following new function:
+
+GetApplicationObject() function                   APPLICAT.H
+
+Declaration     extern PTApplication _EXPFUNC GetApplicationObject();
+
+Description     This function can be called from within an application
+                or a DLL. If an ObjectWindows application is in control,
+                GetApplicationObject() returns a pointer to that
+                application's application object (PTApplication). 
+                Otherwise, returns NULL.
+
+Page 126:
+
+Add the following operator:
+
+  void operator delete( Pvoid ptr );
+ObjectWindows redefines the global operator delete to check 
+the safety pool after each deletion. If it is exhausted, 
+operator delete attempts to reallocate it. This provides
+automatic safety pool restoration whenever it is likely  
+to be successful.
+See also: SafetyPool::IsExhausted
+
+Page 126:
+
+New Function:
+ 
+    WORD FAR OWLGetVersion();               owl.h
+ 
+        This function returns the version number of the ObjectWindows
+        library.  Returns the value of the constant OWLVersion.  
+
+New Constant:
+ 
+    const int OWLVersion;                   owl.h
+        This constant can be used to ensure that the version number
+        returned from a call to OWLGetVersion is the expected
+        version.  This is most useful when using the ObjectWindows
+        DLL.  
+
+Page 130 (TComboBoxData class):
+
+Change the last sentence of AddString as follows:
+
+If IsSelected is TRUE, deletes Selection before reallocating a copy of
+AString as Selection.
+
+*****PART 2*****
+
+Chapter 4, "Windows functions"
+-------------------------------
+
+Page 149 (AnimatePalette function): 
+The last LPPALETTEENTRY Palette parameter should be PaletteColors.
+
+Page 157:
+
+Add the following information about the old ChangeMenu function:
+ 
+Replaced in Windows 3.0 with AppendMenu, DeleteMenu, InsertMenu, 
+ModifyMenu, and RemoveMenu.
+
+Page 197: 
+
+Add the following ExtDeviceMode function:
+
+Definition: int ExtDeviceMode(HWND Wnd, HANDLE Driver, DEVMODE FAR * 
+DevModeOutput, LPSTR DeviceName, LPSTR Port, DEVMODE FAR * DevModeInput, 
+LPSTR Profile, WORD Mode);
+
+Provides device initialization information for a printer's device driver. 
+The application must include DRIVINIT.H. 
+Parameters: 
+Wnd     Identifies a window (could be the parent of an application-called 
+dialog box). 
+
+Driver     Device-driver module identifier. See GetModuleHandle and  
+LoadLibrary functions.
+
+DevModeOutput     Pointer to a DEVMODE structure.
+
+DeviceName     Pointer to a null-terminated character string device name.
+
+Port     Pointer to the string containing the port connecting the device.
+
+DevModeInput     Pointer to a DEVMODE structure with driver initialization 
+information.
+
+Profile     Pointer to string containing the name of the initialization  
+file. If NULL, default is WIN.INI.
+
+Mode     Specifies operations. 
+   Mode Value                       Meaning 
+   ---- -----                       ------- 
+   0                                See Returns: 
+   DM_COPY        Writes driver's current settings to DEVMODE 
+   DM_MODIFY      Changes settings 
+   DM_PROMPT      Gets user specifications from dialog box 
+   DM_UPDATE      Writes settings to environment and WIN.INI
+
+Returns: 
+If Mode is 0, returns size (in bytes) of DevModeInput structure. Dialog 
+box return values are IDOK or IDCANCEL. A successful function returns 
+IDOK, a failure returns less than 0.
+See also GetProcAddress
+
+Page 198:
+
+Add the following FatalAppExit function:
+
+Definition:  void FatalAppExit(WORD action, LPSTR MessageText);
+
+Last choice for terminating. Displays a message but may not be able  
+to free memory, close files, and may cause a general failure of Windows.
+
+Parameters: 
+Action     Reserved. Must be set to 0.
+
+MessageText     Pointer to the displayed 35-character string.   
+
+
+
+
+
+
+==================================================================
+ObjectWindows for C++ Programmer's Guide   CORRECTIONS & ADDITIONS
+==================================================================
+
+Part 1, "Learning ObjectWindows"
+
+ Chapter 2, "Stepping through Windows"
+
+  Page 30
+   Replace the paragraph directly about the heading "Creating the
+   resource file" with the following:
+       If you use one of these DLLs, you must use the other. So an 
+       application that uses the ObjectWindows DLL must also use the
+       Borland C++ run-time library DLL, and vice versa. If you use 
+       these DLLs, you must compile your application in the large 
+       memory model (-ml for the command line compiler, or the 
+       Options|Compiler|Code Generation menu option in the IDE) and
+       with the smart callbacks option (-WS for the command line 
+       compiler, or the Options|Compiler|Entry/Exit Code menu 
+       option in the IDE). Also, since the container class library is
+       contained with the ObjectWindows DLL (OWL.DLL), if you use the
+       ObjectWindows DLL, you don't need to explicitly link in a 
+       container class library.
+
+  Page 33
+   Replace the sentence "The correct container class library for an 
+   application that uses the ObjectWindows DLL, the Borland C++ run-time 
+   library DLL, or an ObjectWindows user DLL is TCLASSDL.LIB." with 
+   "If you are using the ObjectWindows DLL, you don't need to explicitly
+   link a container class library."
+
+   Replace the paragraph 
+    You may with to dynamically link the Borland C++ run-time library to 
+    your application. Doing so will descrease the size of the your .EXE
+    file. Simply add the import library BCRTL.LIB to your project.
+   with
+    If you are using an ObjectWindows DLL, you must link the Borland C++ 
+    run-time library to your application. Doing so will decrease the size 
+    of the your .EXE file. Simply add the import library CRTLL.LIB to your 
+    project.
+
+   Add a new bulleted paragraph before the last item in the bulleted 
+   list:
+    If you are statically linking an ObjectWindows library (OWLWx.LIB),
+    you must also statically link the new Windows global memory 
+    suballocator library. Just add SALLOCWx.LIB (where "x" indicates 
+    the memory model) to your project.
+
+   Replace the command-line example
+      BCCX -WE myprog.cpp owlws.lib tclassws.lib
+   with
+      BCCX -WE myprog.cpp owlws.lib sallocws.lib tclassws.lib
+    This command first compiles MYPROG.CPP then links it with OWLWS.LIB,
+    SALLOCWS.LIB, and TCLASSWS.LIB
+
+   Replace the command-line example
+      BCCX -WS -ml myprog.cpp owl.lib tclassdl.lib bcrtl.lib
+   with
+      BCCX -WS -ml myprog.cpp owl.lib crtll.lib
+    compiles MYPROG.CPP then links it with the OWL.LIB and CRTLL.LIB 
+    import libraries.
+
+  Page 39
+   Replace the sentence "This is a not a parent as in a base, but more
+   like an owner window." with "This is not a parent as in a derived
+   class's base class, but more like an owner window."
+
+
+ Chapter 6, "Popping up windows"
+
+  Page 84
+   Delete the semi-colons after the resource ID constants in the four
+   #define directives near the middle of the page.
+
+
+
+Part 2, "Using ObjectWindows"
+
+ Chapter 10, "Window objects"
+
+  Page 133
+   Replace the statement
+       AChildWindow = new TChildWindow(this, "Child Title");
+   with
+       AChildWindow = new TWindow(this, "Child Title");

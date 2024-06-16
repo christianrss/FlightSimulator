@@ -1,0 +1,10 @@
+// ObjectWindows - (C) Copyright 1991 by Borland International
+
+#include "windows.h"
+#include "calldll.h"
+
+COMMANDS MENU
+BEGIN
+  MENUITEM "&Create", CM_CREATE
+END
+

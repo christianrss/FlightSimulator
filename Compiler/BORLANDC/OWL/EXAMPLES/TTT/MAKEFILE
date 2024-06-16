@@ -1,0 +1,25 @@
+#
+# ObjectWindows - (C) Copyright 1991 by Borland International
+#
+
+!include "..\makefile.inc"
+
+ttt.exe: turboc.cfg ttt.obj ttt.res $(OWLROOT)\lib\bwcc.lib
+     $(TLINK) $(LFLAGS) $(BCLIBDIR)\c0w$(MODEL) ttt,ttt,,@&&!
+$(OWLROOT)\lib\bwcc $(OWLLIBS) $(STDLIBS)
+!,$(OWLROOT)\lib\owl.def
+     rc -K ttt.res ttt.exe
+
+ttt.res : ttt.rc ttt.ico ttt.h
+
+turboc.cfg: makefile ..\makefile.inc
+	echo -I$(INCLUDE) >turboc.cfg
+
+clean:
+	del *.obj
+	del *.exe
+	del *.res
+	del *.dll
+	del *.lib
+	del *.map
+	del *.sym

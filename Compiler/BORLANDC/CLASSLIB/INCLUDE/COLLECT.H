@@ -1,0 +1,146 @@
+// Borland C++ - (C) Copyright 1991 by Borland International
+
+// Contents ----------------------------------------------------------------
+//
+//      Collection
+//
+// Description
+//
+//      Defines the abstract class Collection.  Collections group objects
+//      together and specify operations.
+//
+// End ---------------------------------------------------------------------
+
+// Interface Dependencies ---------------------------------------------------
+
+#ifndef __COLLECT_H
+#define __COLLECT_H
+
+#ifndef __IOSTREAM_H
+#include <iostream.h>
+#define __IOSTREAM_H
+#endif
+
+#ifndef __CLSTYPES_H
+#include <clstypes.h>
+#endif
+
+#ifndef __OBJECT_H
+#include <object.h>
+#endif
+
+#ifndef __CONTAIN_H
+#include <contain.h>
+#endif
+
+// End Interface Dependencies ------------------------------------------------
+
+_CLASSDEF(Collection)
+
+// Class //
+
+class _CLASSTYPE Collection:  public Container
+{
+public:
+    virtual ~Collection();
+
+    virtual void			add( RObject ) = 0;
+    virtual void            detach( RCObject, int = 0 ) = 0;
+    virtual int             hasMember( RCObject ) const;
+    virtual RObject         findMember( RCObject ) const;
+    virtual RContainerIterator initIterator() const = 0;
+
+    void            destroy( RCObject o ) { detach( o, 1 ); }
+
+    virtual classType       isA() const = 0;
+    virtual Pchar nameOf() const = 0;
+    virtual hashValueType   hashValue() const = 0;
+};
+
+// Description -------------------------------------------------------------
+//
+// 	    Defines the abstract class Collection.  A Collection is a 
+//      grouping of objects on which addition and deletion of objects
+//      may occur.  In addition, a Collection supports a membership test.
+//      
+// Public Members
+//
+//      add
+//
+//      Adds an object to the collection.
+//
+//      destroy
+//
+//      Removes an object reference from the collection and
+//      destroys the object.
+//
+// 	    detach
+//
+// 	    Removes all references to the object in the collection.
+//      Does not delete the object.  Use this function when the collection
+//      elements are not owned by the collection.
+//
+//      hasMember
+//
+// 	    Test whether an object is part of the collection.  Returns 1 if
+//      the object reference is found in the array.
+//
+//      findMember
+//
+// 	    Test whether an object is part of the collection.  Returns a
+// 	    reference to the object in the collection if the object is found.
+//
+// 	    initIterator
+//
+// 	    Iterator initializer.  Redeclared as pure virtual.
+//
+// 	    isA
+//
+// 	    Redeclared as pure virtual.
+//
+// 	    nameOf
+//
+// 	    Redeclared as pure virtual.
+// 	
+// 	    hashValue
+//
+// 	    Redeclared as pure virtual.
+//
+//  Inherited Members
+//
+// 	    isEmpty
+//
+// 	    Inherited from Container.
+//
+// 	    forEach
+//
+// 	    Inherited from Container.
+//
+//      firstThat
+//
+// 	    Inherited from Container.
+//
+//      lastThat
+//
+// 	    Inherited from Container.
+//
+// 	    printOn
+//
+// 	    Inherited from Container.
+//
+//      isEqual
+//
+// 	    Inherited from Container.
+//
+// 	    isSortable
+//
+// 	    Inherited from Object.
+//
+// 	    isAssociation
+//
+// 	    Inherited from Object.
+//
+// End ---------------------------------------------------------------------
+
+
+#endif // ifndef __COLLECT_H //

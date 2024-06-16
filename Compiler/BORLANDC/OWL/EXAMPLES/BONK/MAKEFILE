@@ -1,0 +1,35 @@
+#
+# ObjectWindows - (C) Copyright 1991 by Borland International
+#
+
+!include "..\makefile.inc"
+
+!if $d(BONK2)
+BONKRES = bonk2.res
+!else
+BONKRES = bonk.res
+!endif
+
+bonk.exe: turboc.cfg bonk.obj $(BONKRES)
+     $(TLINK) $(LFLAGS) $(BCLIBDIR)\c0w$(MODEL) bonk,bonk,,@&&!
+$(OWLLIBS) $(STDLIBS)
+!,$(OWLROOT)\lib\owl.def
+     rc -K $(BONKRES) bonk.exe
+
+bonk.res : bonk.rc board.bmp live.bmp dead.bmp gameover.bmp critter.ico\
+         malet.cur maletdow.cur
+
+bonk2.res : bonk2.rc board2.bmp live2.bmp dead2.bmp gameove2.bmp critter2.ico\
+         malet2.cur maletdo2.cur
+
+turboc.cfg: makefile ..\makefile.inc
+	echo -I$(INCLUDE) >turboc.cfg
+
+clean:
+	del *.obj
+	del *.exe
+	del *.res
+	del *.dll
+	del *.lib
+	del *.map
+	del *.sym

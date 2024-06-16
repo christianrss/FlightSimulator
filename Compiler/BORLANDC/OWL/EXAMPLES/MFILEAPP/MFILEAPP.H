@@ -1,0 +1,2 @@
+#define CM_SAVESTATE     200
+#define CM_RESTORESTATE  201

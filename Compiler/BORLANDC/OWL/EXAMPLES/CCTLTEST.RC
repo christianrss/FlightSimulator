@@ -1,0 +1,9 @@
+#include "cctltest.h"
+
+COMMANDS MENU
+BEGIN
+  MENUITEM "&Color", CM_COLOR
+END
+
+rcinclude colordlg.dlg
+

@@ -1,0 +1,212 @@
+	      ObjectWindows for C++: ANSWERS TO COMMON QUESTIONS
+
+
+
+ B u i l d i n g   O W L   P r o g r a m s
+ ----------------------------------------------------------
+
+ Q: What compiler options do I build OWL programs with?
+ A: You can use -W, -WE, or -WS for OWL applications that do not use DLLs.
+    If your OWL application uses DLLs, you must use -WS and you must
+    build in large model.  When building a DLL, you may use either
+    -WD or -WDE and your DLL must be in large model.
+    Note that -WS and -WDE are preferred.  For a good example of a
+    makefile that is used to build OWL EXEs and DLLs, look at MAKEFILE
+    and MAKEFILE.INC in the OWL\EXAMPLES directory; that directory
+    also contains .PRJ project files for building OWL programs that
+    use OWL.DLL.
+
+
+ Q: What settings should I put in my program's module definition (.DEF)
+    file?
+ A: You do not need to provide module definition files for your Windows
+    programs when they are built with Borland C++.
+    If a .DEF file is not present, the linker, TLINK, provides defaults
+    (these are documented in the TLINK section of the BC++ User's Guide).
+    We do provide a file, OWL.DEF, located in your OWL\LIB subdirectory,
+    that provides the same settings as the TLINK defaults.
+    If you need to change the default settings, copy this file and make
+    your changes in the copy.
+
+    Similarly, you do not need to provide a .DEF file for DLLs that you
+    write because TLINK provides defaults in that case as well.
+    If the default values are not appropriate, you can use the file
+    OWLDLL.DEF in OWL\LIB  as a template for your .DEF file.
+    Note that this file is different from the file of the same name in
+    OWL\SOURCE which is used to build OWL.DLL.
+
+
+ Q: Why do I get a linker errors such as "Linker Error: Unable to
+    open file 'DLLHELLO.LIB'" when I attempt to build the CALLDLL.EXE or
+    the USECDLL.EXE example programs?
+ A: The linker error indicates that an import library is not present.
+    These programs must be linked with the import libraries of the
+    DLLs that they call (DLLHELLO.DLL and CDLGDLL.DLL, respectively).
+    The reason for the error is that the import library does not exist
+    because the DLL has not yet been built.  Building the DLL using the
+    makefile or the associated .PRJ file will result in the import
+    library being automatically created for you.
+
+
+ Q: When I attempt to build the OWL libraries using the
+    BUILDOWL.BAT batch file, my system hangs.  How can I finish
+    building the library?
+ A: Reboot your machine and run the batch file again.  The
+    batch file will run the makefiles again.  The makefile will
+    not attempt to rebuild any of the files successfully built during
+    the first run of the batch file.  This problem may occur while
+    processing WINDOBJ.CPP or SWINDOBJ.CPP.  Note that the file will
+    be correctly compiled and assembled; the hang occurs after the
+    assembly is complete.
+
+
+
+ D e b u g g i n g   O W L   P r o g r a m s
+ ----------------------------------------------------------------------
+
+ Q. In TDW, why do I get an exception 13 error when I trace (F7) through
+    a constructor for a class derived from TApplication when no error
+    is reported if the program is run outside of TDW?
+ A. There is currently a bug in TDW which results in stack corruption
+    when an attempt is made to trace (F7) through certain inline
+    constructors.  The stack corruption usually results in a General
+    Protection (GP) fault somewhere down the line.
+
+    A workaround is as follows: If you would like to trace into a
+    constructor call and notice (in the Module Viewer) that the
+    constructor is inline (its definition is within the body of a class
+    definition or it is declared with an explicit "inline" keyword),
+    temporarily switch into the cpu viewer (View:CPU) and trace (F7)
+    until you get to the first CALL instruction.  Type F7 again, to trace
+    into the call, and then switch back to the Module viewer (by typing
+    Control-V).  You will be returned to the source for the first
+    non-inline function.  From there you may continue to trace normally.
+
+    Note that not all inline constructors exhibit this problem.  One in
+    particular which almost always causes the GP fault is the
+    TApplication constructor.
+
+
+ Q. Why do I get an Error message box when I run my program?
+ A. The message box will appear if an error occurred during the
+    creation of a Window element.  This may indicate that you are
+    low in memory.  Very often this message appears when you attempt
+    to create an element that depends on information in your resource
+    template script (.RC) file and the identifier for it in your
+    source code does not have a matching item in the .RC file;
+    be wary of typographical errors.
+
+
+ Q. Why do I get an Unrecoverable Application Error when I run my program?
+ A. Typically, this error is reported when memory is used incorrectly.
+    You may be using a pointer containing an invalid address.
+
+    You may be using an invalid window handle; for example, you
+    attempt to send a message to a window before it has been
+    created or after it has been destroyed.  Remember that,
+    when you construct a (C++) object representing a (Windows) element,
+    the element does not yet exist.  You initialize the window object
+    in the constructor but you should not try to initialize the window
+    element until the call to SetupWindow (or, on rare occasions,
+    near the end of Create).
+
+    Another place where errors are made is in the creation and
+    execution of modal dialog boxes.  You first create the dialog object
+    using 'new', and then execute it using the ExecDialog member function
+    of your application object, as in the following:
+
+	    TDialog *MyDialog = new TDialog(this, "DialogName");
+	    GetApplication()->ExecDialog(MyDialog);
+
+    'ExecDialog' invokes the objects 'Execute' member function but
+    first calls 'ValidWindow'.  Always create window objects (including
+    dialog and control objects) with 'new' (ie, from the heap)
+    because 'delete' is called on the window object pointer when
+    the corresponding window element is destroyed.
+
+
+
+ R u n n i n g   O W L   P r o g r a m s
+ ----------------------------------------------------------------------
+
+ Q. Why do I get error dialog boxes from Windows when I attempt to run
+    my program?
+ A. If you built your program to use a DLL, then that DLL must be located
+    in the same directory as the EXE that uses it, in the Windows directory,
+    in the Windows system directory, or in a directory in your path.
+    If this is not the case, Windows will put up a message
+    indicating that it cannot find the DLL.  By default, OWL.DLL,
+    BWCC.DLL and BCRTL.DLL are placed into your BORLANDC\BIN directory
+    by the INSTALL program.
+
+    Also, take care that you are using the correct versions of DLLs
+    required by your EXEs.  If you modify and rebuild a DLL, make sure
+    that the new DLL is in your path and found before any older versions
+    of the DLL on your search path; your application may crash doing
+    otherwise correct code if an older version of your DLL is in your
+    path and found before a new version.
+
+
+ Q. Why do I get a message saying "Error: Cannot establish DDE link to
+    DDE server" when I attempt to run the PROGTALK example program?
+ A. If you started this program from the DOS command line by typing
+    "win progtalk", then you will get this message.  This example
+    program attempts to use the program manager as its DDE server.
+    When the program is invoked via "win progtalk", Windows loads
+    PROGTALK before PROGMAN, and the DDE initialization fails.
+
+
+ Q. Why can't I run more than one instance of the INSTTEST example
+    program
+ A. This will happen if you built INSTTEST in large model.  Windows
+    does not allow you to run more than one instance of a program
+    that has more than one data segment.
+
+
+
+ O t h e r    Q u e s t i o n s
+ ----------------------------------------------------------------------
+
+ Q. What is the difference between a child window in ObjectWindows and
+    a WS_CHILD window?
+ A. In Windows, WS_CHILD is a style for a window that is confined to
+    the client area of a parent window.
+
+    This child-parent relationship is not the same as the child-parent
+    model used to describe relationships between windows in ObjectWindows
+    (though there are conceptual similarities).
+
+	In ObjectWindows, a child window is an interface element that is
+    managed by another interface element.  A child window is displayed
+    only when its parent window is displayed.  For example, a dialog
+    box is a child window managed by the window that spawned it.
+
+    When you close its parent window, the child window automatically closes.
+	An ObjectWindows child window MAY have a WS_CHILD style, though
+    it is not required to be.
+
+	For more information on the child-parent relationship in
+    ObjectWindows, see the ObjectWindows Programmer's Guide.  For
+    more information on the WS_CHILD window style and (Windows) child
+    windows, see the MS Windows
+    Programmer's Reference.
+
+
+ Q. If I am porting a program from ObjectWindows for Pascal (OWLP) to
+    ObjectWindows for C++ (OWLC), what are the differences that I
+    will need to know?
+ A. The object hierarchies for OWLP and OWLC are similar but you
+    will want to note the following differences:
+
+    - The 'TMDIFrame' class in OWLC corresponds to the 'TMDIWindow'
+    object in OWLP.
+
+    - The 'TMDIClient' object in OWLP is derived from 'TControl'.
+    The 'TMDIClient class in OWLC is derived from 'TWindow'.
+
+    - The 'TDlgWindow' object in OWLP does not have a corresponding
+    class in OWLC.  However, all of its functionality is contained
+    within TDialog.  If you are porting an OWLP application to OWLC,
+    interpret all references to 'TDlgWindow' as 'TDialog'.  For an
+    example of how to use a dialog as a main window, check out
+    CALC.CPP in the OWL\EXAMPLES\CALC subdirectory.

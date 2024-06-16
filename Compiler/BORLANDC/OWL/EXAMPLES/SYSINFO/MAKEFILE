@@ -1,0 +1,19 @@
+#
+# ObjectWindows - (C) Copyright 1991 by Borland International
+#
+
+!include "..\makefile.inc"
+
+sysinfo.exe: turboc.cfg sysinfo.obj sysinfo.res
+     $(TLINK) $(LFLAGS) $(BCLIBDIR)\c0w$(MODEL) sysinfo,sysinfo,,@&&!
+$(OWLLIBS) $(STDLIBS)
+!,$(OWLROOT)\lib\owl.def
+     rc -K sysinfo.res sysinfo.exe
+
+turboc.cfg: makefile ..\makefile.inc
+	echo -I$(INCLUDE) >turboc.cfg
+
+clean:
+    del *.obj
+   	del *.res
+    del *.exe

@@ -1,0 +1,118 @@
+#
+# Borland C++ - (C) Copyright 1991 by Borland International
+#
+
+.autodepend
+.swap
+
+!if $d(DEBUG)
+DBG = -v
+!endif
+
+!if !$d(MODEL)
+MODEL = s
+!endif
+
+!if $d(WINDOWS)
+!if $d(DLL)
+WIN = -WDE
+D = d
+!else
+WIN = -WE
+D = w
+!endif
+!endif
+
+!if !$d(BCROOT)
+BCROOT=c:\borlandc
+!endif
+
+!if !$d(CLASSDIR)
+CLASSDIR = $(BCROOT)\classlib
+!endif
+
+KEY = $(D)$(MODEL)
+OBJDIR = $(CLASSDIR)\object\$(KEY)
+
+.path.obj = $(OBJDIR)
+
+INCLUDE = $(CLASSDIR)\include;$(BCROOT)\include
+LIBDIR = $(CLASSDIR)\lib
+
+!if $d(DEBUG)
+TLIB = $(BCROOT)\bin\tlib
+!else
+TLIB = $(BCROOT)\bin\tlib /0
+!endif
+
+CC = $(BCROOT)\bin\bccx
+
+!if $d(DLL)
+CFLAGS = -c -D_CLASSDLL $(DBG) $(WIN) -m$(MODEL) -n$(OBJDIR) -w-parm
+!else
+CFLAGS = -c $(DBG) $(WIN) -m$(MODEL) -n$(OBJDIR) -w-parm
+!endif
+
+BCC = $(CC) $(CFLAGS)
+
+OBJS = 	abstarry.obj \
+	array.obj \
+	assoc.obj \
+	bag.obj \
+	collect.obj \
+	contain.obj \
+	dbllist.obj \
+	deque.obj \
+	dict.obj \
+	hashtbl.obj \
+	ldate.obj \
+	list.obj \
+	ltime.obj \
+	object.obj \
+	queue.obj \
+	set.obj \
+	sortable.obj \
+	sortarry.obj \
+	stack.obj \
+	strng.obj \
+    errexit.obj
+
+.cpp.obj:
+	$(BCC) $.
+
+.asm.obj:
+	$(BCC) $.
+
+all: config $(LIBDIR)\tclass$(KEY).lib
+
+config:
+	echo -I$(INCLUDE) >turboc.cfg
+
+$(LIBDIR)\tclass$(KEY).lib: $(OBJS)
+     del $(LIBDIR)\tclass$(KEY).lib
+     $(TLIB) $(LIBDIR)\tclass$(KEY).lib @&&!
++$(OBJDIR)\ARRAY     &
++$(OBJDIR)\DBLLIST   &
++$(OBJDIR)\LIST      &
++$(OBJDIR)\SORTARRY  &
++$(OBJDIR)\CONTAIN   &
++$(OBJDIR)\OBJECT    &
++$(OBJDIR)\STACK     &
++$(OBJDIR)\QUEUE     &
++$(OBJDIR)\DEQUE     &
++$(OBJDIR)\HASHTBL   &
++$(OBJDIR)\ABSTARRY  &
++$(OBJDIR)\ASSOC     &
++$(OBJDIR)\COLLECT   &
++$(OBJDIR)\LDATE     &
++$(OBJDIR)\LTIME     &
++$(OBJDIR)\DICT            &
++$(OBJDIR)\STRNG     &
++$(OBJDIR)\SORTABLE  &
++$(OBJDIR)\SET       &
++$(OBJDIR)\BAG              &
++$(OBJDIR)\errexit
+!
+
+clean:
+	del $(OBJDIR)\*.obj

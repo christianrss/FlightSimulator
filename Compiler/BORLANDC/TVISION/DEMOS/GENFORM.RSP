@@ -1,0 +1,7 @@
+genform.cpp
+forms.obj 
+fields.obj 
+datacoll.obj 
+listdlg.obj 
+tv.lib
+

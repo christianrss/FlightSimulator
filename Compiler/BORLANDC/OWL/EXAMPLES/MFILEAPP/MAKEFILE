@@ -1,0 +1,23 @@
+#
+# ObjectWindows - (C) Copyright 1991 by Borland International
+#
+
+!include "..\makefile.inc"
+
+mfileapp.exe: turboc.cfg mfileapp.obj mfileapp.res
+     $(TLINK) $(LFLAGS) $(BCLIBDIR)\c0w$(MODEL)  mfileapp,mfileapp,,@&&!
+$(OWLLIBS) $(STDLIBS)
+!,$(OWLROOT)\lib\owl.def
+     rc -K mfileapp.res mfileapp.exe
+
+turboc.cfg: makefile ..\makefile.inc
+	echo -I$(INCLUDE) >turboc.cfg
+
+clean:
+	del *.obj
+	del *.exe
+	del *.res
+	del *.dll
+	del *.lib
+	del *.map
+	del *.sym
