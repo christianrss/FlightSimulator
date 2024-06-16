@@ -10,7 +10,7 @@
 
 const long IMAGE_SIZE=64000;
 
-int Pcx::load(char far *filename, pcx_struct *pcx)
+int Pcx::load(char *filename, pcx_struct *pcx)
 {
 	// Funcao para carregar dados PCX de um arquivo FILENAME
 	// para a estrutura PCX.
@@ -109,7 +109,7 @@ void Pcx::load_palette(int pcxfile, pcx_struct *pcx)
 	// do final do arquivo
 	lseek(pcxfile,-768L,SEEK_END);
 	// Ler todos os 768 registros da paleta para o array
-	read(pcxfile, pcx->palette,3*256);
+	read(pcxfile, pcx->palette, 3*256);
 	// Ajustar para o deslocamento de bit requerido:
 	for (int i=0; i<256; i++)
 		for (int j=0; j<3; j++)

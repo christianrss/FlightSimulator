@@ -20,10 +20,11 @@ INCLUDEPATH =.\Compiler\BORLANDC\INCLUDE;.\Compiler\BORLANDC\TVISION\INCLUDE;.\E
 #		*List Macros*
 
 EXE_dependencies =  \
-  .\App\polydemo.obj \
+  .\App\OPTDEMO.obj \
   .\Engine\Graphics\loadpoly.obj \
   .\Engine\Graphics\poly.obj \
   .\Engine\Graphics\drawpoly.obj \
+  .\Engine\Graphics\pcx.obj \
   .\Build\screen.obj \
   .\Build\bresnham.obj
 
@@ -31,11 +32,12 @@ EXE_dependencies =  \
 .\Release\FSIM.EXE: fsim.cfg $(EXE_dependencies)
   $(TLINK) /v/x/c/P-/L$(LIBPATH) @&&|
 c0l.obj+ 
-.\Build\polydemo.obj+
+.\Build\OPTDEMO.obj+
 .\Build\loadpoly.obj+
 .\Build\poly.obj+
 .\Build\drawpoly.obj+
 .\Build\screen.obj +
+.\Build\pcx.obj +
 .\Build\bresnham.obj
 .\Release\FSIM
 # no map file
@@ -50,6 +52,7 @@ cl.lib
 .\Build\loadpoly.obj: fsim.cfg .\Engine\Graphics\LOADPOLY.CPP
 .\Build\poly.obj: fsim.cfg .\Engine\Graphics\POLY.CPP
 .\Build\drawpoly.obj: fsim.cfg .\Engine\Graphics\DRAWPOLY.CPP
+.\Build\pcx.obj: fsim.cfg .\Engine\Graphics\pcx.CPP
 
 .\Build\screen.obj: fsim.cfg .\Engine\Graphics\SCREEN.ASM 
 	$(TASM) /MX /ZI /O .\Engine\Graphics\SCREEN.ASM,.\Build

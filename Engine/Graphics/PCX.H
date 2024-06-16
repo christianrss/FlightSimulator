@@ -41,7 +41,7 @@ class Pcx
 		void load_palette(int pcxfile, pcx_struct *pcx);
 	public:
 		// Funcao que carrega dados PCX:
-		int load(char far *filename, pcx_struct *pcx);
+		int load(char *filename, pcx_struct *pcx);
 		// Funcao que comprime o bitmap PCX
 		int compress(pcx_struct *pcx);
 };
