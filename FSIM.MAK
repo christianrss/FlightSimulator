@@ -20,7 +20,7 @@ INCLUDEPATH =.\Compiler\BORLANDC\INCLUDE;.\Compiler\BORLANDC\TVISION\INCLUDE;.\E
 #		*List Macros*
 
 EXE_dependencies =  \
-  .\App\OPTDEMO.obj \
+  .\App\POLYDEMO.obj \
   .\Engine\Graphics\loadpoly.obj \
   .\Engine\Graphics\poly.obj \
   .\Engine\Graphics\drawpoly.obj \
@@ -32,7 +32,7 @@ EXE_dependencies =  \
 .\Release\FSIM.EXE: fsim.cfg $(EXE_dependencies)
   $(TLINK) /v/x/c/P-/L$(LIBPATH) @&&|
 c0l.obj+ 
-.\Build\OPTDEMO.obj+
+.\Build\POLYDEMO.obj+
 .\Build\loadpoly.obj+
 .\Build\poly.obj+
 .\Build\drawpoly.obj+
@@ -48,7 +48,7 @@ cl.lib
 |
 
 #		*Individual File Dependencies*
-.\Build\polydemo.obj: fsim.cfg .\App\POLYDEMO.CPP
+.\Build\POLYDEMO.obj: fsim.cfg .\App\POLYDEMO.CPP
 .\Build\loadpoly.obj: fsim.cfg .\Engine\Graphics\LOADPOLY.CPP
 .\Build\poly.obj: fsim.cfg .\Engine\Graphics\POLY.CPP
 .\Build\drawpoly.obj: fsim.cfg .\Engine\Graphics\DRAWPOLY.CPP

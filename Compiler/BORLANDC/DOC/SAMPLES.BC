@@ -1,0 +1,51 @@
+
+
+
+
+
+
+===========================================================================
+New sample programs
+===========================================================================
+
+                    Borland C++ 3.1 includes many new sample programs to
+                    show you how to take advantage of features new to
+                    Windows 3.1, such as multimedia, TrueType, DDEML
+                    (Dynamic Data Exchange Management Library), drag and
+                    drop, common dialog boxes, and OLE (Object Linking and
+                    Embedding). In the IDE, choose Project|Open and choose
+                    the directory and project file for the sample you want
+                    to see. For the command-line compiler, go to the
+                    directory and run MAKE to build the project.
+
+
+    EXAMPLES\WIN31  =======================================================
+
+                    These samples are in C and use traditional methods of
+                    Windows programming.
+
+
+---------------------------------------------------------------------------
+Directory   Description
+---------------------------------------------------------------------------
+
+SOUNDER     Multimedia sound player that uses several different high-level
+            approaches to playing sound. You must have audio hardware to
+            use all SOUNDER's features.
+
+TRUETYPE    Shows TrueType font scaling, rotation, and attributes. Also
+            demonstrates how to use the common font dialog box.
+
+DDEML       DDE client and server, using the DDEML library.
+
+DRAGDROP    A simple program that accepts files dragged and dropped from a
+            drag and drop server (File Manager, for example).
+
+CMDLG       Demonstrates use of common file, color, and font dialog boxes.
+
+CHELP       This application implements context-sensitive Help for its
+            menus.
+
+CLIOLE      Demonstrates OLE, as a client to Windows Paintbrush.
+
+---------------------------------------------------------------------------
