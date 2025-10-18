@@ -1,4 +1,4 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+// Borland C++ - (C) Copyright 1991, 1992 by Borland International
 
 // list.cpp:      Implementation of the List Class
 
@@ -32,3 +32,4 @@ void List::print()
    for (int i = 0; i < nelem; ++i)
       cout << list[i] << "\n";
 }
+

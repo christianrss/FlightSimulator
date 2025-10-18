@@ -3,14 +3,14 @@
     File sharing mode for use with sopen.
     See DOS function 3Dh for definition.
 
-        Copyright (c) Borland International 1987,1988,1990,1991
+    Copyright (c) 1987, 1992 by Borland International
     All Rights Reserved.
 */
 
-#if !defined( __SHARE_H )
+#if !defined(__SHARE_H)
 #define __SHARE_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 

@@ -49,4 +49,4 @@ void Point::MoveTo(int NewX, int NewY) {
    Y = NewY;
    Show();         // show point at new location
 };
-
+

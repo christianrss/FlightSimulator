@@ -5,22 +5,20 @@
    Copyright (c) 1990, 1991 Borland International, Inc.
    All rights reserved.
 
-   Tasm2Msg - assembler output filter to Turbo C++ IDE message window
+   Tasm2Msg - assembler output filter to the IDE message window.
 
    This filter accepts input through the standard input stream, converts
    it and outputs it to the standard output stream.  The streams are linked
    through pipes, such that the input stream is the output from the assembler
    being invoked, and the output stream is connected to the message window
-   of the Turbo C++ IDE, ie.
+   of the IDE, ie.
 
-	      tasm fname | tasm2msg | Turbo C++ message window
+	      tasm fname | tasm2msg | IDE message window
 
    Input can come from TASM, MASM 5.1 or OPTASM.  The type of assembler is
    determined from analysing the lines of output from the assembler.
 
-   Compile using Turbo C++ in the LARGE memory model
-
-   tcc -ml tasm2msg
+   Compile using the LARGE memory model.
 */
 
 #include <dir.h>
@@ -254,6 +252,7 @@ scanning of the rest of the line.
 *************************************************************************/
 int ProcessTasmLine(char *Line)
 {
+   static int HavePutFile = FALSE;
    char     Type;
    unsigned i;
    char     *s;
@@ -288,6 +287,7 @@ int ProcessTasmLine(char *Line)
 	    strcpy(CurFile,fn);
 	    Put(&Type,1);
             Put(CurFile,strlen(CurFile)+1);      /* along with the new name */
+	    HavePutFile = TRUE;
 	 }
 	 Type = MsgNewLine;                      /* set type to new line */
 	 s = strchr(Line,')');                   /* find the close paren */
@@ -315,6 +315,22 @@ int ProcessTasmLine(char *Line)
       }
       else                            /* Fatal error, no line # or filename */
       {
+        if( !HavePutFile )
+        {
+	   /* IDE expects the first message to
+	      be preceded by a filename.  Since
+	      we don't have one, fake it by
+	      sending a NULL file before the
+	      message.
+	   */
+	   Type = MsgNewFile;                  /* indicate by sending type
+					          out to message window */
+	   *CurFile = '\0';
+	   Put(&Type,1);
+	   Put(CurFile,1);                     /* along with null filename */
+           HavePutFile = TRUE;
+        }
+                       
 	Type = MsgNewLine;            /* Fake line # etc.                   */
 	i    = 1;
 	Put(&Type,1);
@@ -408,4 +424,4 @@ int main( void )
    flushOut((unsigned)(CurOutPtr-OutBuffer));     /* flush the buffer */
    return 0;                          /* return OK */
 }
-
+

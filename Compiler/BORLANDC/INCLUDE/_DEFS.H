@@ -2,21 +2,17 @@
 
     Common definitions for pointer size and calling conventions.
 
-    Copyright (c) Borland International 1991
+    Copyright (c) 1991, 1992 by Borland International
     All Rights Reserved.
 */
 
-#if !defined( __DEFS_H )
-#define __DEFS_H
+#if !defined(___DEFS_H)
+#define ___DEFS_H
 
 #if __STDC__
 #  define _Cdecl
 #else
-#  ifdef __OS2__
-#    define _Cdecl  _stdcall
-#  else
-#    define _Cdecl  cdecl
-#  endif
+#  define _Cdecl  cdecl
 #endif
 
 #ifndef __PAS__
@@ -25,25 +21,55 @@
 #  define _CType pascal
 #endif
 
-#ifdef __OS2__
+#ifdef __MSC
+#  define _emit db
+#  define __far _far
+#  define __near _near
+#  define __cdecl _cdecl
+#  define __pascal _pascal
+#  define __export _export
+#  ifdef __SMALL__
+#    define _M_I86SM
+#  endif
+#  ifdef __COMPACT__
+#    define _M_I86CM
+#  endif
+#  ifdef __MEDIUM__
+#    define _M_I86MM
+#  endif
+#  ifdef __LARGE__
+#    define _M_I86LM
+#  endif
+#  ifndef _Windows
+#    define _DOS
+#  else
+#    define _WINDOWS
+#  endif
+#endif
+
+#if defined(__STDC__)
 #  define _FAR
 #  define _FARFUNC
 #  define _CLASSTYPE
 #else
-#  if   defined(__DLL__)
-#    define _CLASSTYPE _export
-#    define _FAR far
-#    if defined(_BUILDRTLDLL)
-#      define _FARFUNC _export
-#    else
-#      define _FARFUNC far
-#    endif
-#  elif defined(_CLASSDLL) || defined(_RTLDLL)
-#    define _CLASSTYPE huge
+#  if defined(_BUILDRTLDLL)
+#    define _FARFUNC _export
+#  elif defined(_RTLDLL)
 #    define _FARFUNC far
-#    define _FAR far
 #  else
 #    define _FARFUNC
+#  endif
+#  if defined(__DLL__)
+#    if defined(_RTLDLL) || defined(_CLASSDLL)
+#      define _CLASSTYPE _export
+#    else
+#      define _CLASSTYPE far
+#    endif
+#    define _FAR far
+#  elif defined(_RTLDLL) || defined(_CLASSDLL)
+#    define _CLASSTYPE huge
+#    define _FAR far
+#  else
 #    define _FAR
 #    if   defined(__TINY__) || defined(__SMALL__) || defined(__MEDIUM__)
 #      define _CLASSTYPE  near
@@ -53,7 +79,7 @@
 #      define _CLASSTYPE  huge
 #    endif
 #  endif
-#endif
+#endif    /* __STDC__ */
 
 #if defined(_BUILDRTLDLL)
 #  define _FARCALL _export
@@ -61,7 +87,7 @@
 #  define _FARCALL far
 #endif
 
-#ifdef __cplusplus
+#if defined( __cplusplus )
 #  define _PTRDEF(name) typedef name _FAR * P##name;
 #  define _REFDEF(name) typedef name _FAR & R##name;
 #  define _REFPTRDEF(name) typedef name _FAR * _FAR & RP##name;
@@ -75,4 +101,4 @@
     _REFCONSTDEF(name)
 #endif
 
-#endif  /* __DEFS_H */
+#endif  /* ___DEFS_H */

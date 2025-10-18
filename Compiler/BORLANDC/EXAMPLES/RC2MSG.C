@@ -5,19 +5,17 @@
    Copyright (c) 1991 Borland International, Inc.
    All rights reserved.
 
-   RC2Msg - Resource compiler output filter to Turbo C++ IDE message window
+   RC2Msg - Resource compiler output filter to the IDE message window.
 
    This filter accepts input through the standard input stream, converts
    it and outputs it to the standard output stream.  The streams are linked
    through pipes, such that the input stream is the output from the resource
    compiler being invoked, and the output stream is connected to the message
-   window of the Turbo C++ IDE, ie.
+   window of the IDE, ie.
 
-	      rc fname | rc2msg | Turbo C++ message window
+	      rc fname | rc2msg | IDE message window
 
-   Compile using Turbo C++ in the LARGE memory model
-
-   tcc -ml rc2msg
+   Compile using the LARGE memory model.
 */
 
 #include <dir.h>

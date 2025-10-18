@@ -66,17 +66,17 @@ main()                        // test the functions
    int graphdriver = DETECT, graphmode;
    initgraph(&graphdriver, &graphmode, "..\\bgi");
 
-   Circle MyCircle(100, 200, 50);   // declare a circle object
+   Circle MyCircle(50, 100, 25);    // declare a circle object
    MyCircle.Show();                 // show it
    getch();                         // wait for keypress
-   MyCircle.MoveTo(200, 250);       // move the circle (tests hide
+   MyCircle.MoveTo(100, 125);       // move the circle (tests hide
                                     // and show also)
    getch();
-   MyCircle.Expand(50);             // make it bigger
+   MyCircle.Expand(25);             // make it bigger
    getch();
-   MyCircle.Contract(75);           // make it smaller
+   MyCircle.Contract(35);           // make it smaller
    getch();
    closegraph();
    return 0;
 }
-
+

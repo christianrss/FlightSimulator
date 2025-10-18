@@ -5,19 +5,17 @@
    Copyright (c) 1991 Borland International, Inc.
    All rights reserved.
 
-   Impl2Msg - Import Librarian output filter to Turbo C++ IDE message window
+   Impl2Msg - Import Librarian output filter to IDE message window
 
    This filter accepts input through the standard input stream, converts
    it and outputs it to the standard output stream.  The streams are linked
    through pipes, such that the input stream is the output from the import
    librarian being invoked, and the output stream is connected to the message
-   window of the Turbo C++ IDE, ie.
+   window of the IDE, ie.
 
-	      implib fname | impl2msg | Turbo C++ message window
+	      implib fname | impl2msg | IDE message window
 
-   Compile using Turbo C++ in the LARGE memory model
-
-   tcc -ml impl2msg
+   Compile using the LARGE memory model.
 */
 
 #include <dir.h>
@@ -141,6 +139,7 @@ To be considered an error message, a line must have one of these forms:
 ************************************************************************/
 void ProcessLine(char *Line)
 {
+   static int HavePutFile = FALSE;
    char     Type, *s;
    unsigned i, HasFileAndLineNumber = FALSE;
 
@@ -176,6 +175,7 @@ void ProcessLine(char *Line)
 	strcpy(CurFile,Line);
 	Put(&Type,1);
 	Put(CurFile,strlen(CurFile)+1);   /* along with the new name */
+        HavePutFile = TRUE;
      }
 
      s++;                                 /* flush white space until */
@@ -204,6 +204,22 @@ void ProcessLine(char *Line)
      Line++;                              /* position Line past ':' */
      while( *Line == ' ' )                /* and at start of message */
        Line++;
+
+     if( !HavePutFile )
+     {
+	/* IDE expects the first message to
+	   be preceded by a filename.  Since
+	   we don't have one, fake it by
+	   sending a NULL file before the
+	   message.
+	*/
+	Type = MsgNewFile;                  /* indicate by sending type
+					       out to message window */
+	*CurFile = '\0';
+	Put(&Type,1);
+	Put(CurFile,1);                     /* along with null filename */
+	HavePutFile = TRUE;
+     }
 
      Type = MsgNewLine;                   /* Put fake line number */
      i    = 1;

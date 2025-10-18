@@ -3,7 +3,7 @@
     Complex Number Library - Include File
     class complex:  declarations for complex numbers.
 
-    Copyright (c) Borland International 1990,1991
+    Copyright (c) 1990, 1992 by Borland International
     All Rights Reserved.
 
 All function names, member names, and operators have been borrowed
@@ -23,15 +23,24 @@ from AT&T C++, except for the addition of:
 #error Must use C++ for the type complex.
 #endif
 
-#if !defined( __DEFS_H )
+#if !defined(__COMPLEX_H)
+#define __COMPLEX_H
+
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 
-#if !defined( __COMPLEX_H )
-#define _COMPLEX_H
+#if !defined(__IOSTREAM_H)
+#include <iostream.h>
+#endif
 
-#if !defined( __MATH_H )
+#if !defined(__MATH_H)
 #include <math.h>
+#endif
+
+#pragma option -Vo-
+#if defined(__BCOPT__) && !defined(_RTL_ALLOW_po)
+#pragma option -po-
 #endif
 
 _CLASSDEF(complex)
@@ -256,9 +265,12 @@ inline int _Cdecl operator!=(complex _FAR & __z1, complex _FAR & __z2)
 
 // Complex stream I/O
 
-#include <iostream.h>
-
 ostream _FAR & _Cdecl _FARFUNC operator<<(ostream _FAR &, complex _FAR &);
 istream _FAR & _Cdecl _FARFUNC operator>>(istream _FAR &, complex _FAR &);
+
+#pragma option -Vo.
+#if defined(__BCOPT__)
+#pragma option -po.
+#endif
 
 #endif  // __COMPLEX_H

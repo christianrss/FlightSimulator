@@ -2,20 +2,18 @@
 
     Direct MSDOS console input/output.
 
-    Copyright (c) Borland International 1987,1988,1990,1991
+    Copyright (c) 1987, 1992 by Borland International
     All Rights Reserved.
 */
-
-#if defined( _Windows )
-#error conio routines not supported under Windows
-#endif
 
 #if !defined(__CONIO_H)
 #define __CONIO_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
+
+#if !defined(_Windows)
 
 #define _NOCURSOR      0
 #define _SOLIDCURSOR   1
@@ -65,37 +63,47 @@ enum COLORS {
 extern   int _Cdecl directvideo;
 extern   int _Cdecl _wscroll;
 
+#endif   /* !_Windows */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 void        _Cdecl clreol( void );
 void        _Cdecl clrscr( void );
+void        _Cdecl gotoxy( int __x, int __y );
+int         _Cdecl wherex( void );
+int         _Cdecl wherey( void );
+int         _Cdecl getch( void );
+int         _Cdecl getche( void );
+int         _Cdecl kbhit( void );
+int         _Cdecl putch( int __c );
+
+#ifndef _PORT_DEFS
+unsigned char   _Cdecl inportb( unsigned __portid );
+unsigned        _Cdecl inport ( unsigned __portid );
+int             _Cdecl inp( unsigned __portid );
+unsigned        _Cdecl inpw( unsigned __portid );
+void            _Cdecl outportb( unsigned __portid, unsigned char __value );
+void            _Cdecl outport ( unsigned __portid, unsigned __value );
+int             _Cdecl outp( unsigned __portid, int __value );
+unsigned        _Cdecl outpw( unsigned __portid, unsigned __value );
+#endif  /* !_PORT_DEFS */
+
+#if !defined(_Windows)
+
 void        _Cdecl delline( void );
 int         _Cdecl gettext( int __left, int __top,
                             int __right, int __bottom,
                             void *__destin);
 void        _Cdecl gettextinfo (struct text_info *__r );
-void        _Cdecl gotoxy( int __x, int __y );
 void        _Cdecl highvideo( void );
-#ifdef __MSC
-int         _Cdecl inport( int __portid );
-#ifndef _PORT_DEFS
-unsigned char _Cdecl inportb( int __portid );
-#endif
-#endif
 void        _Cdecl insline( void );
 void        _Cdecl lowvideo( void );
 int         _Cdecl movetext( int __left, int __top,
                              int __right, int __bottom,
                              int __destleft, int __desttop );
 void        _Cdecl normvideo( void );
-#ifdef __MSC
-void        _Cdecl outport( int __portid, int __value );
-#ifndef _PORT_DEFS
-void        _Cdecl outportb( int __portid, unsigned char __value );
-#endif
-#endif
 int         _Cdecl puttext( int __left, int __top,
                             int __right, int __bottom,
                             void *__source );
@@ -103,8 +111,6 @@ void        _Cdecl textattr( int __newattr );
 void        _Cdecl textbackground( int __newcolor );
 void        _Cdecl textcolor( int __newcolor );
 void        _Cdecl textmode( int __newmode );
-int         _Cdecl wherex( void );
-int         _Cdecl wherey( void );
 void        _Cdecl window( int __left, int __top, int __right, int __bottom);
 
 void        _Cdecl _setcursortype( int __cur_t );
@@ -112,37 +118,34 @@ char * _Cdecl cgets( char *__str );
 int         _Cdecl cprintf( const char *__format, ... );
 int         _Cdecl cputs( const char *__str );
 int         _Cdecl cscanf( const char *__format, ... );
-int         _Cdecl getch( void );
-int         _Cdecl getche( void );
 char * _Cdecl getpass( const char *__prompt );
-int         _Cdecl kbhit( void );
-int         _Cdecl putch( int __c );
 int         _Cdecl ungetch( int __ch );
 
-#ifdef __MSC
+#endif  /* !_Windows */
+
 #ifndef _PORT_DEFS
 #define _PORT_DEFS
 
     /* These are in-line functions.  These prototypes just clean up
        some syntax checks and code generation.
      */
-unsigned char _Cdecl    __inportb__( int __portid );
-unsigned int _Cdecl     __inportw__( int __portid );
-void        _Cdecl      __outportb__( int __portid, unsigned char __value );
-void        _Cdecl      __outportw__( int __portid, unsigned int __value );
+unsigned char   _Cdecl  __inportb__ (unsigned __portid);
+unsigned        _Cdecl  __inportw__ (unsigned __portid);
+unsigned char   _Cdecl  __outportb__(unsigned __portid, unsigned char __value);
+unsigned        _Cdecl  __outportw__(unsigned __portid, unsigned __value);
 
-#define inportb         __inportb__
-#define inportw         __inportw__
-#define outportb        __outportb__
-#define outportw        __outportw__
+#define inportb(__portid)           __inportb__(__portid)
+#define outportb(__portid, __value) ((void) __outportb__(__portid, __value))
+#define inport(__portid)            __inportw__(__portid)
+#define outport(__portid, __value)  ((void) __outportw__(__portid, __value))
 
-#define inp( portid ) inportb( portid )
-#define outp( portid,v )  outportb( portid,v )
-#define inpw( portid ) inportw( portid )
-#define outpw( portid,v )  outportw( portid,v )
+/* MSC-compatible macros for port I/O */
+#define inp(__portid)               __inportb__ (__portid)
+#define outp(__portid, __value)     __outportb__(__portid, (unsigned char)__value)
+#define inpw(__portid)              __inportw__ (__portid)
+#define outpw(__portid, __value)    __outportw__(__portid, __value)
 
-#endif	/* _PORT_DEFS */
-#endif	/* __MSC */
+#endif  /* _PORT_DEFS */
 
 #ifdef __cplusplus
 }

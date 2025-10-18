@@ -1,212 +1,86 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+/*------------------------------------------------------------------------*/
+/*                                                                        */
+/*  STRNG.H                                                               */
+/*                                                                        */
+/*  Copyright Borland International 1991, 1992                            */
+/*  All Rights Reserved                                                   */
+/*                                                                        */
+/*------------------------------------------------------------------------*/
 
-// Contents ----------------------------------------------------------------
-//
-//      String      
-//      String::isEqual
-//      String::isLessThan
-//      String::printOn
-//      String::operator char*
-//
-// Description
-//
-//      Defines the instance class String and inline member functions.
-//
-// End ---------------------------------------------------------------------
-
-// Interface Dependencies ---------------------------------------------------
-
-#ifndef _STRNG_H
+#if !defined( _STRNG_H )
 #define _STRNG_H
 
-#ifndef __IOSTREAM_H
-#include <iostream.h>
-#define __IOSTREAM_H
-#endif
+#if !defined( __CLSTYPES_H )
+#include <ClsTypes.h>
+#endif  // __CLSTYPES_H
 
-#ifndef __STRING_H
+#if !defined( __SORTABLE_H )
+#include <Sortable.h>
+#endif  // __SORTABLE_H
+
+#if !defined( __STRING_H )
 #include <string.h>
-#define __STRING_H
+#endif  // __STRING_H
+
+#if !defined( __CHECKS_H )
+#include <Checks.h>
+#endif  // __CHECKS_H
+
+#pragma option -Vo-
+#if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+#pragma option -po-
 #endif
 
-#ifndef __CLSTYPES_H
-#include <clstypes.h>
-#endif
-
-#ifndef __OBJECT_H
-#include <object.h>
-#endif
-
-#ifndef __SORTABLE_H
-#include <sortable.h>
-#endif
-
-// End Interface Dependencies ------------------------------------------------
-
-// Class //
-
+_CLASSDEF(ostream)
 _CLASSDEF(String)
 
-class _CLASSTYPE String:  public Sortable
+class _CLASSTYPE String : public Sortable
 {
+
 public:
-    String( PCchar );
-    String( RCString );
-    virtual ~String();
 
-    virtual int             isEqual( RCObject ) const;
-    virtual int             isLessThan( RCObject ) const;
+    String( const char _FAR * = "" );
+    String( const String _FAR & );
+    virtual ~String()
+        {
+        delete theString;
+        }
 
-    virtual classType       isA() const;
-    virtual Pchar nameOf() const;
-    virtual hashValueType   hashValue() const;
-    virtual void            printOn( Rostream ) const;
 
-    RString         operator =( RCString );
-    operator PCchar() const;
+    String& operator = ( const String _FAR & );
+    operator const char _FAR *() const;
+
+    virtual int isEqual( const Object _FAR & ) const;
+    virtual int isLessThan( const Object _FAR & ) const;\
+
+    virtual classType isA() const
+        {
+        return stringClass;
+        }
+
+    virtual char _FAR *nameOf() const
+        {
+        return "String";
+        }
+
+    virtual hashValueType hashValue() const;
+    virtual void printOn( ostream _FAR & ) const;
+
 private:
-    sizeType        len;
-    Pchar theString;
+
+    sizeType len;
+    char _FAR *theString;
+
 };
 
-// Description -------------------------------------------------------------
-//
-// 	    Defines the instance class String.  String objects may be used
-//      anywhere an instance object is called for.  A string object 
-//      is always terminated by a null.
-//
-// Constructor
-//
-//      String
-//
-//      Constructs a String object from a given character string.
-//
-// Destructor
-//
-//      ~String
-//
-//      String destructor.
-//
-// Public Members
-//
-// 	    isEqual
-//
-// 	    Returns 1 if two strings are equivalent, 0 otherwise.
-// 	    Determines equivalence by calling strcmp().
-//
-// 	    isLessThan
-//
-// 	    Returns 1 if this is less than a test String.
-//
-// 	    isA
-//
-// 	    Returns the class type of class String.
-//
-// 	    nameOf
-//
-// 	    Returns a pointer to the character string "String."
-//
-// 	    hashValue
-//
-// 	    Returns the hash value of a string object.
-//
-// 	    printOn
-//
-// 	    Prints the contents of the string.
-//
-// 	    operator char*
-//
-// 	    Character pointer conversion operator.
-//
-// 	    operator =
-//
-// 	    Assignment operator for two string objects.
-//
-// Inherited Members
-//
-//      operator new
-//
-//      Inherited from Object.
-//
-//      forEach
-//
-//      Inherited from Object.
-//
-//      firstThat
-//
-//      Inherited from Object.
-//
-//      lastThat
-//
-//      Inherited from Object.
-//
-// 	    isSortable
-//
-// 	    Inherited from Sortable.
-//
-// 	    isAssociation
-//
-// 	    Inherited from Object.
-//
-// End ---------------------------------------------------------------------
-
-
-// Constructor //
-
-inline String::String( PCchar aPtr )
-
-// Summary -----------------------------------------------------------------
-//
-//      Constructor for a string object.
-//
-// Parameters
-//
-//      aPtr
-//
-//      Pointer to the characters out of which we are to construct a 
-//      String object.
-//
-// Functional Description
-//
-//      We assign the string's length to len, then allocate space into
-//      which we will store the string's characters.  You may construct
-//      String objects out of local character strings.
-//
-// End ---------------------------------------------------------------------
+inline String::operator const char _FAR *() const
 {
-    if ( aPtr && *aPtr )
-    {
-		len = strlen( aPtr ) + 1;
-        theString = new char[ len ];
-	    (void)strcpy( theString, aPtr );
-    }
-    else  // make a null string String object.
-    {
-        len = 0;
-        theString = 0;
-    }
+    return theString;
 }
-// End Constructor //
 
+#if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+#pragma option -po.
+#endif
+#pragma option -Vo.
 
-// Member Function //
-
-inline String::operator PCchar() const
-
-// Summary -----------------------------------------------------------------
-//
-//      Converts a string object to a character pointer.
-//
-// Remarks
-//
-// warnings:
-// 	    You may not modifiy the returned string.
-//
-// End ---------------------------------------------------------------------
-{
-	return theString;
-}
-// End Member Function String::operator char* //
-
-
-#endif // ifndef _STRNG_H //
+#endif

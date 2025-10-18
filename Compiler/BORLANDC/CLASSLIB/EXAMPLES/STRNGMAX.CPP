@@ -1,92 +1,43 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
-
-
-// Contents ----------------------------------------------------------------
-//
-//      main
-//
-// Description
-//
-//      Contains a simple example program for class String.
-//
-// End ---------------------------------------------------------------------
-
-// Interface Dependencies ---------------------------------------------------
-
-// None
-
-// End Interface Dependencies ------------------------------------------------
-
-// Implementation Dependencies ----------------------------------------------
+#if !defined( __STRNG_H )
+#include <strng.h>
+#endif  // __STRNG_H
 
 #ifndef __IOSTREAM_H
 #include <iostream.h>
-#define __IOSTREAM_H
 #endif
 
-#ifndef __STRNG_H
-#include <strng.h>
-#endif
-
-// End Implementation Dependencies -------------------------------------------
-
-
-// Function //
-
+//
+// Determines the maximum string using the ASCII collating sequence to 
+// define rank.  A string is defined to be greater than another if the
+// ASCII values of its characters are greater than the values of the other
+// string.  For example,
+//
+// strngmax Alpha Beta Charlie
+//
+// would print Charlie to stdout and return 3.
+//
 int main( int argc, char *argv[] )
-
-// Summary -----------------------------------------------------------------
-//
-//      Illustrates a use of the String class.  Displays the alphabetically
-//      last string out of the given command line and returns the position
-//      of that string.
-//
-//      Usage:  strngmax string1 [string2 ...]
-//
-// Parameters
-//
-//      argc
-//
-//      The number of arguments passed on the command line.  There must
-//      be at least 1 argument other than the command name.
-//
-//      argv
-//
-//      A vector of character strings which are the arguments to the
-//      command line.
-//
-// Return Value
-//
-//     maxPosition
-//
-//     The position on the command line of the last string.  Returns
-//     1 if an error occurs.
-//
-// End ---------------------------------------------------------------------
 {
-    if ( argc < 2 )
-    {
+    if( argc < 2 )
+        {
         cerr << "Usage:  strngmax string1 [string2 ...]\n";
         return 1;
-    }
+        }
 
-    String theLargestString( argv[1] );
-    int    maxPosition = 1;
+    String theGreatestString( argv[1] );
+    int positionOfTheGreatestString = 1;
     int nextArg = 2;
 
-    while ( nextArg < argc )
-    {
-        String argListString ( argv[nextArg++] );
-        if ( argListString > theLargestString )
+    while( nextArg < argc )
         {
-            theLargestString = argListString;
-            maxPosition = nextArg - 1;
+        String argListString ( argv[nextArg++] );
+        if ( argListString > theGreatestString )
+            {
+            theGreatestString = argListString;
+            positionOfTheGreatestString = nextArg - 1;
+            }
         }
-    } // end while more arguments on the command line.
 
-    cout << theLargestString << "\n";
-    return maxPosition;
+    cout << theGreatestString << endl;
+    return positionOfTheGreatestString;
 }
-// End Function main //
-
-

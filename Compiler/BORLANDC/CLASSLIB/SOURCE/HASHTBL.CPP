@@ -1,408 +1,152 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+/*------------------------------------------------------------------------*/
+/*                                                                        */
+/*  HASHTBL.CPP                                                           */
+/*                                                                        */
+/*  Copyright Borland International 1991, 1992                            */
+/*  All Rights Reserved                                                   */
+/*                                                                        */
+/*------------------------------------------------------------------------*/
 
-// Contents ----------------------------------------------------------------
-//
-// 	HashTable::isA
-// 	HashTable::nameOf
-// 	HashTable::add
-// 	HashTable::detach
-// 	HashTable::hashValue
-// 	HashTable::findMember
-// 	HashTable::initIterator
-//
-//      HashTableIterator::HashTableIterator            constructor
-//      HashTableIterator::operator ++
-//      HashTableIteartor::preIterate
-//      HashTableIterator::operator int
-//      HashTableIterator::restart
-//
-// Description
-//
-//      Class HashTable member functions.
-//
-// End ---------------------------------------------------------------------
-
-// Interface Dependencies ---------------------------------------------------
+#if !defined( __HASHTBL_H )
+#include <HashTbl.h>
+#endif  // __HASHTBL_H
 
 #ifndef __IOSTREAM_H
 #include <iostream.h>
-#define __IOSTREAM_H
 #endif
 
-#ifndef __CLSTYPES_H
-#include <clstypes.h>
-#endif
-
-#ifndef __OBJECT_H
-#include <object.h>
-#endif
-
-#ifndef __CONTAIN_H
-#include <contain.h>
-#endif
-
-#ifndef __HASHTBL_H
-#include <hashtbl.h>
-#endif
-
-// End Interface Dependencies ------------------------------------------------
-
-
-// Interface Dependencies ---------------------------------------------------
-
-#ifndef __LIST_H
-#include <list.h>
-#endif
-
-// End Interface Dependencies ------------------------------------------------
-
-
-// Member Function //
-
-HashTable::~HashTable()
-
-// Summary -----------------------------------------------------------------
-//
-//      Destructor for a HashTable object.
-//
-//	We don't do anything here, because the destructor for Array
-//	will take care of destroying the contained objects.
-//
-// End ---------------------------------------------------------------------
+HashTable::HashTable( sizeType aPrime ) :
+    size( aPrime ),
+    table( aPrime ),
+    itemsInContainer(0)
 {
 }
-// End Destructor //
-
-
-// Member Function //
-
-classType HashTable::isA() const
-
-// Summary -----------------------------------------------------------------
-//
-// 	    Returns the class type of an hash table.
-//
-// End ---------------------------------------------------------------------
-{
-    return hashTableClass; 
-}
-// End Member Function HashTable::isA //
-
-
-// Member Function //
-
-char *HashTable::nameOf() const
-
-// Summary -----------------------------------------------------------------
-//
-// 	    Returns a pointer to the character string "HashTable."
-//
-// End ---------------------------------------------------------------------
-{
-    return "HashTable";
-}
-// End Member Function HashTable::nameOf //
-
-
-// Member Function //
 
 void HashTable::add( Object& objectToAdd )
-
-// Summary -----------------------------------------------------------------
-//
-// 	    Adds an element to a hash table.
-//
-// Parameters
-//
-//      objectToAdd
-//
-// 	    The object we are to put in the hash table.
-//
-// End ---------------------------------------------------------------------
 {
-
     hashValueType index = getHashValue( objectToAdd );
-
-// Body Comment
-//
-//      Check to see if there is any List object at the given index.
-//      If there isn't an object already there, then we use the
-//      table's addAt() function to put a new List object there.
-//      If there is a List object already there, then we can use its member
-//      functions (note that it would be a run-time error to use the member
-//      functions of theErrorObject) to add our object to the list.
-//
-// EndComment
-
-    if( table[ index ] == NOOBJECT )
-    {
-		table.addAt( *(new List), index );
-    }
-
-    ((List&)table[ index ]).add( objectToAdd );
-    ++itemsInContainer;
+    if( table[ index ] == 0 )
+        table[index] = new List;
+    ((List *)table[ index ])->add( objectToAdd );
+    itemsInContainer++;
 }
-// End Member Function HashTable::add //
 
-
-// Member Function //
-
-void HashTable::detach( const Object& objectToDetach, int deleteObjectToo )
-
-// Summary -----------------------------------------------------------------
-//
-// 	    Detaches an element in a hash table.
-//
-// Parameters
-//
-// 	    objectToDetach
-//
-// 	    The object we are to detach from the hash table.
-//
-// 	    deleteObjectToo
-//
-// 	    Indicates whether we are to call the object's destructor
-//
-// Functional Description
-//
-// 	    If there is a list of objects at the given hash table entry,
-// 	    detach our object in the list.
-//
-// End ---------------------------------------------------------------------
+void HashTable::detach( Object& objectToDetach, DeleteType dt )
 {
-
-   hashValueType index = getHashValue( objectToDetach );
-
-   if( table[ index ] != NOOBJECT )
-   {
-      int temp = ((List&)table[ index ]).getItemsInContainer();
-      ((List&)table[ index ]).detach( objectToDetach, deleteObjectToo );
-      if(temp != ((List&)table[ index ]).getItemsInContainer())
-         --itemsInContainer;
-   }
-
+    hashValueType index = getHashValue( objectToDetach );
+    if( table[ index ] != 0 )
+        {
+        unsigned listSize = ((List *)table[ index ])->getItemsInContainer();
+        ((List *)table[ index ])->detach( objectToDetach, delItem(dt) );
+        if( ((List *)table[ index ])->getItemsInContainer() != listSize )
+            itemsInContainer--;
+        }
 }
-// End Member Function HashTable::detach //
 
-
-// Member Function //
-
-hashValueType HashTable::hashValue() const
-
-// Summary -----------------------------------------------------------------
-//
-//      Returns the hash value of a list.
-//
-// End ---------------------------------------------------------------------
+static void setOwner( Object& list, void *owns )
 {
-	return hashValueType(0);
+    ((List&)list).ownsElements( *(TShouldDelete::DeleteType *)owns );
 }
-// End Member Function HashTable::hashValue //
 
-
-// Member Function //
-
-Object& HashTable::findMember( const Object& testObject ) const
-
-// Summary -----------------------------------------------------------------
-//
-//      Looks up the given object in the hash table and returns a
-// 	reference to the object in the hash table, if the hash table
-// 	contains an object which is equal to the given object.
-//
-// Parameters
-//
-// 	    testObject
-//
-// 	    The object for which we will be searching in this
-// 	    hash table.
-//
-// Return Value
-//
-// 	    Returns NOOBJECT if this hash table does not have the given
-// 	    object.  Returns a reference to the object otherwise.
-//
-// Functional Description
-//
-//      Check to see if there is any List object at the given index.
-//      If there isn't an object already there, then we don't have
-// 	the object in our hash table.
-//      If there is a List object already there, then we can use its member
-//      functions (note that it would be a run-time error to use the member
-//      functions of theErrorObject) to search for our object in the list.
-//
-// End ---------------------------------------------------------------------
+void HashTable::flush( DeleteType dt )
 {
-
-	hashValueType index = getHashValue( testObject );
-
-	if( table[ index ] == NOOBJECT )
-	{
-		return NOOBJECT;
-	}
-
-	return ((List&)table[ index ]).findMember( testObject );
+    int shouldDel = delObj( dt );
+    table.forEach( setOwner, &shouldDel );
+    table.flush( 1 );
+    itemsInContainer = 0;
 }
-// End Member Function HashTable::findMember //
 
-
-// Member Function //
+Object& HashTable::findMember( Object& testObject ) const
+{
+    hashValueType index = getHashValue( testObject );
+    if( index >= table.limit() || table[ index ] == 0 )
+        {
+        return NOOBJECT;
+        }
+    return ((List *)table[ index ])->findMember( testObject );
+}
 
 ContainerIterator& HashTable::initIterator() const
-
-// Summary -----------------------------------------------------------------
-//
-//      Initializes an iterator for a hash table.
-//
-// End ---------------------------------------------------------------------
 {
-	return *( (ContainerIterator *)new HashTableIterator( this->table ) );
+    return *( (ContainerIterator *)new HashTableIterator( *this ) );
 }
-// End Member Function HashTable::initIterator //
 
-
-
-// Constructor //
-
-HashTableIterator::HashTableIterator( const Array& toIterate ) :
-                                beingIterated( toIterate )
-
-// Summary -----------------------------------------------------------------
-//
-//      Constructor for a hash table iterator object.
-//
-// Functional Description
-//
-//      We initialize the list iterator to a dummy list's iterator, then
-//      initialize the array iterator.  Finally, we invoke operator ++()
-//      on the iterator to finish the initialization.
-//
-// End ---------------------------------------------------------------------
+HashTableIterator::HashTableIterator( const HashTable& toIterate ) :
+                                beingIterated( toIterate ),
+                                listIterator(0)
 {
-    List dummy;
-    listIterator = (ListIterator *)&dummy.initIterator();
-    indexIterator = (ArrayIterator *)&toIterate.initIterator();
-    (void)preIterate();
+    arrayIterator = new BI_IVectorIteratorImp<Object>( toIterate.table );
+    restart();
 }
-// End Constructor HashTableIterator::HashTableIterator //
-
-
-// Member Function //
-
-Object& HashTableIterator::operator ++()
-
-// Summary -----------------------------------------------------------------
-//
-//      Increments a hash table iterator.
-//
-// End ---------------------------------------------------------------------
-{
-    if ( preIterate() )
-       return (*listIterator)++;
-    else
-       return NOOBJECT;
-}
-// End Member Function HashTableIterator::operator ++ //
-
-
-// Member Function //
-
-int HashTableIterator::preIterate()
-
-// Summary -----------------------------------------------------------------
-//
-//      Prepares a hash table iterator for the next iteration step.
-//
-// Functional Description
-//
-//      If our current list iterator is finished, we bump the array
-//      iterator up.  If the element at that index is a valid list,
-//      we set up an iterator using that list.
-//
-//
-// End ---------------------------------------------------------------------
-{
-    if (listIterator == 0)
-        return 0;
-    
-    while ( *listIterator == NOOBJECT )
-    {
-        delete listIterator;
-	listIterator = 0;
-        while ( *indexIterator && *indexIterator == NOOBJECT )
-            (*indexIterator)++;
-        if ( *indexIterator == 0 )
-            return 0;
-        else // the array iteration isn't over.
-        {
-            Object& l = *indexIterator;
-            List& l1 = (List&)l;
-            listIterator = (ListIterator *)&l1.initIterator();
-            do {
-                (*indexIterator)++;
-                } while ( *indexIterator && *indexIterator == NOOBJECT );
-        }
-    }
-    return 1;
-}
-// End Member Function preIterate //
-
-
-// Member Function //
-
-HashTableIterator::operator int()
-
-// Summary -----------------------------------------------------------------
-//
-//      Implements a hash table iterator integer conversion operator.
-//      This is used to test for the end of iteration sequence.
-//
-// End ---------------------------------------------------------------------
-{
-   return  preIterate();
-}
-// End Member Function HashTableIterator::operator int //
-
-
-// Member Function //
-
-HashTableIterator::operator Object&()
-
-// Summary -----------------------------------------------------------------
-//
-//      Conversion to Object operator.
-//
-// End ---------------------------------------------------------------------
-{
-   if ( preIterate() )
-      return *listIterator;
-   else
-      return NOOBJECT;
-}
-// End Member Function HashTableIterator::operator Object& //
-
-
-// Member Function //
-
-void    HashTableIterator::restart()
-
-// Summary -----------------------------------------------------------------
-//
-//      Restarts the iteration process.
-//
-// End ---------------------------------------------------------------------
-{
-    delete indexIterator;
-    delete listIterator;
-    List dummy;
-    listIterator = (ListIterator *)&dummy.initIterator();
-    indexIterator = (ArrayIterator *)&beingIterated.initIterator();
-   (void)preIterate();
-}
-// End Member Function HashTableIterator::restart //
 
 HashTableIterator::~HashTableIterator()
 {
+    delete arrayIterator;
     delete listIterator;
-    delete indexIterator;
+}
+
+Object& HashTableIterator::operator ++ ( int )
+{
+    Object& res = (listIterator == 0) ? NOOBJECT : listIterator->current();
+    scan();
+    return res;
+}
+
+Object& HashTableIterator::operator ++ ()
+{
+    scan();
+    return (listIterator == 0) ? NOOBJECT : listIterator->current();
+}
+
+HashTableIterator::operator int()
+{
+    return int(*arrayIterator);
+}
+
+Object& HashTableIterator::current()
+{
+    return (listIterator == 0) ? NOOBJECT : listIterator->current();
+}
+
+void HashTableIterator::restart()
+{
+    delete listIterator;
+
+    arrayIterator->restart();
+    while( *arrayIterator != 0 && arrayIterator->current() == 0 )
+        (*arrayIterator)++;
+
+    if( *arrayIterator != 0 )
+        {
+        Object *curList = arrayIterator->current();
+        listIterator = &(((List *)curList)->initIterator());
+        if( listIterator->current() == NOOBJECT )
+            scan();
+        }
+    else
+        listIterator = 0;
+}
+
+void HashTableIterator::scan()
+{
+    if( listIterator == 0 )
+        return;
+
+    (*listIterator)++;
+    while( listIterator != 0 && listIterator->current() == NOOBJECT )
+        {
+        delete listIterator;
+
+        (*arrayIterator)++;
+        while( *arrayIterator != 0 && arrayIterator->current() == 0 )
+            (*arrayIterator)++;
+
+        if( arrayIterator->current() != 0 )
+            {
+            Object *cur = arrayIterator->current();
+            listIterator = &(((Container *)cur)->initIterator());
+            }
+        else
+            listIterator = 0;
+        }
 }

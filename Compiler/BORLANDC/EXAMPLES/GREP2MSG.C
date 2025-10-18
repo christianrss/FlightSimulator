@@ -5,19 +5,17 @@
    Copyright (c) 1990, 1991 Borland International, Inc.
    All rights reserved.
 
-   Grep2Msg - Message filter from Turbo Grep to Turbo C++ IDE message window
+   Grep2Msg - Message filter from Turbo Grep to the IDE message window.
 
    This filter accepts input through the standard input stream, converts
    it and outputs it to the standard output stream.  The streams are linked
    through pipes, such that the input stream is the output from GREP, and
-   the output stream is connected to the message window of the Turbo C++ IDE.
-   This filter is invoked through the Turbo C++ IDE transfer mechanism as
+   the output stream is connected to the message window of the IDE.
+   This filter is invoked through the IDE transfer mechanism as
 
-            grep <commands> | grep2msg | TC IDE
+            grep <commands> | grep2msg | IDE message window
 
-    Compile using Turbo C++ in the LARGE memory model
-
-    tcc -ml grep2msg
+    Compile using the LARGE memory model.
 */
 
 #include <dir.h>
@@ -255,4 +253,4 @@ int main(void)
 
    return  0;                          /* everything went ok */
 }
-
+

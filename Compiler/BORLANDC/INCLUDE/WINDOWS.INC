@@ -50,45 +50,45 @@ WNDCLASS ends
 
 IFNDEF NOTEXT
 TEXTMETRIC struc
-    tmHeight	    dw	    ?
-    tmAscent	    dw	    ?
-    tmDescent	    dw	    ?
-    tmIntLeading    dw	    ?
-    tmExtLeading    dw	    ?
-    tmAveCharWidth  dw	    ?
-    tmMaxCharWidth  dw	    ?
-    tmWeight	    dw	    ?
-    tmItalic	    db	    ?
-    tmUnderlined    db	    ?
-    tmStruckOut     db	    ?
-    tmFirstChar     db	    ?
-    tmLastChar	    db	    ?
-    tmDefaultChar   db	    ?
-    tmBreakChar     db	    ?
-    tmPitch	    db	    ?
-    tmCharSet	    db	    ?
-    tmOverhang	    dw	    ?
-    tmAspectX	    dw	    ?
-    tmAspectY	    dw	    ?
+    tmHeight        dw      ?
+    tmAscent        dw      ?
+    tmDescent       dw      ?
+    tmIntLeading    dw      ?
+    tmExtLeading    dw      ?
+    tmAveCharWidth  dw      ?
+    tmMaxCharWidth  dw      ?
+    tmWeight        dw      ?
+    tmItalic        db      ?
+    tmUnderlined    db      ?
+    tmStruckOut     db      ?
+    tmFirstChar     db      ?
+    tmLastChar      db      ?
+    tmDefaultChar   db      ?
+    tmBreakChar     db      ?
+    tmPitch         db      ?
+    tmCharSet       db      ?
+    tmOverhang      dw      ?
+    tmAspectX       dw      ?
+    tmAspectY       dw      ?
 TEXTMETRIC ends
 
-LF_FACESIZE	EQU	32
+LF_FACESIZE     EQU     32
 
 LOGFONT struc
-    lfHeight	      dw   ?
-    lfWidth	      dw   ?
+    lfHeight          dw   ?
+    lfWidth           dw   ?
     lfEscapement      dw   ?
     lfOrientation     dw   ?
-    lfWeight	      dw   ?
-    lfItalic	      db   ?
+    lfWeight          dw   ?
+    lfItalic          db   ?
     lfUnderline       db   ?
     lfStrikeOut       db   ?
-    lfCharSet	      db   ?
+    lfCharSet         db   ?
     lfOutPrecision    db   ?
     lfClipPrecision   db   ?
-    lfQuality	      db   ?
+    lfQuality         db   ?
     lfPitchAndFamily  db   ?
-    lfFaceName	      db   LF_FACESIZE dup(?)
+    lfFaceName        db   LF_FACESIZE dup(?)
 LOGFONT ends
 
 LOGBRUSH struc
@@ -121,24 +121,24 @@ RELATIVE        =   2
 ;
 ;  Stock Logical Objects
 ;
-WHITE_BRUSH     =  0
-LTGRAY_BRUSH    =  1
-GRAY_BRUSH      =  2
-DKGRAY_BRUSH    =  3
-BLACK_BRUSH     =  4
-NULL_BRUSH      =  5
-HOLLOW_BRUSH    =  5
-WHITE_PEN       =  6
-BLACK_PEN       =  7
-NULL_PEN        =  8
-DOT_MARKER      =  9
-OEM_FIXED_FONT  = 10
-ANSI_FIXED_FONT = 11
-ANSI_VAR_FONT   = 12
-SYSTEM_FONT     = 13
+WHITE_BRUSH         =  0
+LTGRAY_BRUSH        =  1
+GRAY_BRUSH          =  2
+DKGRAY_BRUSH        =  3
+BLACK_BRUSH         =  4
+NULL_BRUSH          =  5
+HOLLOW_BRUSH        =  5
+WHITE_PEN           =  6
+BLACK_PEN           =  7
+NULL_PEN            =  8
+DOT_MARKER          =  9
+OEM_FIXED_FONT      = 10
+ANSI_FIXED_FONT     = 11
+ANSI_VAR_FONT       = 12
+SYSTEM_FONT         = 13
 DEVICE_DEFAULT_FONT = 14
-DEFAULT_PALETTE = 15
-SYSTEM_FIXED_FONT = 16
+DEFAULT_PALETTE     = 15
+SYSTEM_FIXED_FONT   = 16
 ENDIF
 ;
 ; Brush Styles
@@ -149,7 +149,7 @@ BS_HOLLOW       =   BS_NULL
 BS_HATCHED      =   2
 BS_PATTERN      =   3
 BS_INDEXED      =   4
-BS_DIBPATTERN	=   5
+BS_DIBPATTERN   =   5
 ;
 ; Hatch Styles
 ;
@@ -199,9 +199,9 @@ ASPECTXY      =44    ; Length of the hypotenuse
 LOGPIXELSX    =88    ; Logical pixels/inch in X
 LOGPIXELSY    =90    ; Logical pixels/inch in Y
 
-SIZEPALETTE  =104    ; Number of entries in physical palette
-NUMRESERVED  =106    ; Number of reserved entries in palette
-COLORRES     =108    ; Actual color resolution
+SIZEPALETTE   =104   ; Number of entries in physical palette
+NUMRESERVED   =106   ; Number of reserved entries in palette
+COLORRES      =108   ; Actual color resolution
 ;
 ifndef NOGDICAPMASKS
 ;
@@ -291,7 +291,7 @@ endif       ;NOGDICAPMASKS
 ;
 PC_RESERVED     = 1    ;/* palette index used for animation */
 PC_EXPLICIT     = 2    ;/* palette index is explicit to device */
-PC_NOCOLLAPSE	= 4    ;/* do not match color to system palette */
+PC_NOCOLLAPSE   = 4    ;/* do not match color to system palette */
 
 ; DIB color table identifiers
 ;
@@ -301,8 +301,8 @@ DIB_PAL_COLORS  = 1    ;/* color table in palette indices */
 
 ;constants for Get/SetSystemPaletteUse()
 ;
-SYSPAL_STATIC	= 1
-SYSPAL_NOSTATIC	= 2
+SYSPAL_STATIC   = 1
+SYSPAL_NOSTATIC = 2
 
 ; constants for CreateDIBitmap
 CBM_INIT        = 4    ;/* initialize bitmap */
@@ -314,7 +314,7 @@ BI_RLE4         = 2
 ;
 ;
 ANSI_CHARSET    = 0
-SYMBOL_CHARSET	= 2
+SYMBOL_CHARSET  = 2
 OEM_CHARSET     = 255
 ;
 ;  styles for CombineRgn
@@ -365,6 +365,10 @@ OBM_RGARROWD      =  32741
 OBM_LFARROWD      =  32740
 OBM_MNARROW       =  32739
 OBM_COMBO         =  32738
+OBM_UPARROWI      =  32737
+OBM_DNARROWI      =  32736
+OBM_RGARROWI      =  32735
+OBM_LFARROWI      =  32734
 
 OBM_OLD_CLOSE     =  32767
 OBM_SIZE          =  32766
@@ -458,17 +462,18 @@ IDNO     =   7
 ;
 ;  Flags for OpenFile
 ;
-OF_READ 	    = 0000H
-OF_WRITE	    = 0001H
-OF_READWRITE	    = 0002H
-OF_SHARE_COMPAT	    = 0000H
+OF_READ             = 0000H
+OF_WRITE            = 0001H
+OF_READWRITE        = 0002H
+OF_SHARE_COMPAT     = 0000H
 OF_SHARE_EXCLUSIVE  = 0010H
 OF_SHARE_DENY_WRITE = 0020H
 OF_SHARE_DENY_READ  = 0030H
 OF_SHARE_DENY_NONE  = 0040H
-OF_PARSE	    = 0100H
-OF_DELETE	    = 0200H
-OF_VERIFY	    = 0400H
+OF_PARSE            = 0100H
+OF_DELETE           = 0200H
+OF_VERIFY           = 0400H     ; Used with OF_REOPEN
+OF_SEARCH           = 0400H     ; Used without OF_REOPEN
 OF_CANCEL           = 0800H
 OF_CREATE           = 1000H
 OF_PROMPT           = 2000H
@@ -530,9 +535,6 @@ LMEM_LOCKCOUNT  =   00FFH
 NONZEROLHND     =    LMEM_MOVEABLE
 NONZEROLPTR     =    LMEM_FIXED
 
-LNOTIFY_OUTOFMEM  =  0
-LNOTIFY_MOVE      =  1
-LNOTIFY_DISCARD   =  2
 
 
 GMEM_FIXED      =   0000h
@@ -544,11 +546,11 @@ GMEM_MODIFY     =   0080h
 GMEM_DISCARDABLE=   0100h
 GMEM_NOT_BANKED =   1000h
 GMEM_DDESHARE   =   2000h
-GMEM_SHARE	=   2000h
+GMEM_SHARE      =   2000h
 GMEM_NOTIFY     =   4000h
 GMEM_LOWER      =   GMEM_NOT_BANKED
-GHND    =    GMEM_MOVEABLE+GMEM_ZEROINIT
-GPTR    =    GMEM_FIXED+GMEM_ZEROINIT
+GHND            =   GMEM_MOVEABLE+GMEM_ZEROINIT
+GPTR            =   GMEM_FIXED+GMEM_ZEROINIT
 
 ; Flags returned by GlobalFlags (in addition to GMEM_DISCARDABLE)
 GMEM_DISCARDED  =    4000h
@@ -560,19 +562,22 @@ WF_PMODE        =    0001h
 WF_CPU286       =    0002h
 WF_CPU386       =    0004h
 WF_CPU486       =    0008h
-WF_STANDARD	=    0010h
-WF_WIN286	=    0010h
-WF_ENHANCED	=    0020h
-WF_WIN386	=    0020h
-WF_CPU086	=    0040h
-WF_CPU186	=    0080h
+WF_STANDARD     =    0010h
+WF_WIN286       =    0010h
+WF_ENHANCED     =    0020h
+WF_WIN386       =    0020h
+WF_CPU086       =    0040h
+WF_CPU186       =    0080h
 WF_LARGEFRAME   =    0100h
 WF_SMALLFRAME   =    0200h
-WF_80x87	=    0400h
+WF_80x87        =    0400h
+WF_PAGING       =    0800h
+WF_WLO          =    8000h
 
 ; WEP fSystemExit flag values
-WEP_SYSTEM_EXIT	=	1
-WEP_FREE_DLL	=	0
+WEP_SYSTEM_EXIT =       1
+WEP_FREE_DLL    =       0
+
 
 ;  Virtual Keys, Standard Set
 
@@ -606,7 +611,7 @@ VK_DOWN         = 28H
 
 VK_PRINT        = 2aH
 VK_EXECUTE      = 2bH
-VK_SNAPSHOT	= 2ch	; Printscreen key..
+VK_SNAPSHOT     = 2ch   ; Printscreen key..
 VK_INSERT       = 2dH
 VK_DELETE       = 2eH
 VK_HELP         = 2fH
@@ -644,6 +649,17 @@ VK_F13          = 7cH
 VK_F14          = 7dH
 VK_F15          = 7eH
 VK_F16          = 7fH
+VK_F17          = 80H
+VK_F18          = 81H
+VK_F19          = 82H
+VK_F20          = 83H
+VK_F21          = 84H
+VK_F22          = 85H
+VK_F23          = 86H
+VK_F24          = 87H
+
+VK_NUMLOCK      = 90H
+VK_SCROLL       = 91H
 ENDIF
 
 IFNDEF NOWH
@@ -655,11 +671,16 @@ WH_JOURNALPLAYBACK = 1
 WH_KEYBOARD        = 2
 WH_GETMESSAGE      = 3
 WH_CALLWNDPROC     = 4
+IFNDEF NOWIN31
 WH_CBT             = 5
 WH_SYSMSGFILTER    = 6
-WH_WINDOWMGR       = 7
+WH_MOUSE           = 7
+WH_HARDWARE        = 8
+WH_DEBUG           = 9
+ENDIF
 ;
 ; Hook Codes
+HC_GETLPLPFN       = (-3)
 HC_LPLPFNNEXT      = (-2)
 HC_LPFNNEXT        = (-1)
 HC_ACTION          = 0
@@ -674,10 +695,17 @@ HC_SYSMODALOFF     = 5
 HCBT_MOVESIZE      = 0
 HCBT_MINMAX        = 1
 HCBT_QS            = 2
+HCBT_CREATEWND     = 3
+HCBT_DESTROYWND    = 4
+HCBT_ACTIVATE      = 5
+HCBT_CLICKSKIPPED  = 6
+HCBT_KEYSKIPPED    = 7
+HCBT_SYSCOMMAND    = 8
+HCBT_SETFOCUS      = 9
+
 ;
 ; WH_MSGFILTER Filter Proc Codes
 MSGF_DIALOGBOX     = 0
-MSGF_MESSAGEBOX    = 1
 MSGF_MENU          = 2
 MSGF_MOVE          = 3
 MSGF_SIZE          = 4
@@ -693,6 +721,7 @@ WC_MOVE            = 5
 WC_SIZE            = 6
 WC_DRAWCAPTION     = 7
 ;
+
 ; Message Structure used in Journaling
 EVENTMSG    struc
     message     dw ?
@@ -712,12 +741,12 @@ GWL_STYLE         =  (-16)
 GWL_EXSTYLE       =  (-20)
 
 ; GetWindow() Constants
-GW_HWNDFIRST	  =  0
-GW_HWNDLAST	  =  1
-GW_HWNDNEXT	  =  2
-GW_HWNDPREV	  =  3
-GW_OWNER	  =  4
-GW_CHILD	  =  5
+GW_HWNDFIRST      =  0
+GW_HWNDLAST       =  1
+GW_HWNDNEXT       =  2
+GW_HWNDPREV       =  3
+GW_OWNER          =  4
+GW_CHILD          =  5
 
 ; Class field offsets for GetClassLong() and GetClassWord()
 GCL_MENUNAME      =  (-8)
@@ -786,11 +815,11 @@ BITMAP STRUC
         bmBits         DD ?
 BITMAP ENDS
 
-RGBTRIPLE	struc
-	rgbBlue		db ?
-	rgbGreen	db ?
-	rgbRed		db ?
-RGBTRIPLE	ends
+RGBTRIPLE       struc
+        rgbBlue         db ?
+        rgbGreen        db ?
+        rgbRed          db ?
+RGBTRIPLE       ends
 
 RGBQUAD         struc
         rgbqBlue        db ?
@@ -970,6 +999,12 @@ BLACKONWHITE    = 1
 WHITEONBLACK    = 2
 COLORONCOLOR    = 3
 ;
+; New StretchBlt modes
+;
+STRETCH_ANDSCANS    = 1
+STRETCH_ORSCANS     = 2
+STRETCH_DELETESCANS = 3
+;
 ; PolyFill modes
 ;
 ALTERNATE       = 1
@@ -1046,25 +1081,25 @@ META_SELECTOBJECT          =  012Dh
 META_SETTEXTALIGN          =  012Eh
 META_DRAWTEXT              =  062Fh
 
-META_CHORD		   =  0830h
-META_SETMAPPERFLAGS	   =  0231h
-META_EXTTEXTOUT		   =  0a32h
-META_SETDIBTODEV	   =  0d33h
-META_SELECTPALETTE	   =  0234h
-META_REALIZEPALETTE	   =  0035h
-META_ANIMATEPALETTE	   =  0436h
-META_SETPALENTRIES	   =  0037h
-META_POLYPOLYGON	   =  0538h
-META_RESIZEPALETTE	   =  0139h
+META_CHORD                 =  0830h
+META_SETMAPPERFLAGS        =  0231h
+META_EXTTEXTOUT            =  0a32h
+META_SETDIBTODEV           =  0d33h
+META_SELECTPALETTE         =  0234h
+META_REALIZEPALETTE        =  0035h
+META_ANIMATEPALETTE        =  0436h
+META_SETPALENTRIES         =  0037h
+META_POLYPOLYGON           =  0538h
+META_RESIZEPALETTE         =  0139h
 
-META_DIBBITBLT		   =  0940h
-META_DIBSTRETCHBLT	   =  0b41h
+META_DIBBITBLT             =  0940h
+META_DIBSTRETCHBLT         =  0b41h
 META_DIBCREATEPATTERNBRUSH =  0142h
-META_STRETCHDIB		   =  0f43h
+META_STRETCHDIB            =  0f43h
 
-META_DELETEOBJECT	   =  01f0h
+META_DELETEOBJECT          =  01f0h
 
-META_CREATEPALETTE	   =  00f7h
+META_CREATEPALETTE         =  00f7h
 META_CREATEBRUSH           =  00F8h
 META_CREATEPATTERNBRUSH    =  01F9h
 META_CREATEPENINDIRECT     =  02FAh
@@ -1080,26 +1115,26 @@ HANDLETABLE struc
 HANDLETABLE ends
 
 METARECORD struc
-    mr_rdSize	     dd      ?
+    mr_rdSize        dd      ?
     mr_rdFunction    dw      ?
-    mr_rdParm	     dw      ?
+    mr_rdParm        dw      ?
 METARECORD ends
 
 METAFILEPICT struc
-    mfp_mm	dw	?
-    mfp_xExt	dw	?
-    mfp_yExt	dw	?
-    mfp_hMF	dw	?
+    mfp_mm      dw      ?
+    mfp_xExt    dw      ?
+    mfp_yExt    dw      ?
+    mfp_hMF     dw      ?
 METAFILEPICT ends
 
 METAHEADER struc
-  mtType	dw	?
-  mtHeaderSize	dw	?
-  mtVersion	dw	?
-  mtSize	dd	?
-  mtNoObjects	dw	?
-  mtMaxRecord	dd	?
-  mtNoParameters dw	?
+  mtType        dw      ?
+  mtHeaderSize  dw      ?
+  mtVersion     dw      ?
+  mtSize        dd      ?
+  mtNoObjects   dw      ?
+  mtMaxRecord   dd      ?
+  mtNoParameters dw     ?
 METAHEADER ends
 
 endif ; NOMETAFILE
@@ -1116,7 +1151,7 @@ QUERYESCSUPPORT           =   8
 SETABORTPROC              =   9
 STARTDOC                  =   10
 ;; This value conflicts with a std WIN386 MACRO definition
-;;ENDDOC		    =	11
+;;ENDDOC                    =   11
 GETPHYSPAGESIZE           =   12
 GETPRINTINGOFFSET         =   13
 GETSCALINGFACTOR          =   14
@@ -1126,8 +1161,8 @@ SETCOPYCOUNT              =   17
 SELECTPAPERSOURCE         =   18
 DEVICEDATA                =   19
 PASSTHROUGH               =   19
-GETTECHNOLGY		  =   20
-GETTECHNOLOGY		  =   20
+GETTECHNOLGY              =   20
+GETTECHNOLOGY             =   20
 SETENDCAP                 =   21
 SETLINEJOIN               =   22
 SETMITERLIMIT             =   23
@@ -1136,10 +1171,10 @@ DRAWPATTERNRECT           =   25
 GETVECTORPENSIZE          =   26
 GETVECTORBRUSHSIZE        =   27
 ENABLEDUPLEX              =   28
-ENABLEMANUALFEED	  =   29
-GETSETPAPERBINS 	  =   29
-GETSETPRINTORIENT	  =   30
-ENUMPAPERBINS		  =   31
+ENABLEMANUALFEED          =   29
+GETSETPAPERBINS           =   29
+GETSETPRINTORIENT         =   30
+ENUMPAPERBINS             =   31
 
 GETEXTENDEDTEXTMETRICS    =   256
 GETEXTENTTABLE            =   257
@@ -1151,8 +1186,10 @@ EXTTEXTOUT                =   512
 ENABLERELATIVEWIDTHS      =   768
 ENABLEPAIRKERNING         =   769
 SETKERNTRACK              =   770
-SETALLJUSTVALUES	  =   771
-SETCHARSET		  =   772
+SETALLJUSTVALUES          =   771
+SETCHARSET                =   772
+
+GETSETSCREENPARAMS        =   3072
 
 STRETCHBLT                =   2048
 
@@ -1226,6 +1263,8 @@ SC_KEYMENU     = 0F100h
 SC_ARRANGE     = 0F110h
 SC_RESTORE     = 0F120h
 SC_TASKLIST    = 0F130h
+SC_SCREENSAVE  = 0F140h
+SC_HOTKEY      = 0F150h
 
 SC_ICON        = SC_MINIMIZE
 SC_ZOOM        = SC_MAXIMIZE
@@ -1257,6 +1296,7 @@ WM_QUERYOPEN        = 0013h
 WM_ERASEBKGND       = 0014h
 WM_SYSCOLORCHANGE   = 0015h
 WM_ENDSESSION       = 0016h
+WM_SYSTEMERROR      = 0017h
 WM_SHOWWINDOW       = 0018h
 WM_CTLCOLOR         = 0019h
 WM_WININICHANGE     = 001Ah
@@ -1282,8 +1322,15 @@ WM_CHARTOITEM       = 002Fh
 WM_SETFONT          = 0030h
 WM_GETFONT          = 0031h
 WM_QUERYDRAGICON    = 0037h
-WM_COMPAREITEM	    = 0039h
+WM_COMPAREITEM      = 0039h
 WM_COMPACTING       = 0041h
+IFNDEF NOWIN31
+WM_COMMNOTIFY       = 0044h
+WM_WINDOWPOSCHANGING= 0046h
+WM_WINDOWPOSCHANGED = 0047h
+WM_POWER            = 0048h
+ENDIF
+
 
 WM_NCCREATE         = 0081h
 WM_NCDESTROY        = 0082h
@@ -1326,7 +1373,7 @@ WM_MENUSELECT       = 011Fh
 WM_MENUCHAR         = 0120h
 WM_ENTERIDLE        = 0121h
 
-			  
+
 WM_MOUSEFIRST       = 0200h
 WM_MOUSEMOVE        = 0200h
 WM_LBUTTONDOWN      = 0201h
@@ -1352,6 +1399,7 @@ WM_MDICASCADE       = 0227h
 WM_MDIICONARRANGE   = 0228h
 WM_MDIGETACTIVE     = 0229h
 WM_MDISETMENU       = 0230h
+WM_DROPFILES        = 0233h
 
 
 WM_CUT              = 0300h
@@ -1372,6 +1420,20 @@ WM_HSCROLLCLIPBOARD = 030Eh
 WM_QUERYNEWPALETTE  = 030Fh
 WM_PALETTEISCHANGING = 0310h
 WM_PALETTECHANGED   = 0311h
+
+IFNDEF NOWIN31
+WM_PENWINFIRST      equ 0380h
+WM_PENWINLAST       equ 038Fh
+
+
+WM_COALESCE_FIRST  equ 0390h
+WM_COALESCE_LAST   equ 039Fh
+
+
+
+
+ENDIF
+
 
 
 ;  private window messages start here
@@ -1427,25 +1489,25 @@ MK_MBUTTON       = 0010h
 ;
 ; Class styles
 ;
-CS_VREDRAW      = 0001h
-CS_HREDRAW      = 0002h
-CS_KEYCVTWINDOW = 0004H
-CS_DBLCLKS      = 0008h
-; 		  0010h reserved
-CS_OWNDC        = 0020h
-CS_CLASSDC      = 0040h
-CS_PARENTDC     = 0080h
-CS_NOKEYCVT     = 0100h
-CS_SAVEBITS     = 0800h
-CS_NOCLOSE      = 0200h
+CS_VREDRAW         = 0001h
+CS_HREDRAW         = 0002h
+CS_KEYCVTWINDOW    = 0004H
+CS_DBLCLKS         = 0008h
+;                    0010h reserved
+CS_OWNDC           = 0020h
+CS_CLASSDC         = 0040h
+CS_PARENTDC        = 0080h
+CS_NOKEYCVT        = 0100h
+CS_SAVEBITS        = 0800h
+CS_NOCLOSE         = 0200h
 CS_BYTEALIGNCLIENT = 1000h
 CS_BYTEALIGNWINDOW = 2000h
-CS_GLOBALCLASS  = 4000h    ; Global window class
+CS_GLOBALCLASS     = 4000h    ; Global window class
 
 ;
 ; Special CreateWindow position value
 ;
-CW_USEDEFAULT	EQU    8000h
+CW_USEDEFAULT   EQU    8000h
 
 ;
 ; Windows styles (the high words)
@@ -1486,22 +1548,26 @@ WS_ICONIC       = WS_MINIMIZE
 WS_SIZEBOX      = WS_THICKFRAME
 
 ; Extended Window Styles (low words)
-WS_EX_DLGMODALFRAME = 0001
-WS_EX_DRAGOBJECT    = 0002
+WS_EX_DLGMODALFRAME  = 0001
+WS_EX_DRAGOBJECT     = 0002
 WS_EX_NOPARENTNOTIFY = 0004
+WS_EX_TOPMOST        = 0008
 
 ;
 ; predefined clipboard formats
 ;
-CF_TEXT         = 1
-CF_BITMAP       = 2
-CF_METAFILEPICT = 3
-CF_SYLK         = 4
-CF_DIF          = 5
-CF_TIFF         = 6
-CF_OEMTEXT      = 7
-CF_DIB          = 8
-CF_PALETTE      = 9
+CF_TEXT         =  1
+CF_BITMAP       =  2
+CF_METAFILEPICT =  3
+CF_SYLK         =  4
+CF_DIF          =  5
+CF_TIFF         =  6
+CF_OEMTEXT      =  7
+CF_DIB          =  8
+CF_PALETTE      =  9
+CF_PENDATA      = 10
+CF_RIFF         = 11
+CF_WAVE         = 12
 
 CF_OWNERDISPLAY = 80h       ; owner display
 CF_DSPTEXT      = 81h       ; display text
@@ -1534,19 +1600,28 @@ RT_FONT         = 8
 RT_ACCELERATOR  = 9
 RT_RCDATA       = 10
 
+;** NOTE: if any new resource types are introduced above this point, then the
+;** value of DIFFERENCE must be changed.
+;** (RT_GROUP_CURSOR - RT_CURSOR) must always be equal to DIFFERENCE
+;** (RT_GROUP_ICON - RT_ICON) must always be equal to DIFFERENCE
+
+DIFFERENCE       =   11
+
+RT_GROUP_CURSOR  =   RT_CURSOR + DIFFERENCE
+RT_GROUP_ICON    =   RT_ICON + DIFFERENCE
 
 
 
 IFNDEF NOMDI
 MDICREATESTRUCT     struc
-    szClass	    dd ?
-    szTitle	    dd ?
-    hOwner	    dw ?
-    x		    dw ?
-    y		    dw ?
-    cxc 	    dw ?
-    cyc 	    dw ?
-    style	    dd ?
+    szClass         dd ?
+    szTitle         dd ?
+    hOwner          dw ?
+    x               dw ?
+    y               dw ?
+    cxc             dw ?
+    cyc             dw ?
+    style           dd ?
 MDICREATESTRUCT ends
 
 CLIENTCREATESTRUCT  struc
@@ -1558,50 +1633,50 @@ ENDIF
 ; NOMDI
 
 
-PALETTEENTRY	    struc
-    peRed	    db ?
-    peGreen	    db ?
-    peBlue	    db ?
-    peFlags	    db ?
-PALETTEENTRY	    ends
+PALETTEENTRY        struc
+    peRed           db ?
+    peGreen         db ?
+    peBlue          db ?
+    peFlags         db ?
+PALETTEENTRY        ends
 
 ; Logical Palette
-LOGPALETTE	    struc
-    palVersion	    dw ?
+LOGPALETTE          struc
+    palVersion      dw ?
     palNumEntries   dw ?
     palPalEntry     db ?  ; array of PALETTEENTRY
-LOGPALETTE	    ends
+LOGPALETTE          ends
 
 ; DRAWITEMSTRUCT for ownerdraw
-DRAWITEMSTRUCT	    struc
-    drCtlType	      dw ?
-    drCtlID	      dw ?
-    dritemID	      dw ?
+DRAWITEMSTRUCT      struc
+    drCtlType         dw ?
+    drCtlID           dw ?
+    dritemID          dw ?
     dritemAction      dw ?
     dritemState       dw ?
-    drhwndItem	      dw ?
-    drhDC	      dw ?
-    drrcItem	      DB size RECT dup(?)
-    dritemData	      dd ?
+    drhwndItem        dw ?
+    drhDC             dw ?
+    drrcItem          DB size RECT dup(?)
+    dritemData        dd ?
 DRAWITEMSTRUCT ends
 
 ; DELETEITEMSTRUCT for ownerdraw
 DELETEITEMSTRUCT    struc
-    deCtlType	      dw ?
-    deCtlID	      dw ?
-    deitemID	      dw ?
-    dehwndItem	      dw ?
-    deitemData	      dd ?
+    deCtlType         dw ?
+    deCtlID           dw ?
+    deitemID          dw ?
+    dehwndItem        dw ?
+    deitemData        dd ?
 DELETEITEMSTRUCT ends
 
 ; MEASUREITEMSTRUCT for ownerdraw
 MEASUREITEMSTRUCT   struc
-    meCtlType	      dw ?
-    meCtlID	      dw ?
-    meitemID	      dw ?
+    meCtlType         dw ?
+    meCtlID           dw ?
+    meitemID          dw ?
     meitemWidth       dw ?
     meitemHeight      dw ?
-    meitemData	      dd ?
+    meitemData        dd ?
 MEASUREITEMSTRUCT ends
 
 ; COMPAREITEMSTUCT for ownerdraw sorting
@@ -1654,32 +1729,38 @@ SWP_NOREPOSITION =  0200h
 IFNDEF NOWINMESSAGES
 
 ; Listbox messages
-LB_ADDSTRING	   = (WM_USER+1)
-LB_INSERTSTRING    = (WM_USER+2)
-LB_DELETESTRING    = (WM_USER+3)
-LB_RESETCONTENT    = (WM_USER+5)
-LB_SETSEL	   = (WM_USER+6)
-LB_SETCURSEL	   = (WM_USER+7)
-LB_GETSEL	   = (WM_USER+8)
-LB_GETCURSEL	   = (WM_USER+9)
-LB_GETTEXT	   = (WM_USER+10)
-LB_GETTEXTLEN	   = (WM_USER+11)
-LB_GETCOUNT	   = (WM_USER+12)
-LB_SELECTSTRING    = (WM_USER+13)
-LB_DIR		   = (WM_USER+14)
-LB_GETTOPINDEX	   = (WM_USER+15)
-LB_FINDSTRING	   = (WM_USER+16)
-LB_GETSELCOUNT	   = (WM_USER+17)
-LB_GETSELITEMS	   = (WM_USER+18)
-LB_SETTABSTOPS	   = (WM_USER+19)
+LB_ADDSTRING           = (WM_USER+1)
+LB_INSERTSTRING        = (WM_USER+2)
+LB_DELETESTRING        = (WM_USER+3)
+LB_RESETCONTENT        = (WM_USER+5)
+LB_SETSEL              = (WM_USER+6)
+LB_SETCURSEL           = (WM_USER+7)
+LB_GETSEL              = (WM_USER+8)
+LB_GETCURSEL           = (WM_USER+9)
+LB_GETTEXT             = (WM_USER+10)
+LB_GETTEXTLEN          = (WM_USER+11)
+LB_GETCOUNT            = (WM_USER+12)
+LB_SELECTSTRING        = (WM_USER+13)
+LB_DIR                 = (WM_USER+14)
+LB_GETTOPINDEX         = (WM_USER+15)
+LB_FINDSTRING          = (WM_USER+16)
+LB_GETSELCOUNT         = (WM_USER+17)
+LB_GETSELITEMS         = (WM_USER+18)
+LB_SETTABSTOPS         = (WM_USER+19)
 LB_GETHORIZONTALEXTENT = (WM_USER+20)
 LB_SETHORIZONTALEXTENT = (WM_USER+21)
-LB_SETTOPINDEX	   = (WM_USER+24)
-LB_GETITEMRECT	   = (WM_USER+25)
-LB_GETITEMDATA	   = (WM_USER+26)
-LB_SETITEMDATA	   = (WM_USER+27)
-LB_SELITEMRANGE    = (WM_USER+28)
-LB_MSGMAX	   = (WM_USER+33)
+LB_SETTOPINDEX         = (WM_USER+24)
+LB_GETITEMRECT         = (WM_USER+25)
+LB_GETITEMDATA         = (WM_USER+26)
+LB_SETITEMDATA         = (WM_USER+27)
+LB_SELITEMRANGE        = (WM_USER+28)
+LB_SETCARETINDEX       = (WM_USER+31)
+LB_GETCARETINDEX       = (WM_USER+32)
+IFNDEF NOWIN31
+LB_SETITEMHEIGHT       = (WM_USER+33)
+LB_GETITEMHEIGHT       = (WM_USER+34)
+LB_FINDSTRINGEXACT     = (WM_USER+35)
+ENDIF
 
 ENDIF
 ; NOWINMESSAGES
@@ -1696,8 +1777,9 @@ LBS_USETABSTOPS       = 0080h
 LBS_NOINTEGRALHEIGHT  = 0100h
 LBS_MULTICOLUMN       = 0200h
 LBS_WANTKEYBOARDINPUT = 0400h
-LBS_EXTENDEDSEL	      = 0800h
+LBS_EXTENDEDSEL       = 0800h
 LBS_STANDARD          = LBS_NOTIFY + LBS_SORT + WS_VSCROLL + WS_BORDER
+LBS_DISABLENOSCROLL   = 1000h
 
 ; Listbox Notification Codes
 LBN_ERRSPACE      =  (-2)
@@ -1710,34 +1792,39 @@ LBN_KILLFOCUS     =  5
 IFNDEF NOWINMESSAGES
 
 ; Edit Control Messages
-EM_GETSEL	   = (WM_USER+0)
-EM_SETSEL	   = (WM_USER+1)
-EM_GETRECT	   = (WM_USER+2)
-EM_SETRECT	   = (WM_USER+3)
-EM_SETRECTNP	   = (WM_USER+4)
-EM_SCROLL	   = (WM_USER+5)
-EM_LINESCROLL	   = (WM_USER+6)
-EM_GETMODIFY	   = (WM_USER+8)
-EM_SETMODIFY	   = (WM_USER+9)
-EM_GETLINECOUNT    = (WM_USER+10)
-EM_LINEINDEX	   = (WM_USER+11)
-EM_SETHANDLE	   = (WM_USER+12)
-EM_GETHANDLE	   = (WM_USER+13)
-EM_GETTHUMB	   = (WM_USER+14)
-EM_LINELENGTH	   = (WM_USER+17)
-EM_REPLACESEL	   = (WM_USER+18)
-EM_SETFONT	   = (WM_USER+19)
-EM_GETLINE	   = (WM_USER+20)
-EM_LIMITTEXT	   = (WM_USER+21)
-EM_CANUNDO	   = (WM_USER+22)
-EM_UNDO 	   = (WM_USER+23)
-EM_FMTLINES	   = (WM_USER+24)
-EM_LINEFROMCHAR    = (WM_USER+25)
-EM_SETWORDBREAK    = (WM_USER+26)
-EM_SETTABSTOPS     = (WM_USER+27)
-EM_SETPASSWORDCHAR = (WM_USER+28)
-EM_EMPTYUNDOBUFFER = (WM_USER+29)
-EM_MSGMAX          = (WM_USER+30)
+EM_GETSEL              = (WM_USER+0)
+EM_SETSEL              = (WM_USER+1)
+EM_GETRECT             = (WM_USER+2)
+EM_SETRECT             = (WM_USER+3)
+EM_SETRECTNP           = (WM_USER+4)
+EM_SCROLL              = (WM_USER+5)
+EM_LINESCROLL          = (WM_USER+6)
+EM_GETMODIFY           = (WM_USER+8)
+EM_SETMODIFY           = (WM_USER+9)
+EM_GETLINECOUNT        = (WM_USER+10)
+EM_LINEINDEX           = (WM_USER+11)
+EM_SETHANDLE           = (WM_USER+12)
+EM_GETHANDLE           = (WM_USER+13)
+EM_LINELENGTH          = (WM_USER+17)
+EM_REPLACESEL          = (WM_USER+18)
+EM_SETFONT             = (WM_USER+19)
+EM_GETLINE             = (WM_USER+20)
+EM_LIMITTEXT           = (WM_USER+21)
+EM_CANUNDO             = (WM_USER+22)
+EM_UNDO                = (WM_USER+23)
+EM_FMTLINES            = (WM_USER+24)
+EM_LINEFROMCHAR        = (WM_USER+25)
+EM_SETWORDBREAK        = (WM_USER+26)
+EM_SETTABSTOPS         = (WM_USER+27)
+EM_SETPASSWORDCHAR     = (WM_USER+28)
+EM_EMPTYUNDOBUFFER     = (WM_USER+29)
+IFNDEF NOWIN31
+EM_GETFIRSTVISIBLELINE = (WM_USER+30)
+EM_SETREADONLY         = (WM_USER+31)
+EM_SETWORDBREAKPROC    = (WM_USER+32)
+EM_GETWORDBREAKPROC    = (WM_USER+33)
+EM_GETPASSWORDCHAR     = (WM_USER+34)
+ENDIF
 
 ENDIF
 ; NOWINMESSAGES
@@ -1755,25 +1842,30 @@ ES_AUTOVSCROLL     = 0040h
 ES_AUTOHSCROLL     = 0080h
 ES_NOHIDESEL       = 0100h
 ES_OEMCONVERT      = 0400h
+IFNDEF NOWIN31
+ES_READONLY        = 0800h
+ES_WANTRETURN      = 1000h
+ENDIF
+
 
 ; Edit Control Notification Codes
-EN_SETFOCUS        = 0100
-EN_KILLFOCUS       = 0200
-EN_CHANGE          = 0300
-EN_UPDATE          = 0400
-EN_ERRSPACE        = 0500
-EN_MAXTEXT         = 0501
-EN_HSCROLL         = 0601
-EN_VSCROLL         = 0602
+EN_SETFOCUS        = 0100h
+EN_KILLFOCUS       = 0200h
+EN_CHANGE          = 0300h
+EN_UPDATE          = 0400h
+EN_ERRSPACE        = 0500h
+EN_MAXTEXT         = 0501h
+EN_HSCROLL         = 0601h
+EN_VSCROLL         = 0602h
 
 IFNDEF NOWINMESSAGES
 
 ; Button Control Messages
-BM_GETCHECK	   = (WM_USER+0)
-BM_SETCHECK	   = (WM_USER+1)
-BM_GETSTATE	   = (WM_USER+2)
-BM_SETSTATE	   = (WM_USER+3)
-BM_SETSTYLE	   = (WM_USER+4)
+BM_GETCHECK        = (WM_USER+0)
+BM_SETCHECK        = (WM_USER+1)
+BM_GETSTATE        = (WM_USER+2)
+BM_SETSTATE        = (WM_USER+3)
+BM_SETSTYLE        = (WM_USER+4)
 
 ENDIF
 ; NOWINMESSAGES
@@ -1789,7 +1881,6 @@ BS_AUTO3STATE      = 06h
 BS_GROUPBOX        = 07h
 BS_USERBUTTON      = 08h
 BS_AUTORADIOBUTTON = 09h
-BS_PUSHBOX         = 0Ah
 BS_OWNERDRAW       = 0Bh
 BS_LEFTTEXT        = 20h
 
@@ -1812,8 +1903,8 @@ DS_NOIDLEMSG       = 100h ;/* WM_ENTERIDLE message will not be sent */
 IFNDEF NOWINMESSAGES
 
 ; Dialog box messages
-DM_GETDEFID	   = (WM_USER+0)
-DM_SETDEFID	   = (WM_USER+1)
+DM_GETDEFID        = (WM_USER+0)
+DM_SETDEFID        = (WM_USER+1)
 
 ENDIF   ;NOWINMESSAGES
 
@@ -1860,26 +1951,33 @@ CBS_NOINTEGRALHEIGHT = 0400h
 IFNDEF NOWINMESSAGES
 
 ; Combo Box messages
-CB_GETEDITSEL	   = (WM_USER+0)
-CB_LIMITTEXT	   = (WM_USER+1)
-CB_SETEDITSEL	   = (WM_USER+2)
-CB_ADDSTRING	   = (WM_USER+3)
-CB_DELETESTRING    = (WM_USER+4)
-CB_DIR		   = (WM_USER+5)
-CB_GETCOUNT	   = (WM_USER+6)
-CB_GETCURSEL	   = (WM_USER+7)
-CB_GETLBTEXT	   = (WM_USER+8)
-CB_GETLBTEXTLEN    = (WM_USER+9)
-CB_INSERTSTRING    = (WM_USER+10)
-CB_RESETCONTENT    = (WM_USER+11)
-CB_FINDSTRING	   = (WM_USER+12)
-CB_SELECTSTRING    = (WM_USER+13)
-CB_SETCURSEL	   = (WM_USER+14)
-CB_SHOWDROPDOWN    = (WM_USER+15)
-CB_GETITEMDATA     = (WM_USER+16)
-CB_SETITEMDATA     = (WM_USER+17)
+CB_GETEDITSEL            = (WM_USER+0)
+CB_LIMITTEXT             = (WM_USER+1)
+CB_SETEDITSEL            = (WM_USER+2)
+CB_ADDSTRING             = (WM_USER+3)
+CB_DELETESTRING          = (WM_USER+4)
+CB_DIR                   = (WM_USER+5)
+CB_GETCOUNT              = (WM_USER+6)
+CB_GETCURSEL             = (WM_USER+7)
+CB_GETLBTEXT             = (WM_USER+8)
+CB_GETLBTEXTLEN          = (WM_USER+9)
+CB_INSERTSTRING          = (WM_USER+10)
+CB_RESETCONTENT          = (WM_USER+11)
+CB_FINDSTRING            = (WM_USER+12)
+CB_SELECTSTRING          = (WM_USER+13)
+CB_SETCURSEL             = (WM_USER+14)
+CB_SHOWDROPDOWN          = (WM_USER+15)
+CB_GETITEMDATA           = (WM_USER+16)
+CB_SETITEMDATA           = (WM_USER+17)
+IFNDEF NOWIN31
 CB_GETDROPPEDCONTROLRECT = (WM_USER+18)
-CB_MSGMAX	   = (WM_USER+19)
+CB_SETITEMHEIGHT         = (WM_USER+19)
+CB_GETITEMHEIGHT         = (WM_USER+20)
+CB_SETEXTENDEDUI         = (WM_USER+21)
+CB_GETEXTENDEDUI         = (WM_USER+22)
+CB_GETDROPPEDSTATE       = (WM_USER+23)
+CB_FINDSTRINGEXACT       = (WM_USER+24)
+ENDIF
 
 ENDIF ; NOWINMESSAGES
 
@@ -1894,10 +1992,18 @@ SS_WHITERECT       = 06h
 SS_BLACKFRAME      = 07h
 SS_GRAYFRAME       = 08h
 SS_WHITEFRAME      = 09h
-SS_USERITEM        = 0Ah
 SS_SIMPLE          = 0Bh
 SS_LEFTNOWORDWRAP  = 0Ch
 SS_NOPREFIX        = 80h    ; Don't do "&" character translation
+
+IFNDEF NOWIN31
+IFNDEF NOWINMESSAGES
+
+;Static Control Messages
+STM_SETICON        = (WM_USER+0)
+STM_GETICON        = (WM_USER+1)
+ENDIF
+ENDIF
 
 ; Scroll Bar Styles (low word)
 SBS_HORZ                    = 0000h
@@ -1913,77 +2019,89 @@ SBS_SIZEBOX                 = 0008h
 IFNDEF NOSYSMETRICS
 
 ; GetSystemMetrics() codes
-SM_CXSCREEN       =  0
-SM_CYSCREEN       =  1
-SM_CXVSCROLL      =  2
-SM_CYHSCROLL      =  3
-SM_CYCAPTION      =  4
-SM_CXBORDER       =  5
-SM_CYBORDER       =  6
-SM_CXDLGFRAME     =  7
-SM_CYDLGFRAME     =  8
-SM_CYVTHUMB       =  9
-SM_CXHTHUMB       =  10
-SM_CXICON         =  11
-SM_CYICON         =  12
-SM_CXCURSOR       =  13
-SM_CYCURSOR       =  14
-SM_CYMENU         =  15
-SM_CXFULLSCREEN   =  16
-SM_CYFULLSCREEN   =  17
-SM_CYKANJIWINDOW  =  18
-SM_MOUSEPRESENT   =  19
-SM_CYVSCROLL      =  20
-SM_CXHSCROLL      =  21
-SM_DEBUG          =  22
-SM_SWAPBUTTON     =  23
-SM_RESERVED1      =  24
-SM_RESERVED2      =  25
-SM_RESERVED3      =  26
-SM_RESERVED4      =  27
-SM_CXMIN          =  28
-SM_CYMIN          =  29
-SM_CXSIZE         =  30
-SM_CYSIZE         =  31
-SM_CXFRAME        =  32
-SM_CYFRAME        =  33
-SM_CXMINTRACK     =  34
-SM_CYMINTRACK     =  35
-SM_CMETRICS       =  36
+SM_CXSCREEN           =  0
+SM_CYSCREEN           =  1
+SM_CXVSCROLL          =  2
+SM_CYHSCROLL          =  3
+SM_CYCAPTION          =  4
+SM_CXBORDER           =  5
+SM_CYBORDER           =  6
+SM_CXDLGFRAME         =  7
+SM_CYDLGFRAME         =  8
+SM_CYVTHUMB           =  9
+SM_CXHTHUMB           =  10
+SM_CXICON             =  11
+SM_CYICON             =  12
+SM_CXCURSOR           =  13
+SM_CYCURSOR           =  14
+SM_CYMENU             =  15
+SM_CXFULLSCREEN       =  16
+SM_CYFULLSCREEN       =  17
+SM_CYKANJIWINDOW      =  18
+SM_MOUSEPRESENT       =  19
+SM_CYVSCROLL          =  20
+SM_CXHSCROLL          =  21
+SM_DEBUG              =  22
+SM_SWAPBUTTON         =  23
+SM_RESERVED1          =  24
+SM_RESERVED2          =  25
+SM_RESERVED3          =  26
+SM_RESERVED4          =  27
+SM_CXMIN              =  28
+SM_CYMIN              =  29
+SM_CXSIZE             =  30
+SM_CYSIZE             =  31
+SM_CXFRAME            =  32
+SM_CYFRAME            =  33
+SM_CXMINTRACK         =  34
+SM_CYMINTRACK         =  35
+IFNDEF NOWIN31
+SM_CXDOUBLECLK        =  36
+SM_CYDOUBLECLK        =  37
+SM_CXICONSPACING      =  38
+SM_CYICONSPACING      =  39
+SM_MENUDROPALIGNMENT  =  40
+SM_PENWINDOWS         =  41
+SM_DBCSENABLED        =  42
+ENDIF
+SM_CMETRICSMAX        =  43
 
 ENDIF   ;NOSYSMETRICS
 
 IFNDEF  NOCOLOR
 
-COLOR_SCROLLBAR        = 0
-COLOR_BACKGROUND       = 1
-COLOR_ACTIVECAPTION    = 2
-COLOR_INACTIVECAPTION  = 3
-COLOR_MENU             = 4
-COLOR_WINDOW           = 5
-COLOR_WINDOWFRAME      = 6
-COLOR_MENUTEXT         = 7
-COLOR_WINDOWTEXT       = 8
-COLOR_CAPTIONTEXT      = 9
-COLOR_ACTIVEBORDER     = 10
-COLOR_INACTIVEBORDER   = 11
-COLOR_APPWORKSPACE     = 12
-COLOR_HIGHLIGHT        = 13
-COLOR_HIGHLIGHTTEXT    = 14
-COLOR_BTNFACE          = 15
-COLOR_BTNSHADOW        = 16
-COLOR_GRAYTEXT         = 17
-COLOR_BTNTEXT          = 18
-
+COLOR_SCROLLBAR           = 0
+COLOR_BACKGROUND          = 1
+COLOR_ACTIVECAPTION       = 2
+COLOR_INACTIVECAPTION     = 3
+COLOR_MENU                = 4
+COLOR_WINDOW              = 5
+COLOR_WINDOWFRAME         = 6
+COLOR_MENUTEXT            = 7
+COLOR_WINDOWTEXT          = 8
+COLOR_CAPTIONTEXT         = 9
+COLOR_ACTIVEBORDER        = 10
+COLOR_INACTIVEBORDER      = 11
+COLOR_APPWORKSPACE        = 12
+COLOR_HIGHLIGHT           = 13
+COLOR_HIGHLIGHTTEXT       = 14
+COLOR_BTNFACE             = 15
+COLOR_BTNSHADOW           = 16
+COLOR_GRAYTEXT            = 17
+COLOR_BTNTEXT             = 18
+IFNDEF NOWIN31
+COLOR_INACTIVECAPTIONTEXT = 19
+COLOR_BTNHILIGHT          = 20
+ENDIF
 ENDIF   ;NOCOLOR
 
 ; Commands to pass WinHelp()
-HELP_CONTEXT	=0001h	;/* Display topic in ulTopic */
-HELP_QUIT	=0002h	;/* Terminate help */
-HELP_INDEX	=0003h	;/* Display index */
-HELP_HELPONHELP =0004h	;/* Display help on using help */
-HELP_SETINDEX	=0005h	;/* Set the current Index for multi index help */
-HELP_KEY	=0101h	;/* Display topic for keyword in offabData */
+HELP_CONTEXT    =0001h  ;/* Display topic in ulTopic */
+HELP_QUIT       =0002h  ;/* Terminate help */
+HELP_INDEX      =0003h  ;/* Display index */
+HELP_HELPONHELP =0004h  ;/* Display help on using help */
+HELP_SETINDEX   =0005h  ;/* Set the current Index for multi index help */
+HELP_KEY        =0101h  ;/* Display topic for keyword in offabData */
 
 IFNDEF NOCOMM
 
@@ -2036,6 +2154,11 @@ EV_BREAK        =    0040h ; /* BREAK received               */
 EV_ERR          =    0080h ; /* Line status error occurred   */
 EV_RING         =    0100h ; /* Ring signal detected         */
 EV_PERR         =    0200h ; /* Printer error occured        */
+EV_CTSS         =    0400h ; /* CTS state                    */
+EV_DSRS         =    0800h ; /* DSR state                    */
+EV_RLSDS        =    1000h ; /* RLSD state                   */
+EV_RingTe       =    2000h ; /* Ring Trailing Edge Indicator */
+
 
 ; Escape Functions
 SETXOFF         =    1     ;  /* Simulate XOFF received       */
@@ -2047,6 +2170,48 @@ CLRDTR          =    6     ;  /* Set DTR low                  */
 RESETDEV        =    7     ;  /* Reset device if possible     */
 
 LPTx            =    80h   ; /* Set if ID is for LPT device  */
+
+IFNDEF NOWIN31
+; new escape functions
+GETMAXLPT   equ  8         ; Max supported LPT id
+GETMAXCOM   equ  9         ; Max supported COM id
+GETBASEIRQ  equ 10         ; Get port base & irq for a port
+
+; Comm Baud Rate indices
+CBR_110     equ 0FF10h
+CBR_300     equ 0FF11h
+CBR_600     equ 0FF12h
+CBR_1200    equ 0FF13h
+CBR_2400    equ 0FF14h
+CBR_4800    equ 0FF15h
+CBR_9600    equ 0FF16h
+CBR_14400   equ 0FF17h
+CBR_19200   equ 0FF18h
+;               0FF19h  (reserved)
+;               0FF1Ah  (reserved)
+CBR_38400   equ 0FF1Bh
+;               0FF1Ch  (reserved)
+;               0FF1Dh  (reserved)
+;               0FF1Eh  (reserved)
+CBR_56000   equ 0FF1Fh
+;               0FF20h  (reserved)
+;               0FF21h  (reserved)
+;               0FF22h  (reserved)
+CBR_128000  equ 0FF23h
+;               0FF24h  (reserved)
+;               0FF25h  (reserved)
+;               0FF26h  (reserved)
+CBR_256000  equ 0FF27h
+
+; notifications passed in low word of lParam on WM_COMMNOTIFY messages
+CN_RECEIVE  equ 1           ; bytes are available in the input queue
+CN_TRANSMIT equ 2           ; fewer than wOutTrigger bytes still
+                            ; remain in the output queue waiting
+                            ; to be transmitted.
+CN_EVENT    equ 4           ; an enabled event has occurred
+
+ENDIF
+
 
 DCB     struc
     DCB_Id             db ?  ; /* Internal Device ID              */
@@ -2106,3 +2271,73 @@ COMSTAT     struc
 COMSTAT     ends
 
 ENDIF       ;NOCOM
+
+;
+; Installable Driver Support
+;
+; Driver Messages
+DRV_LOAD            = 0001h
+DRV_ENABLE          = 0002h
+DRV_OPEN            = 0003h
+DRV_CLOSE           = 0004h
+DRV_DISABLE         = 0005h
+DRV_FREE            = 0006h
+DRV_CONFIGURE       = 0007h
+DRV_QUERYCONFIGURE  = 0008h
+DRV_INSTALL         = 0009h
+DRV_REMOVE          = 000Ah
+DRV_EXITSESSION     = 000Bh
+DRV_POWER           = 000Fh
+DRV_RESERVED        = 0800h
+DRV_USER            = 4000h
+
+;LPARAM of DRV_CONFIGURE message and return values
+DRVCONFIGINFO struc
+    DRVCNF_dwDCISize          dw ?
+    DRVCNF_lpszDCISectionName dd ?
+    DRVCNF_lpszDCIAliasName   dd ?
+DRVCONFIGINFO ends
+
+DRVCNF_CANCEL       = 0000h
+DRVCNF_OK           = 0001h
+DRVCNF_RESTART      = 0002h
+
+
+IFNDEF  NOKERNEL
+;
+; Common Kernel errors
+;
+ERR_GALLOC      = 01030h        ; GlobalAlloc Failed
+ERR_GREALLOC    = 01031h        ; GlobalReAlloc Failed
+ERR_GLOCK       = 01032h        ; GlobalLock Failed
+ERR_LALLOC      = 01033h        ; LocalAlloc Failed
+ERR_LREALLOC    = 01034h        ; LocalReAlloc Failed
+ERR_LLOCK       = 01035h        ; LocalLock Failed
+ERR_ALLOCRES    = 01036h        ; AllocResource Failed
+ERR_LOCKRES     = 01037h        ; LockResource Failed
+ERR_LOADMODULE  = 01038h        ; LoadModule failed
+
+;
+; Common User Errors
+;
+ERR_CREATEDLG        =  01045h ; /* Create Dlg failure due to LoadMenu failure */
+ERR_CREATEDLG2       =  01046h ; /* Create Dlg failure due to CreateWindow Failure */
+ERR_REGISTERCLASS    =  01047h ; /* RegisterClass failure due to Class already registered */
+ERR_DCBUSY           =  01048h ; /* DC Cache is full */
+ERR_CREATEWND        =  01049h ; /* Create Wnd failed due to class not found */
+ERR_STRUCEXTRA       =  01050h ; /* Unallocated Extra space is used */
+ERR_LOADSTR          =  01051h ; /* LoadString() failed */
+ERR_LOADMENU         =  01052h ; /* LoadMenu Failed     */
+ERR_NESTEDBEGINPAINT =  01053h ; /* Nested BeginPaint() calls */
+ERR_BADINDEX         =  01054h ; /* Bad index to Get/Set Class/Window Word/Long */
+ERR_CREATEMENU       =  01055h ; /* Error creating menu */
+
+;
+; Common GDI Errors
+;
+ERR_CREATEDC        = 01070h    ; /* CreateDC/CreateIC etc., failure */
+ERR_CREATEMETA      = 01071h    ; /* CreateMetafile failure */
+ERR_DELOBJSELECTED  = 01072h    ; /* Bitmap being deleted is selected into DC */
+ERR_SELBITMAP       = 01073h    ; /* Bitmap being selected is already selected elsewhere */
+
+ENDIF       ;NOKERNEL

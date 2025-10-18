@@ -2,14 +2,14 @@
 
     Definitions used for file status functions
 
-        Copyright (c) Borland International 1987,1988,1990,1991
+    Copyright (c) 1987, 1992 by Borland International
     All Rights Reserved.
 */
 
 #ifndef __STAT_H
 #define __STAT_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 
@@ -41,10 +41,31 @@ struct  stat
 #ifdef __cplusplus
 extern "C" {
 #endif
-int  _Cdecl _FARFUNC fstat (int __handle, struct stat _FAR *__statbuf);
-int  _Cdecl _FARFUNC stat  (char _FAR *__path, struct stat _FAR *__statbuf);
+int  _Cdecl _FARFUNC fstat(int __handle, struct stat _FAR *__statbuf);
+int  _Cdecl _FARFUNC stat(const char _FAR *__path, struct stat _FAR *__statbuf);
+
+#ifdef __MSC
+#define _fstat(h,b) fstat(h,b)
+#define _stat(p,b)  stat(p,b)
+struct  _stat
+{
+    short st_dev;
+    short st_ino;
+    short st_mode;
+    short st_nlink;
+    int   st_uid;
+    int   st_gid;
+    short st_rdev;
+    long  st_size;
+    long  st_atime;
+    long  st_mtime;
+    long  st_ctime;
+};
+#endif
+
 #ifdef __cplusplus
 }
 #endif
 
 #endif  /* __STAT_H */
+

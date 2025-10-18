@@ -1,151 +1,68 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+/*------------------------------------------------------------------------*/
+/*                                                                        */
+/*  DICT.H                                                                */
+/*                                                                        */
+/*  Copyright Borland International 1991, 1992                            */
+/*  All Rights Reserved                                                   */
+/*                                                                        */
+/*------------------------------------------------------------------------*/
 
-// Contents ----------------------------------------------------------------
-//
-// 	    Dictionary
-//
-// Description
-//
-// 	    Defines the class Dictionary.  Dictionary holds a set of objects
-// 	    of type Association, which each contain a key and a value.
-// 	    Dictionary uses the key to look up the associated value.
-//
-// End ---------------------------------------------------------------------
-
-// Interface Dependencies ---------------------------------------------------
-
-#ifndef __DICT_H
+#if !defined( __DICT_H )
 #define __DICT_H
 
-#ifndef __STDLIB_H
+#if !defined( __CLSTYPES_H )
+#include <ClsTypes.h>
+#endif  // __CLSTYPES_H
+
+#if !defined( __OBJECT_H )
+#include <Object.h>
+#endif  // __OBJECT_H
+
+#if !defined( __SET_H )
+#include <Set.h>
+#endif  // __SET_H
+
+#if !defined( __STDLIB_H )
 #include <stdlib.h>
-#define __STDLIB_H
 #endif
 
-#ifndef __IOSTREAM_H
-#include <iostream.h>
-#define __IOSTREAM_H
+#pragma option -Vo-
+#if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+#pragma option -po-
 #endif
 
-#ifndef __CLSTYPES_H
-#include <clstypes.h>
-#endif
-
-#ifndef __CLSDEFS_H
-#include <clsdefs.h>
-#endif
-
-#ifndef __OBJECT_H
-#include <object.h>
-#endif
-
-#ifndef __ASSOC_H
-#include <assoc.h>
-#endif
-
-#ifndef __SET_H
-#include <set.h>
-#endif
-
-// End Interface Dependencies ------------------------------------------------
-
+_CLASSDEF(Association)
 _CLASSDEF(Dictionary)
-
-// Class //
 
 class _CLASSTYPE Dictionary : public Set
 {
+
 public:
-    Dictionary() {}
-    Dictionary( RDictionary );
-    virtual ~Dictionary();
 
-    virtual void			add( RObject );
-    RAssociation    lookup( RCObject ) const;
+    Dictionary( unsigned sz = DEFAULT_HASH_TABLE_SIZE ) :
+        Set(sz)
+        {
+        }
 
-    virtual classType       isA() const;
-    virtual Pchar nameOf() const;
+    virtual void add( Object _FAR & );
+    Association _FAR & lookup( const Object _FAR & ) const;
+
+    virtual classType isA() const
+        {
+        return dictionaryClass;
+        }
+
+    virtual char _FAR *nameOf() const
+        {
+        return "Dictionary";
+        }
+
 };
 
-// Description -------------------------------------------------------------
-//
-// 	    Defines the class Dictionary.  Dictionary holds a set of objects
-// 	    of type Association, which each contain a key and a value.
-// 	    Dictionary uses the key to look up the associated value.
-//
-// Constructor
-//
-// 	    Dictionary
-//
-// 	    Default constructor.
-//
-// Destructor
-//
-// 	    ~Dictionary
-//
-// Public Members
-//
-//      add
-//
-//      Adds an object to the collection.
-//
-// 	    lookup
-//
-// 	    Converts an object to an association with no value, then finds
-// 	    that association in the dictionary.
-//
-// 	    isA
-//
-// 	    Returns the class type of dictionary.
-//
-// 	    nameOf
-//
-// 	    Returns a character pointer to the string "Dictionary."
-//
-// 	    hashValue
-//
-// 	    Inherited from Object.
-//
-// Inherited Members
-//
-//      destroy
-//
-//      Removes an object reference from the collection and
-//      destroys the object.
-//
-// 	    detach
-//
-// 	    Removes all references to the object in the collection.
-//      Does not delete the object.  Use this function when the collection
-//      elements are not owned by the collection.
-//
-// 	    lookup
-//
-// 	    Inherited from HashTable.
-//
-//      hasMember
-//
-// 	    Test whether an object is part of the collection.  Returns 1 if
-//      the object reference is found in the array.
-//
-// 	    initIterator
-//
-// 	    Inherited from HashTable.
-//
-// 	    isEmpty
-//
-// 	    Returns a 1 if the collection has no members.  Returns a 0
-// 	    otherwise.
-//
-//      firstThat
-//
-//      Returns the first object that satisfies the given condition.
-//
-//      lastThat
-//
-//      Returns the last object that satisfies the given condition.
-//
-// End ---------------------------------------------------------------------
+#if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+#pragma option -po.
+#endif
+#pragma option -Vo.
 
+#endif  // __DICT_H
 
-#endif // ifndef __DICT_H //

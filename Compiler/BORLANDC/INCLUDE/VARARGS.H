@@ -4,7 +4,7 @@
     a variable number of arguments.  These macros are compatible
     with UNIX System V.  Use stdarg.h for ANSI C compatibility.
 
-        Copyright (c) Borland International 1991
+    Copyright (c) 1991, 1992 by Borland International
     All Rights Reserved.
 */
 
@@ -15,7 +15,7 @@
 #error Can't include both STDARG.H and VARARGS.H
 #endif
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 
@@ -25,4 +25,4 @@ typedef void _FAR *va_list;
 #define va_arg(ap, type) (*(type _FAR *)(((*(char _FAR *_FAR *)&(ap))+=((sizeof(type)+1) & 0xFFFE))-(((sizeof(type)+1) & 0xFFFE))))
 #define va_end(ap)   ap = ((void _FAR *)0)
 
-#endif	/* __VARARGS_H */
+#endif  /* __VARARGS_H */

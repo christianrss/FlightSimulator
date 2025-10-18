@@ -1,109 +1,181 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+/*------------------------------------------------------------------------*/
+/*                                                                        */
+/*  STACK.H                                                               */
+/*                                                                        */
+/*  Copyright Borland International 1991, 1992                            */
+/*  All Rights Reserved                                                   */
+/*                                                                        */
+/*------------------------------------------------------------------------*/
 
-// Contents ----------------------------------------------------------------
-//
-//      Stack
-//
-// Description
-//
-//      Defines the class Stack.
-//
-// End ---------------------------------------------------------------------
-
-// Interface Dependencies ---------------------------------------------------
-
-#ifndef __STACK_H
+#if !defined( __STACK_H )
 #define __STACK_H
 
-#ifndef __IOSTREAM_H
-#include <iostream.h>
-#define __IOSTREAM_H
+#if defined( TEMPLATES )
+
+    #if !defined( __STACKS_H )
+    #include <Stacks.h>
+    #endif  // __STACKS_H
+
+    #pragma option -Vo-
+    #if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+    #pragma option -po-
+    #endif
+
+    #define Stack   BI_TCStackAsList
+    #define PStack  PBI_TCStackAsList
+    #define RStack  RBI_TCStackAsList
+    #define RPStack RPBI_TCStackAsList
+    #define PCStack PCBI_TCStackAsList
+    #define RCStack RCBI_TCStackAsList
+
+    _CLASSDEF( BI_TCStackAsList )
+
+    #define StackIterator   BI_TCStackAsListIterator
+    #define PStackIterator  PBI_TCStackAsListIterator
+    #define RStackIterator  RBI_TCStackAsListIterator
+    #define RPStackIterator RPBI_TCStackAsListIterator
+    #define PCStackIterator PCBI_TCStackAsListIterator
+    #define RCStackIterator RCBI_TCStackAsListIterator
+
+    _CLASSDEF( BI_TCStackAsListIterator )
+
+#else   // TEMPLATES
+
+    #if !defined( __CLSTYPES_H )
+    #include <ClsTypes.h>
+    #endif  // __CLSTYPES_H
+
+    #if !defined( __CONTAIN_H )
+    #include <Contain.h>
+    #endif  // __CONTAIN_H
+
+    #if !defined( __LIST_H )
+    #include <List.h>
+    #endif  // __LIST_H
+
+    #pragma option -Vo-
+    #if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+    #pragma option -po-
+    #endif
+
+    _CLASSDEF(Stack)
+
+    class _CLASSTYPE Stack : public Container
+    {
+
+    public:
+
+        void push( Object _FAR & );
+        Object _FAR & pop();
+        Object _FAR & top() const
+            {
+            return list.peekHead();
+            }
+
+        virtual void flush( DeleteType dt = DefDelete )
+            {
+            list.flush( dt );
+            }
+
+        virtual int isEmpty() const
+            {
+            return list.isEmpty();
+            }
+
+        virtual countType getItemsInContainer() const
+            {
+            return list.getItemsInContainer();
+            }
+
+        virtual void forEach( iterFuncType f, void _FAR *arg )
+            {
+            list.forEach( f, arg );
+            }
+
+        virtual Object _FAR & firstThat( condFuncType f, void _FAR *arg ) const
+            {
+            return list.firstThat( f, arg );
+            }
+
+        virtual Object _FAR & lastThat( condFuncType f, void _FAR *arg ) const
+            {
+            return list.lastThat( f, arg );
+            }
+
+        virtual classType isA() const
+            {
+            return stackClass;
+            }
+
+        virtual char _FAR *nameOf() const
+            {
+            return "Stack";
+            }
+
+        virtual hashValueType hashValue() const
+            {
+            return list.hashValue();
+            }
+
+        virtual int isEqual( const Object& obj ) const
+            {
+            return list.isEqual( obj );
+            }
+
+        virtual int isSortable() const
+            {
+            return list.isSortable();
+            }
+
+        virtual int isAssociation() const
+            {
+            return list.isAssociation();
+            }
+
+        virtual void printOn( ostream& os ) const
+            {
+            list.printOn( os );
+            }
+
+        virtual void printHeader( ostream& os ) const
+            {
+            list.printHeader( os );
+            }
+
+        virtual void printSeparator( ostream& os ) const
+            {
+            list.printSeparator( os );
+            }
+
+        virtual void printTrailer( ostream& os ) const
+            {
+            list.printTrailer( os );
+            }
+
+        virtual ContainerIterator _FAR & initIterator() const;
+
+        int ownsElements()
+            {
+            return list.ownsElements();
+            }
+
+        void ownsElements( int del )
+            { 
+            list.ownsElements( del );
+            }
+
+    private:
+
+        List list;
+
+    };
+
+#endif  // TEMPLATES
+
+#if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+#pragma option -po.
 #endif
-
-#ifndef __CLSTYPES_H
-#include <clstypes.h>
-#endif
-
-#ifndef __OBJECT_H
-#include <object.h>
-#endif
-
-#ifndef __CONTAIN_H
-#include <contain.h>
-#endif
-
-#ifndef __LIST_H
-#include <list.h>
-#endif
-
-// End Interface Dependencies ------------------------------------------------
-
-// Class //
-
-_CLASSDEF(Stack)
-
-class _CLASSTYPE Stack:  public Container
-{
-public:
-    virtual ~Stack();
-
-    void            push( RObject );
-    RObject         pop();
-    RObject         top() const;
-    virtual int             isEmpty() const;
-
-    virtual RContainerIterator initIterator() const;
-
-    virtual classType       isA() const;
-    virtual Pchar nameOf() const;
-    virtual hashValueType   hashValue() const;
-
-private:
-    List    theStack;
-};
-
-// Description -------------------------------------------------------------
-//
-// 	Defines the container class Stack.
-//
-// Public Members
-//
-// 	push
-//
-// 	Pushes an object on the stack.
-//
-// 	pop
-// 
-// 	Pops an object from the stack and delivers that object into the
-//      ownership of the receiver.
-//
-//      top
-//
-//      Returns a refrence to the object on the top of the stack.  The
-//      object remains in the ownership of the stack.  You must make 
-//      sure not to destroy this object while it is still owned by the stack.
-//
-//      initIterator
-//
-//      Stack iterator initializer.
-//
-// 	isA
-//
-// 	Returns the class type for a stack.
-//
-// 	nameOf
-//
-// 	Returns a pointer to the character string "Stack."
-// 	
-// 	hashValue
-//
-// 	Returns a pre-defined value for stacks.
-//
-// 	isEmpty
-//
-// 	Returns whether the stack is empty.
-//
-// End ---------------------------------------------------------------------
+#pragma option -Vo.
 
 #endif  // __STACK_H
 

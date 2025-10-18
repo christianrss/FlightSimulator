@@ -1,6 +1,6 @@
-/* generic.h -- for faking generic class declarations
+/*  generic.h -- for faking generic class declarations
 
-    Copyright (c) 1990,1991 by Borland International    
+    Copyright (c) 1990, 1992 by Borland International
     All rights reserved
 
     When type templates are implemented in C++, this will probably go away.
@@ -13,7 +13,7 @@
 #ifndef __GENERIC_H
 #define __GENERIC_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 
@@ -26,6 +26,7 @@
 #define _Paste4_x(z, y, x, w)   z##y##x##w
 
 // macros for declaring and implementing classes
+#define name2 _Paste2
 #define declare(z, y) _Paste2(z, declare)(y)
 #define implement(z, y) _Paste2(z, implement)(y)
 #define declare2(z, y, x) _Paste2(z, declare2)(y, x)

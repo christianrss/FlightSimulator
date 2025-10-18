@@ -1,9 +1,9 @@
-/*      bcd.h
+/*  bcd.h
 
     BCD Number Library - Include File
     class bcd:  declarations for decimal numbers.
 
-    Copyright (c) Borland International 1987,1988,1990,1991
+    Copyright (c) 1987, 1992 by Borland International
     All Rights Reserved.
 */
 
@@ -11,15 +11,24 @@
 #error Must use C++ for the type bcd.
 #endif
 
-#ifndef __BCD_H
+#if !defined(__BCD_H)
 #define __BCD_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 
-#if !defined( __MATH_H )
+#if !defined(__IOSTREAM_H)
+#include <iostream.h>
+#endif
+
+#if !defined(__MATH_H)
 #include <math.h>
+#endif
+
+#pragma option -Vo-
+#if defined(__BCOPT__) && !defined(_RTL_ALLOW_po)
+#pragma option -po-
 #endif
 
 #define _BcdMaxDecimals     5000
@@ -48,8 +57,8 @@ public:
     friend bcd _Cdecl _FARFUNC atan(bcd _FAR &);
     friend bcd _Cdecl _FARFUNC cos(bcd _FAR &);
     friend bcd _Cdecl _FARFUNC cosh(bcd _FAR &);
-    friend bcd _Cdecl _FARFUNC exp(bcd _FAR &); 
-    friend bcd _Cdecl _FARFUNC log(bcd _FAR &); 
+    friend bcd _Cdecl _FARFUNC exp(bcd _FAR &);
+    friend bcd _Cdecl _FARFUNC log(bcd _FAR &);
     friend bcd _Cdecl _FARFUNC log10(bcd _FAR &);
     friend bcd _Cdecl _FARFUNC pow(bcd _FAR & base, bcd _FAR & expon);
     friend bcd _Cdecl _FARFUNC sin(bcd _FAR &);
@@ -342,11 +351,12 @@ inline void _Cdecl pow10(int n, bcd& a) { __bcd_pow10(n,&a);}
 
 // bcd stream I/O
 
-#if !defined( __IOSTREAM_H )
-#include <iostream.h>
-#endif
-
 ostream _FAR & pascal _FARFUNC operator<<(ostream _FAR &, bcd _FAR &);
 istream _FAR & pascal _FARFUNC operator>>(istream _FAR &, bcd _FAR &);
+
+#pragma option -Vo.
+#if defined(__BCOPT__)
+#pragma option -po.
+#endif
 
 #endif  // __BCD_H

@@ -1,5 +1,5 @@
 /*
-	Copyright (c) 1986,1991 by Borland International Inc.
+	Copyright (c) 1986,1992 by Borland International Inc.
 	All Rights Reserved.
 */
  
@@ -131,4 +131,5 @@ gopError:
 		perror ("get command line option");
 	return ('?');
 }
+
 

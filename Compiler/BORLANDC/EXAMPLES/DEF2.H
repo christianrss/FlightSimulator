@@ -1,4 +1,4 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+// Borland C++ - (C) Copyright 1991, 1992 by Borland International
 
 // def2.h:   A word definition class
 // from Getting Started
@@ -19,4 +19,5 @@ public:
    char *get_meaning(int, char *);
    friend class Dictionary;         // line 18
 };
+
 

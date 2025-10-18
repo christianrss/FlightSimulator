@@ -3,14 +3,14 @@
     Symbolic names for important constants, including machine
     dependencies. A System V compatible header.
 
-        Copyright (c) Borland International 1987,1988,1990,1991
+    Copyright (c) 1987, 1992 by Borland International
     All Rights Reserved.
 */
 
-#if !defined( __VALUES_H )
+#if !defined(__VALUES_H)
 #define __VALUES_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 

@@ -2,14 +2,14 @@
 
     Define flag values accessible to open.
 
-    Copyright (c) Borland International 1987,1988,1990,1991
+    Copyright (c) 1987, 1992 by Borland International
     All Rights Reserved.
 */
 
-#if !defined( __FCNTL_H )
+#if !defined(__FCNTL_H)
 #define __FCNTL_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 
@@ -28,10 +28,11 @@ extern int _Cdecl _fmode;
 #define O_EXCL      0x0400  /* exclusive open */
 
 /* The "open flags" defined above are not needed after open, hence they
-   are re-used for other purposes when the file is running.  Sorry, its
+   are re-used for other purposes when the file is running.  Sorry, it's
    getting crowded !
 */
 #define _O_RUNFLAGS 0x0700
+#define _O_WRITABLE 0x0100 /* file is not read-only */
 #define _O_EOF      0x0200 /* set when text file hits ^Z   */
 
 /* a file in append mode may be written to only at its end.

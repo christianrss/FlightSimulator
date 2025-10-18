@@ -1,11 +1,11 @@
 /*
-   GRAPHICS DEMO FOR TURBO C 2.0
+   GRAPHICS DEMO FOR Borland C++ 
 
-   Copyright (c) 1987,88,90 Borland International. All rights reserved.
+   Copyright (c) 1987,88,91 Borland International. All rights reserved.
 
    From the command line, use:
 
-		tcc bgidemo graphics.lib
+		bcc bgidemo graphics.lib
 
 */
 
@@ -29,9 +29,12 @@
 #define ON	1			/* Define some handy constants	*/
 #define OFF	0			/* Define some handy constants	*/
 
-char *Fonts[] = {
+#define NFONTS 11
+
+char *Fonts[NFONTS] = {
   "DefaultFont",   "TriplexFont",   "SmallFont",
-  "SansSerifFont", "GothicFont"
+  "SansSerifFont", "GothicFont", "ScriptFont", "SimplexFont", "TriplexScriptFont",
+  "ComplexFont", "EuropeanFont", "BoldFont"
 };
 
 char *LineStyles[] = {
@@ -234,15 +237,15 @@ void ReportStatus(void)
 void TextDump()
 {
   static int CGASizes[]  = {
-    1, 3, 7, 3, 3   };
+    1, 3, 7, 3, 3, 2, 2, 2, 2, 2, 2  };
   static int NormSizes[] = {
-    1, 4, 7, 4, 4   };
+    1, 4, 7, 4, 4, 2, 2, 2, 2, 2, 2  };
 
   char buffer[80];
   int font, ch, wwidth, lwidth, size;
   struct viewporttype vp;
 
-  for( font=0 ; font<5 ; ++font ){	/* For each available font	*/
+  for( font=0 ; font<NFONTS ; ++font ){	/* For each available font	*/
     sprintf( buffer, "%s Character Set", Fonts[font] );
     MainWindow( buffer );		/* Display fontname as banner	*/
     getviewsettings( &vp );		/* read current viewport	*/
@@ -271,7 +274,7 @@ void TextDump()
       changetextstyle( font, HORIZ_DIR, size );
 
       ch = '!';                         /* Begin at 1st printable       */
-      while( ch < 127 ){		/* For each printable character */
+      while( ch < 256 ){		/* For each printable character */
 	buffer[0] = ch; 		/* Put character into a string	*/
 	outtext( buffer );		/* send string to screen	*/
 	if( (lwidth+getx()) > wwidth )	/* Are we still in window?	*/
@@ -375,13 +378,13 @@ void RandomBars(void)
 void TextDemo(void)
 {
   int charsize[] = {
-    1, 3, 7, 3, 4   };
+    1, 3, 7, 3, 4, 2, 2, 2, 2, 2, 2   };
   int font, size;
   int h, x, y, i;
   struct viewporttype vp;
   char buffer[80];
 
-  for( font=0 ; font<5 ; ++font ){	/* For each of the four fonts	*/
+  for( font=0 ; font<NFONTS ; ++font ){	/* For each of the avail. fonts	*/
 
     sprintf( buffer, "%s Demonstration", Fonts[font] );
     MainWindow( buffer );
@@ -1398,4 +1401,3 @@ int gprintf( int *xloc, int *yloc, char *fmt, ... )
   return( cnt );			/* Return the conversion count	*/
 
 }
-

@@ -2,7 +2,7 @@
 
     Memory manipulation functions
 
-    Copyright (c) Borland International 1991
+    Copyright (c) 1991, 1992 by Borland International
     All Rights Reserved.
 */
 

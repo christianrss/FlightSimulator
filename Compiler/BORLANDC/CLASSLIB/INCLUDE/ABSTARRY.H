@@ -1,315 +1,202 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+/*------------------------------------------------------------------------*/
+/*                                                                        */
+/*  ABSTARRY.H                                                            */
+/*                                                                        */
+/*  Copyright Borland International 1991, 1992                            */
+/*  All Rights Reserved                                                   */
+/*                                                                        */
+/*------------------------------------------------------------------------*/
 
-// Contents ----------------------------------------------------------------
-//
-//      AbstractArray
-// 	    AbstractArray::arraySize
-//
-//      ArrayIterator
-//      ArrayIterator::ArrayIterator
-//
-// Description
-//
-//      Defines the class AbstractArray.  An array object implies 
-//      indexability.  Defines the class ArrayIterator.
-//
-// End ---------------------------------------------------------------------
-
-// Interface Dependencies ---------------------------------------------------
-
-#ifndef __ABSTARRY_H
+#if !defined( __ABSTARRY_H )
 #define __ABSTARRY_H
 
-#ifndef __IOSTREAM_H
-#include <iostream.h>
-#define __IOSTREAM_H
+#if defined( TEMPLATES )
+
+    #if !defined( __COLLECT_H )
+    #include <Collect.h>
+    #endif  // __COLLECT_H
+
+    #if !defined( __MEM_H )
+    #include <Mem.h>
+    #endif  // __MEM_H
+
+    #pragma option -Vo-
+    #if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+    #pragma option -po-
+    #endif
+
+    _CLASSDEF(ostream)
+    _CLASSDEF(ContainerIterator)
+    _CLASSDEF(AbstractArray)
+    _CLASSDEF(ArrayIterator)
+
+    class _CLASSTYPE AbstractArray:  public Collection
+    {
+
+    public:
+
+        friend class ArrayIterator;
+
+        virtual Object _FAR & operator []( int loc ) = 0;
+
+        virtual int lowerBound() const = 0;
+        virtual int upperBound() const = 0;
+        virtual sizeType arraySize() const = 0;
+
+        virtual void detach( int loc, DeleteType dt = NoDelete ) = 0;
+        virtual void detach( Object _FAR &, DeleteType dt = NoDelete ) = 0;
+        void destroy( int i )
+            {
+            detach( i, Delete );
+            }
+
+        int isEqual( const Object _FAR & ) const;
+        void printContentsOn( ostream _FAR & ) const;
+
+    };
+
+#else   // TEMPLATES
+
+    #if !defined( __COLLECT_H )
+    #include <Collect.h>
+    #endif  // __COLLECT_H
+
+    #if !defined( __MEM_H )
+    #include <Mem.h>
+    #endif  // __MEM_H
+
+    #if !defined( __CHECKS_H )
+    #include <Checks.h>
+    #endif	// __CHECKS_H
+
+    #pragma option -Vo-
+    #if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+    #pragma option -po-
+    #endif
+
+    _CLASSDEF(ostream)
+    _CLASSDEF(ContainerIterator)
+    _CLASSDEF(AbstractArray)
+    _CLASSDEF(ArrayIterator)
+
+    class _CLASSTYPE AbstractArray:  public Collection
+    {
+
+    public:
+
+        AbstractArray( int, int = 0, sizeType = 0 );
+        virtual ~AbstractArray();
+
+        Object _FAR & operator []( int ) const;
+
+        int lowerBound() const
+            {
+            return lowerbound;
+            }
+
+        int upperBound() const
+            {
+            return upperbound;
+            }
+
+        sizeType arraySize() const;
+
+        virtual void detach( Object _FAR &, DeleteType = NoDelete );
+        virtual void detach( int, DeleteType = NoDelete );
+        void destroy( int i ) { detach( i, DefDelete ); }
+        virtual void flush( DeleteType = DefDelete );
+
+        virtual int isEqual( const Object _FAR & ) const;
+        virtual void printContentsOn( ostream _FAR & ) const;
+
+        virtual ContainerIterator _FAR & initIterator() const;
+
+    protected:
+
+        Object _FAR & objectAt( int i ) const
+            {
+            return *theArray[ zeroBase(i) ];
+            }
+
+        Object _FAR *ptrAt( int i ) const
+            {
+            return theArray[ zeroBase(i) ];
+            }
+
+        int find( const Object _FAR & );
+
+        void reallocate( sizeType );
+
+        void setData( int, Object _FAR * );
+
+        void insertEntry( int );
+        void removeEntry( int );
+        void squeezeEntry( int );
+
+        sizeType delta;
+        int lowerbound;
+        int upperbound;
+        int lastElementIndex;
+
+    private:
+
+        Object _FAR * _FAR *theArray;
+
+        int zeroBase( int loc ) const
+            {
+            PRECONDITION( loc >= lowerbound && loc <= upperbound );
+            return loc - lowerbound;
+            }
+
+        int boundBase( unsigned loc ) const
+            {
+            PRECONDITION( loc == UINT_MAX || loc <= upperbound - lowerbound );
+            return loc == UINT_MAX ? INT_MAX : loc + lowerbound;
+            }
+
+        friend class ArrayIterator;
+
+    };
+
+    inline Object _FAR & AbstractArray::operator [] ( int atIndex ) const
+    {
+        return objectAt( atIndex );
+    }
+
+    inline sizeType AbstractArray::arraySize() const
+    {
+        return sizeType( upperbound - lowerbound + 1 );
+    }
+
+    class _CLASSTYPE ArrayIterator : public ContainerIterator
+    {
+
+    public:
+
+        ArrayIterator( const AbstractArray _FAR & );
+        virtual ~ArrayIterator();
+
+        virtual operator int();
+        virtual Object _FAR & current();
+        virtual Object _FAR & operator ++( int );
+        virtual Object _FAR & operator ++();
+        virtual void restart();
+
+    private:
+
+        int currentIndex;
+        const AbstractArray _FAR & beingIterated;
+
+        void scan();
+
+    };
+
+#endif  // TEMPLATES
+
+#if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+#pragma option -po.
 #endif
+#pragma option -Vo.
 
-#ifndef __CLSTYPES_H
-#include <clstypes.h>
-#endif
+#endif  // __ABSTARRY_H
 
-#ifndef __OBJECT_H
-#include <object.h>
-#endif
-
-#ifndef __COLLECT_H
-#include <collect.h>
-#endif
-
-// End Interface Dependencies ------------------------------------------------
-
-_CLASSDEF(AbstractArray)
-_CLASSDEF(ArrayIterator)
-
-class _CLASSTYPE AbstractArray:  public Collection
-{
-public:														 
-    AbstractArray( int upper, int lower = 0, sizeType aDelta = 0 );
-    virtual ~AbstractArray();
-
-            int             lowerBound() const { return lowerbound; }
-            int             upperBound() const { return upperbound; }
-	    sizeType        arraySize() const;
-
-	virtual RContainerIterator initIterator() const;
-
-	virtual void            add( RObject ) = 0;
-            void            destroy( int i ) { detach( i, 1 ); }
-	    void	    detach( int, int = 0 );
-
-	virtual void            detach( RCObject, int = 0 );
-
-    virtual classType       isA() const = 0;
-    virtual Pchar nameOf() const = 0;
-    virtual int             isEqual( RCObject ) const;
-    virtual hashValueType   hashValue() const;
-
-	virtual	void	    printContentsOn( Rostream ) const;
-
-protected:
-    RObject         objectAt( int i ) const
-                                { return *theArray[ i - lowerbound ]; }
-    void            reallocate( sizeType );
-    sizeType	    delta;
-    int		    lowerbound;
-    int		    upperbound;
-    int		    whereToAdd;
-    PObject _FAR * theArray;
-
-    friend  class _CLASSTYPE ArrayIterator;
-};
-
-// Description -------------------------------------------------------------
-//
-//      Defines the class AbstractArray.  The AbstractArray class is 
-//      used as a base class for random-access and sorted arrays.
-//      The size of the array, i.e. the maximum number of elements 
-//      which may be put into the array, is calculated from the bounds 
-//      given at the construction of the array object.
-//
-// Constructor
-//
-// 	    AbstractArray
-//
-// 	    Constructor.  Parameter upper specifies the upper bound for the
-// 	    index of the array.	Parameter lower specifies a lower bound for
-//      the index of the array.  Paramter aDelta specifies the number of 
-// 	    array elements by which the array will grow if an element is added 
-// 	    to an array	which has no more space for elements.  Specify aDelta = 0 
-// 	    if the array should not be allowed to grow.
-//
-// Public Members
-//
-// 	    lowerBound
-//
-// 	    Returns the current lower bound of the array.  The lower bound is
-// 	    fixed when the array is constructed.
-//
-// 	    upperBound
-//
-// 	    Returns the upper bound of the array.  The upper bound is initially
-// 	    set when the array is constructed but may increase is more elements
-// 	    are added.	The amount by which the upper bound will increase is
-// 	    a parameter to the constructor for the array.
-//
-// 	    arraySize
-//
-// 	    Returns the size of the array, in elements, as determined by the
-// 	    lower bound and the current upper bound.
-//
-// 	    initIterator
-//
-// 	    Array iterator initializer.
-//
-//      add
-//
-//      Pure virtual function.
-// 	
-//      destroy
-//
-//      Removes an object reference from the array at the given index and
-//      destroys the object.
-//
-// 	    detach
-//
-// 	    Removes all references to the object at the given index in the array.
-//      Does not delete the object.  Use this function when the array elements
-// 	    are not owned by the array.
-//
-// 	    detach
-//
-//      Removes a reference to the given object from the array.
-//
-//      hashValue
-//
-// 	    Returns a pre-defined value as the hash value of an array.
-//
-// 	    isEqual
-//
-// 	    Determines whether two arrays are equal.
-//
-// 	    printContentsOn
-//
-// 	    Displays the non-ZERO elements of the array.
-//
-// Inherited Members
-//
-//      hasMember
-//
-//      Inherited from Collection
-//
-// 	    isEmpty
-//
-//      Inherited from Collection.
-//
-//      forEach
-//
-//      Inherited from Container.
-//
-//      firstThat
-//
-//      Inherited from Container.
-//
-//      lastThat
-//
-//      Inherited from Container.
-//
-// 	    printOn
-//
-// 	    Inherited from Container.
-//
-//      destroy
-//
-//      Inherited from Collection.
-//
-// Protected Members
-//
-// 	    objectAt
-//
-// 	    Returns a reference to the object at the given index.
-//
-// 	    reallocate
-//
-// 	    Expands the pointer array to a new size.
-//
-//      delta
-//
-//      Defines the number of elements by which we are to expand the
-//      array, if needed.
-//
-//      lowerbound
-//
-//      Defines the smallest value for an index in this array.
-//
-//      upperbound
-//
-//      Defines the largest index in the array which, if referenced,
-//      will not cause an array expansion to take place.
-//
-//      theArray
-//
-//      Points to the area in which array element references are located.
-//
-// End ---------------------------------------------------------------------
-
-
-// Member Function //
-
-inline sizeType AbstractArray::arraySize() const
-
-// Summary -----------------------------------------------------------------
-//
-//      Returns the current size of the array.
-//
-// End ---------------------------------------------------------------------
-{
-	return sizeType( upperbound - lowerbound + 1 );
-}
-// End Member Function AbstractArray::arraySize //
-
-
-// Class //
-
-class _CLASSTYPE ArrayIterator:  public ContainerIterator
-{
-public:
-    ArrayIterator( RCAbstractArray );
-    virtual ~ArrayIterator();
-
-	virtual				operator int();
-	virtual				operator RObject();
-	virtual	RObject		operator ++();
-	virtual	void		restart();
-
-private:
-			int		    currentIndex;
-    RCAbstractArray beingIterated;
-};
-
-// Description -------------------------------------------------------------
-//
-// 	    Defines the array iterator class.  Upon initialization, we set up
-// 	    an internal pointer to our current position in the array.  As
-//      the increment operator is called, we update this current position.
-//
-// Constructor
-//
-//      ArrayIterator( RCAbstractArray )
-//
-// 	    Constructor for an iterator.  Note that this isn't a copy
-// 	    constructor, since it takes an object from a different class.
-//
-// Destructor
-//
-// 	    ~ArrayIterator
-//
-// Public Members
-//
-// 	    operator int
-//
-// 	    We are allowed one cast operator to a predefined type.  This
-// 	    operator defines an explicit or an implicit cast from a
-// 	    ArrayIterator to an integer.
-//
-//      operator Object&
-//
-//      Conversion to Object operator.
-//
-// 	    operator ++
-//
-//      The increment operator.
-//
-// 	    restart
-//
-// 	    Restarts an array iterator.
-//
-// Private Members
-//
-// 	    currentIndex
-//
-// 	    Maintains the position information for this iterator.
-//
-// 	    beingIterated
-//
-//      Maintains a pointer to the array being iterated.
-//
-// End ---------------------------------------------------------------------
-
-
-// Constructor //
-
-inline  ArrayIterator::ArrayIterator( RCAbstractArray toIterate ) :
-			beingIterated( toIterate ), currentIndex( toIterate.lowerbound )
-
-// Summary -----------------------------------------------------------------
-//
-//      Constructor for a array iterator object.
-//
-// End ---------------------------------------------------------------------
-{
-}
-// End Constructor ArrayIterator::ArrayIterator //
-
-
-#endif // ifndef __ABSTARRY_H //

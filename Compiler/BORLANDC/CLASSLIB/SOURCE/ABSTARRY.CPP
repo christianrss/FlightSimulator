@@ -1,528 +1,272 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+/*------------------------------------------------------------------------*/
+/*                                                                        */
+/*  ABSTARRY.CPP                                                          */
+/*                                                                        */
+/*  Copyright Borland International 1991, 1992                            */
+/*  All Rights Reserved                                                   */
+/*                                                                        */
+/*------------------------------------------------------------------------*/
 
-// Contents ----------------------------------------------------------------
-//
-//      AbstractArray::AbstractArray                        constructor
-//      AbstractArray::~AbstractArray                       destructor
-//      AbstractArray::detach                               Object
-//      AbstractArray::detach                               int
-//      AbstractArray::hashValue
-//      AbstractArray::reallocate
-//      AbstractArray::isEqual
-//      AbstractArray::initIterator
-//      AbstractArray::printContentsOn
-//
-//      ArrayIterator::operator int
-//      ArrayIterator::operator Object
-//      ArrayIterator::restart
-//      ArrayIterator::operator ++
-//
-// Description
-//
-//      Implementation of class AbstractArray and class ArrayIterator member
-//      functions.
-//
-// End ---------------------------------------------------------------------
+#if !defined( CHECKS_H )
+#include <Checks.h>
+#endif  // CHECKS_H
 
-// Interface Dependencies ---------------------------------------------------
+#if !defined( __ABSTARRY_H )
+#include <AbstArry.h>
+#endif  // __ABSTARRY_H
+
+#ifndef __IOSTREAM_H
+#include <iostream.h>
+#endif
 
 #ifndef __STDLIB_H
 #include <stdlib.h>
-#define __STDLIB_H
 #endif
 
-#ifndef __CLSDEFS_H
-#include <clsdefs.h>
-#endif
-
-#ifndef __CLSTYPES_H
-#include <clstypes.h>
-#endif
-
-#ifndef __OBJECT_H
-#include <object.h>
-#endif
-
-#ifndef __CONTAIN_H
-#include <contain.h>
-#endif
-
-#ifndef __ABSTARRY_H
-#include <abstarry.h>
-#endif
-
-// End Interface Dependencies ------------------------------------------------
-
-// Implementation Dependencies ----------------------------------------------
-
-#if !defined( __ERREXIT_H )
-#include <errexit.h>
-#endif
-
-// End Implementation Dependencies -------------------------------------------
-
-
-// Constructor //
+#if !defined( __MEM_H )
+#include <mem.h>
+#endif  // __MEM_H
 
 AbstractArray::AbstractArray( int anUpper, int aLower, sizeType aDelta )
-
-// Summary -----------------------------------------------------------------
-//
-//      Constructor for an abstract array.  An abstract array can be made
-// 	    to be either of a fixed or expanding size.  In an expanding array,
-// 	    when a reference is made to an index greater than the current upper
-// 	    bound of the array, the array will grow to allow the given index
-//      to reference a valid array object.  The number of elements by
-//      which this growth is performed is given by the parameter aDelta.
-//
-// Parameters
-//
-//      anUpper
-//
-//      The upper bound for the array.
-//
-//      aLower
-//
-//      The lower bound for the array.  The initial size of the array is
-//      calculated from the upper and lower bounds.
-//
-//      aDelta
-//
-//      The growth factor for the array.
-//
-// Functional Description
-//
-//      We set up the private parts of the array, allocate space for the
-//      pointers, then set all the allocated pointers to point to the 
-//      error object.
-//
-// End ---------------------------------------------------------------------
 {
-	lowerbound = whereToAdd = aLower;
-	upperbound = anUpper;
-	delta = aDelta;
-	theArray = new Object *[ arraySize() ];
+    PRECONDITION( anUpper >= aLower );
+    lastElementIndex = aLower - 1;
+    lowerbound = aLower;
+    upperbound = anUpper;
+    delta = aDelta;
+
+    theArray = new Object *[ arraySize() ];
+    if( theArray == 0 )
+        ClassLib_error(__ENOMEM);
+
     for( int i = 0; i < arraySize(); i++ )
-	{
-		theArray[ i ] = ZERO;
-	} // end for
+        {
+        theArray[ i ] = ZERO;
+        }
 }
-// End Constructor AbstractArray::AbstractArray //
-
-
-// Destructor //
 
 AbstractArray::~AbstractArray()
-
-// Summary -----------------------------------------------------------------
-//
-//      Destructor for a AbstractArray object.
-//
-// End ---------------------------------------------------------------------
 {
-    for( int i = 0; i < arraySize(); i++ )
-        if( theArray[ i ] != ZERO )
-            delete theArray[ i ];
-	delete [ arraySize() ] theArray;
-//	delete theArray;		// for C++ 2.1
-}
-// End Destructor //
-
-
-// Member Function //
-
-void    AbstractArray::detach( const Object& toDetach, int deleteObjectToo )
-
-// Summary -----------------------------------------------------------------
-//
-//      Detaches an object from the array.
-//
-// Parameter
-//
-//      toDetach
-//
-//      The object we are to search for and detach from the AbstractArray.
-//
-//      deleteObjectToo
-//
-//      Specifies whether we are to delete the object.
-//
-// Functional Description                     
-//
-//      If the object specified is at the lower bound of the array, we remove
-//      the reference right away.  Otherwise, we iterate through the array until
-//      we find it, then remove the reference.
-//
-// Remarks
-//
-//  warnings:
-//      No error condition is generated if the object which was specified
-//      isn't in the array.
-//
-// End ---------------------------------------------------------------------
-{
-	if ( toDetach == NOOBJECT )
-        return;
-
-    for ( int i = 0; i < arraySize(); i++ )
-    {
-		if ( ( theArray[ i ] != ZERO ) && ( *theArray[ i ] == toDetach ) )
-        {
-            if ( deleteObjectToo )
-            {
+    PRECONDITION( theArray != 0 );
+    if( ownsElements() )
+        for( int i = 0; i < arraySize(); i++ )
+            if( theArray[ i ] != ZERO )
                 delete theArray[ i ];
-            }
-            theArray[ i ] = ZERO;
-            itemsInContainer--;
-            break;
-        }
-    } // end for //
+    delete [] theArray;
 }
-// End Member Function AbstractArray::detach //
 
-
-// Member Function //
-
-void    AbstractArray::detach( int atIndex, int deleteObjectToo )
-
-// Summary -----------------------------------------------------------------
-//
-//      Detaches an object from the array at the given index.
-//
-// Parameter
-//
-//      toIndex
-//
-//      The index from which we are to detach the object.
-//
-//      deleteObjectToo
-//
-//      Specifies whether we are to delete the object.
-//
-// Remarks
-//
-//  warnings:
-//      No error condition is generated if the object which was specified
-//      isn't in the array.
-//
-// End ---------------------------------------------------------------------
+void AbstractArray::detach( Object& toDetach, DeleteType dt )
 {
-    if ( theArray[ atIndex - lowerbound ] != ZERO )
-    {
-		if ( deleteObjectToo )
+    detach( find( toDetach ), dt );
+}
+
+void AbstractArray::detach( int atIndex, DeleteType dt )
+{
+    PRECONDITION( atIndex >= lowerbound &&
+                  atIndex <= upperbound && theArray != 0
+                );
+
+    if( ptrAt(atIndex) != ZERO )
         {
-            delete ( theArray[ atIndex - lowerbound ] );
-        }
-        theArray[ atIndex - lowerbound ] = ZERO;
+        if( delObj(dt) )
+            delete ptrAt(atIndex);
         itemsInContainer--;
-    } // end if there was an element already there in the array.
+        }
+    removeEntry(atIndex);
+    if( atIndex <= lastElementIndex )
+        lastElementIndex--;
+    CHECK( itemsInContainer != UINT_MAX );
 }
-// End Member Function AbstractArray::detach //
 
-
-// Member Function //
-
-hashValueType AbstractArray::hashValue() const
-
-// Summary -----------------------------------------------------------------
-//
-//      Returns the hash value of a array.
-//
-// End ---------------------------------------------------------------------
+void AbstractArray::flush( DeleteType dt )
 {
-	return hashValueType(0);
+    if( delObj(dt) )
+        for( unsigned i = 0; i <= zeroBase(upperbound); i++ )
+            if( theArray[i] != ZERO )
+                delete theArray[i];
+
+    for( unsigned i = 0; i <= zeroBase(upperbound); i++ )
+        theArray[i] = ZERO;
+
+    itemsInContainer = 0;
+    lastElementIndex = lowerbound-1;
 }
-// End Member Function AbstractArray::hashValue //
 
-
-// Member Function //
+inline unsigned nextDelta( unsigned sz, unsigned delta )
+{
+    return (sz%delta) ? ((sz+delta)/delta)*delta : sz;
+}
 
 void AbstractArray::reallocate( sizeType newSize )
-
-// Summary -----------------------------------------------------------------
-//
-// 	    Reallocates the array's pointer vector to a new size.
-//
-// Parameters
-//
-// 	    newSize
-//
-// 	    The number of pointers which is to be in the new vector.
-//
-// Functional Description
-//
-// 	    We allocate space for a new pointer vector of the given size,
-// 	    adjusted to take into account the growth factor.  We then copy
-// 	    the old vector into the new one and fix up the pointer in the
-// 	    array object.
-//
-// Remarks
-//
-//  assumptions
-// 	    The new size of the pointer vector is greater than the
-//      current size.  We do "expanding-only" arrays, not accordions.
-//
-// End ---------------------------------------------------------------------
 {
-    if ( delta == 0 )
-        ClasslibErrorExit("Error:  Attempting to expand a fixed size array.",
-                          __EEXPAND);
+    PRECONDITION( newSize > arraySize() );
+    if( delta == 0 )
+        ClassLib_error(__EEXPANDFS);
 
-	int i;		// Loop counter for moving the pointers from the old vector
-				// to the new one.
+    sizeType adjustedSize = arraySize() +
+                            nextDelta( newSize - arraySize(), delta );
+    Object **newArray = new Object *[ adjustedSize ];
+    if( newArray == 0 )
+        ClassLib_error(__ENOMEM);
 
-// Body Comment
-//
-// 	    We assume that the new pointer vector size is greater than the
-// 	    current vector size.
-//
-// End
+    memcpy( newArray, theArray, arraySize() * sizeof( theArray[0] ) );
 
-    if (newSize <= arraySize())
-        ClasslibErrorExit("Error: Invalid array size in reallocation.",
-            __EEXPAND);
+    for( int i = arraySize(); i < adjustedSize; i++ )
+        newArray[i] = ZERO;
 
-	sizeType adjustedSize = newSize + ( delta - ( newSize % delta ) );
-
-	Object **newArray = new Object *[ adjustedSize ];
-    if ( newArray == 0 )
-        ClasslibErrorExit("Error:  Out of Memory", __ENOMEM);
-
-	for ( i = 0; i < arraySize(); i++ )
-	{
-		newArray[i] = theArray[i];
-	}
-	for (; i < adjustedSize; i++ )
-	{
-		newArray[i] = ZERO;
-	}
-
-    delete [ arraySize() ] theArray;
+    delete [] theArray;
     theArray = newArray;
     upperbound = adjustedSize + lowerbound - 1;
-
 }
-// End Member Function AbstractArray::reallocate //
 
+void AbstractArray::setData( int loc, Object *data )
+{
+    PRECONDITION( loc >= lowerbound && loc <= upperbound );
+    theArray[ zeroBase(loc) ] = data;
+}
 
-// Member Function //
+void AbstractArray::insertEntry( int loc )
+{
+    PRECONDITION( loc >= lowerbound && loc <= upperbound );
+    memmove( theArray + zeroBase(loc) + 1,
+             theArray + zeroBase(loc),
+             (upperbound - loc)*sizeof( theArray[0] )
+           );
+}
+
+void AbstractArray::removeEntry( int loc )
+{
+    if( loc >= lastElementIndex )
+        theArray[zeroBase(loc)] = ZERO;
+    else
+        squeezeEntry( zeroBase(loc) );
+}
+
+void AbstractArray::squeezeEntry( int squeezePoint )
+{
+    PRECONDITION( squeezePoint >= 0 &&
+                  squeezePoint <= zeroBase(lastElementIndex)
+                );
+
+    memmove( theArray + squeezePoint,
+             theArray + squeezePoint + 1,
+             (zeroBase(lastElementIndex)-squeezePoint)*sizeof( theArray[0] )
+           );
+        theArray[zeroBase(lastElementIndex)] = ZERO;
+}
+
+int AbstractArray::find( const Object& o )
+{
+    if( o == NOOBJECT )
+        return INT_MIN;
+
+    for( int index = 0; index < arraySize(); index++ )
+        if( *(theArray[index]) == o )
+            return boundBase(index);
+    return INT_MIN;
+}
+
+inline int isZero( const Object *o )
+{
+    return o == &NOOBJECT;
+}
 
 int AbstractArray::isEqual( const Object& testObject ) const
-
-// Summary -----------------------------------------------------------------
-//
-// 	    Tests for equality of two arrays.  Two arrays are equal if they
-// 	    have the same dimensions and the same objects at the same indices.
-//
-// Parameters
-//
-// 	    testObject
-//
-// 	    The array which we will be testing against this.
-//
-// End ---------------------------------------------------------------------
 {
+    PRECONDITION( isA() == testObject.isA() );
+    AbstractArray& test = (AbstractArray&)testObject;
+    if( lowerbound != test.lowerbound || upperbound != test.upperbound )
+        return 0;
 
-	if ( lowerbound != ((AbstractArray&)testObject).lowerbound ||
-		 upperbound != ((AbstractArray&)testObject).upperbound )
-	{
-		return 0;
-	}
-
-	for ( int i = 0; i < arraySize(); i++ )
-	{
-
-// Body Comment
-//
-// 	    The two array elements can be null, so check that first.
-// 		If there are really objects there, compare them for equality.
-//
-// End
-
-		if ( theArray[i] != ZERO )
-		{
-			if ( ((AbstractArray&)testObject).theArray[i] != ZERO )
-			{
-				if ( *theArray[i] !=
-					 *( ((AbstractArray &)testObject).theArray[i] ) )
-				{
-					return 0; // objects weren't equal.
-				}
-			}
-			else // the first pointer wasn't ZERO but the second was
-			{
-				return 0;
-			}
-		}
-		else
-			if ( ((AbstractArray&)testObject).theArray[i] != ZERO )
-			{
-				return 0;  // first pointer was ZERO but the second wasn't
-			}
-	}  // end for each element in the array.
-	return 1;
+    for( int i = 0; i < arraySize(); i++ )
+        {
+        if( isZero(theArray[i]) != isZero(test.theArray[i]) )
+            return 0;
+        if( *(theArray[i]) != *(test.theArray[i]) )
+            return 0;
+        }
+    return 1;
 }
-// End Member Function AbstractArray::isEqual //
-
-
-// Member Function //
 
 ContainerIterator& AbstractArray::initIterator() const
-
-// Summary -----------------------------------------------------------------
-//
-//      Initializes an iterator for a list.
-//
-// End ---------------------------------------------------------------------
 {
-	return *( (ContainerIterator *)new ArrayIterator( *this ) );
+    return *( (ContainerIterator *)new ArrayIterator( *this ) );
 }
-// End Member Function AbstractArray::initIterator //
-
-
-// Member Function //
 
 void AbstractArray::printContentsOn( ostream& outputStream ) const
-
-// Summary -----------------------------------------------------------------
-//
-//      Displays the non-ZERO contents of an array on the given stream.
-//
-// Parameters
-//
-//      outputStream
-//
-//      The stream on which we will be writing the contents.
-//
-// Functional Description
-//
-//      We initialize an iterator, then iterator through each object,
-//      asking the objects to print themselves if they are not the
-// 	    error object.
-//
-// Remarks
-//
-//  warnings:
-//      We must be sure to delete the container iterator, since it was
-//      allocated on the heap.
-//
-// End ---------------------------------------------------------------------
 {
-	ContainerIterator& printIterator = initIterator();
-
+    ContainerIterator& printIterator = initIterator();
     printHeader( outputStream );
-
-	while( int(printIterator) != 0 )
-	{
-		Object& arrayObject = printIterator++;
-		if ( arrayObject != NOOBJECT )
-		{
-			arrayObject.printOn( outputStream );
-
-			if ( int(printIterator) != 0 )
-			{
-            printSeparator( outputStream );
-			}
-			else // there are no more objects in the array.
-			{
-				break;
-			}
-		} // end if the array object is NOOBJECT.
-    } // end while //
-
+    while( printIterator != 0 )
+        {
+        Object& arrayObject = printIterator++;
+        if( arrayObject != NOOBJECT )
+            {
+            arrayObject.printOn( outputStream );
+            if( printIterator != 0 )
+                printSeparator( outputStream );
+            else
+                break;
+            }
+        }
     printTrailer( outputStream );
     delete &printIterator;
 }
-// End Member Function AbstractArray::printContentsOn //
 
-
-// Destructor //
+ArrayIterator::ArrayIterator( const AbstractArray& toIterate ) :
+    beingIterated( toIterate ),
+    currentIndex( toIterate.lowerbound )
+{
+    restart();
+}
 
 ArrayIterator::~ArrayIterator()
-
-// Summary -----------------------------------------------------------------
-//
-//      Destructor for a ArrayIterator object.
-//
-// End ---------------------------------------------------------------------
 {
 }
-// End Destructor //
-
-
-// Member Function //
 
 ArrayIterator::operator int()
-
-// Summary -----------------------------------------------------------------
-//
-//      Integer conversion for an array iterator.
-//
-// End ---------------------------------------------------------------------
 {
-	return currentIndex <= beingIterated.upperbound;
+    return currentIndex <= beingIterated.upperbound;
 }
-// End Member Function operator int //
 
-
-// Member Function //
-
-ArrayIterator::operator Object&()
-
-// Summary -----------------------------------------------------------------
-//
-//      Object reference conversion for an array iterator.
-//
-// End ---------------------------------------------------------------------
+Object& ArrayIterator::current()
 {
-	if ( currentIndex <= beingIterated.upperbound )
-	{
-        return ( (Object&)( beingIterated.objectAt( currentIndex ) ) );
-	}
-    else // no more elements in the array.
-    {
+    if ( currentIndex <= beingIterated.upperbound )
+        return beingIterated.objectAt( currentIndex );
+    else
         return NOOBJECT;
-    }
 }
-// End Member Function operator Object& //
 
+void ArrayIterator::scan()
+{
+    if( currentIndex > beingIterated.upperbound )
+        return;
 
-// Member Function //
+    while( ++currentIndex <= beingIterated.upperbound &&
+           beingIterated.objectAt( currentIndex ) == NOOBJECT )
+        ;   // empty body
+}
 
 void ArrayIterator::restart()
-
-// Summary -----------------------------------------------------------------
-//
-//      ArrayIterator restart.
-//
-// End ---------------------------------------------------------------------
 {
-	currentIndex = beingIterated.lowerbound;
+    currentIndex = beingIterated.lowerbound;
+    if( beingIterated.objectAt( currentIndex ) == NOOBJECT )
+        scan();
 }
-// End Member Function ArrayIterator::restart //
 
-
-// Member Function //
-
-Object& ArrayIterator::operator ++()
-
-// Summary -----------------------------------------------------------------
-//
-// 	    Increments the array iterator and returns the next object.
-//
-// End ---------------------------------------------------------------------
+Object& ArrayIterator::operator ++ ( int )
 {
-	if ( currentIndex <= beingIterated.upperbound )
-	{
-		currentIndex++;
-        return ( (Object&)( beingIterated.objectAt( currentIndex - 1 ) ) );
+    Object& res = (currentIndex <= beingIterated.upperbound) ?
+        beingIterated.objectAt( currentIndex ) : NOOBJECT;
 
-	}
-    else // no more elements in the array.
-    {
-        return NOOBJECT;
-    }
+    scan();
 
+    return res;
 }
-// End Member Function ArrayIterator::operator ++//
 
+Object& ArrayIterator::operator ++ ()
+{
+    scan();
+    return (currentIndex <= beingIterated.upperbound) ?
+        beingIterated.objectAt( currentIndex ) : NOOBJECT;
+}

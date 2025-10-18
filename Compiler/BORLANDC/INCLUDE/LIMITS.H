@@ -2,14 +2,14 @@
 
     Defines implementation specific limits on type values.
 
-    Copyright (c) Borland International 1987,1988,1990,1991
+    Copyright (c) 1987, 1992 by Borland International
     All Rights Reserved.
 */
 
 #ifndef __LIMITS_H
 #define __LIMITS_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 

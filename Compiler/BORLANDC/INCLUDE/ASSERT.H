@@ -2,11 +2,11 @@
 
     assert macro
 
-    Copyright (c) Borland International 1987,1988,1990,1991
+    Copyright (c) 1987, 1992 by Borland International
     All Rights Reserved.
 */
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 
@@ -26,9 +26,14 @@ void _Cdecl _FARFUNC __assertfail( char _FAR *__msg,
 #undef assert
 
 #ifdef NDEBUG
-#define assert(p)   ((void)0)
+#  define assert(p)   ((void)0)
 #else
-#define assert(p)   ((p) ? (void)0 : (void) __assertfail( \
-                    "Assertion failed: %s, file %s, line %d\n", \
+#  ifdef _Windows
+#    define _ENDL
+#  else
+#    define _ENDL "\n"
+#  endif
+#  define assert(p) ((p) ? (void)0 : (void) __assertfail( \
+                    "Assertion failed: %s, file %s, line %d" _ENDL, \
                     #p, __FILE__, __LINE__ ) )
 #endif

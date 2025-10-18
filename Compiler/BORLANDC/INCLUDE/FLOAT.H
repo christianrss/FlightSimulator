@@ -3,14 +3,14 @@
     Defines implementation specific macros for dealing with
     floating point.
 
-        Copyright (c) Borland International 1987,1988,1990,1991
+    Copyright (c) 1987, 1992 by Borland International
     All Rights Reserved.
 */
 
 #ifndef __FLOAT_H
 #define __FLOAT_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 
@@ -114,8 +114,8 @@ unsigned int _Cdecl _FARFUNC _status87(void);
 #define CW_DEFAULT  _default87
 extern unsigned int _Cdecl _default87;
 
-/* 
-    SIGFPE signal error types (for integer & float exceptions). 
+/*
+    SIGFPE signal error types (for integer & float exceptions).
 */
 #define FPE_INTOVFLOW       126 /* 80x86 Interrupt on overflow  */
 #define FPE_INTDIV0         127 /* 80x86 Integer divide by zero */
@@ -128,13 +128,13 @@ extern unsigned int _Cdecl _default87;
 #define FPE_STACKFAULT      135 /* 80x87 stack overflow         */
 #define FPE_EXPLICITGEN     140 /* When SIGFPE is raise()'d     */
 
-/* 
+/*
             SIGSEGV signal error types.
 */
 #define SEGV_BOUND          10  /* A BOUND violation (SIGSEGV)  */
 #define SEGV_EXPLICITGEN    11  /* When SIGSEGV is raise()'d    */
 
-/* 
+/*
             SIGILL signal error types.
 */
 #define ILL_EXECUTION       20  /* Illegal operation exception  */

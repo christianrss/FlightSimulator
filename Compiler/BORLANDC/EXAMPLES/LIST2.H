@@ -1,4 +1,4 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+// Borland C++ - (C) Copyright 1991, 1992 by Borland International
 
 // list2.h:   A Integer List Class
 // from Getting Started
@@ -23,3 +23,4 @@ public:
    int getmax() {return nmax;};
    virtual void print();                   // line 22
 };
+

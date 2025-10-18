@@ -1,16 +1,20 @@
-/*      stddef.h
+/*  stddef.h
 
-        Definitions for common types, and NULL
+    Definitions for common types, and NULL
 
-        Copyright (c) Borland International 1987,1988,1990,1991
-        All Rights Reserved.
+    Copyright (c) 1987, 1992 by Borland International
+    All Rights Reserved.
 */
 
 #ifndef __STDDEF_H
 #define __STDDEF_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
+#endif
+
+#ifndef NULL
+#include <_null.h>
 #endif
 
 #ifndef _PTRDIFF_T
@@ -34,12 +38,4 @@ typedef unsigned size_t;
 typedef char wchar_t;
 #endif
 
-#ifndef NULL
-#if defined(__TINY__) || defined(__SMALL__) || defined(__MEDIUM__)
-#define NULL    0
-#else
-#define NULL    0L
-#endif
-#endif
-
-#endif
+#endif  /* __STDDEF_H */

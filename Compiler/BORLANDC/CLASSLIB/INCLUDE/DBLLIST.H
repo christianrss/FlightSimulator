@@ -1,371 +1,249 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+/*------------------------------------------------------------------------*/
+/*                                                                        */
+/*  DBLLIST.H                                                             */
+/*                                                                        */
+/*  Copyright Borland International 1991, 1992                            */
+/*  All Rights Reserved                                                   */
+/*                                                                        */
+/*------------------------------------------------------------------------*/
 
-// Contents ----------------------------------------------------------------
-//
-//      DoubleList
-//      DoubleList::destroyFromHead
-//      DoubleList::destroyFromTail
-//
-//      DoubleListIterator
-//      DoubleListIterator::DoubleListIterator          constructor
-//
-// Description
-//
-//      Defines the class DoubleList.
-//      Defines the class DoubleListIterator.  A list iterator visits each
-//      of the items in a list.
-//
-// End ---------------------------------------------------------------------
-
-// Interface Dependencies ---------------------------------------------------
-
-#ifndef __DBLLIST_H
+#if !defined( __DBLLIST_H )
 #define __DBLLIST_H
 
-#ifndef __IOSTREAM_H
-#include <iostream.h>
-#define __IOSTREAM_H
-#endif
+#if !defined( __CLSTYPES_H )
+#include <ClsTypes.h>
+#endif  // __CLSTYPES_H
 
-#ifndef __CLSTYPES_H
-#include <clstypes.h>
-#endif
+#if !defined( __OBJECT_H )
+#include <Object.h>
+#endif  // __OBJECT_H
 
-#ifndef __OBJECT_H
-#include <object.h>
-#endif
+#if !defined( __COLLECT_H )
+#include <Collect.h>
+#endif  // __COLLECT_H
 
-#ifndef __DLSTELEM_H
-#include <dlstelem.h>
-#endif
+#if !defined( __MEMMGR_H )
+#include <MemMgr.h>
+#endif  // __MEMMGR_H
 
-#ifndef __COLLECT_H
-#include <collect.h>
-#endif
+#if !defined( __SHDDEL_H )
+#include <ShdDel.h>
+#endif  // __SHDDEL_H
 
-// End Interface Dependencies ------------------------------------------------
+#pragma option -Vo-
+#if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+#pragma option -po-
+#endif
 
 _CLASSDEF(DoubleList)
 _CLASSDEF(DoubleListIterator)
 
-// Class //
-
-class _CLASSTYPE DoubleList:  public Collection
+class _CLASSTYPE DoubleListBlockInitializer
 {
-public:
-            DoubleList() { head = tail = 0; }
-    virtual ~DoubleList();
 
-    RObject  peekAtHead() const;
-    RObject  peekAtTail() const;
-            
-    virtual void            add( RObject );
-    virtual void            detach( RCObject, int = 0 );
-    void addAtHead( RObject );
-    void addAtTail( RObject );
-    void            destroyFromHead( RCObject );
-    void            destroyFromTail( RCObject );
-    void            detachFromHead( RCObject, int = 0 );
-    void            detachFromTail( RCObject, int = 0 );
+protected:
 
-    virtual RContainerIterator initIterator() const;
-    RContainerIterator initReverseIterator() const;
+    DoubleListBlockInitializer();
+    ~DoubleListBlockInitializer();
 
-    virtual classType       isA() const;
-    virtual Pchar nameOf() const;
-    virtual hashValueType   hashValue() const;
+    static unsigned count;
 
-private:
-    PDoubleListElement head;
-    PDoubleListElement tail;
-    friend  class DoubleListIterator;
 };
 
-// Description -------------------------------------------------------------
-//
-//      Defines the container class DoubleList. 
-//
-// Constructor
-//
-//      DoubleList
-//
-//      Default constructor
-//
-// Destructor
-//
-//      ~DoubleList
-//
-// Public Members
-//
-//      peekAtHead
-//
-//      Returns a reference to the object at the head of the list.
-//
-//      peekAtTail
-//
-//      Returns a reference to the object at the tail of the list.
-//
-//      add
-//
-//      Adds an element to the list.  By default, the element is
-//      added to the head of the list.
-//
-//      addAtHead
-//
-//      Adds an element at the head of the list.
-//
-//      addAtTail
-//
-//      Adds an element to the tail of the list.
-//
-//      destroyFromHead
-//
-//      Destroys the given element, searching forward from the head of the
-//      list.
-//
-//      destroyFromTail
-//
-//      Destroys the given element, searching forward from the head of the
-//      list.
-//
-//      detach
-//
-//      Detaches the given element.  By default, the element is searched
-//      for from the head of the list.
-//
-//      detachFromHead
-//
-//      Detachs the given element, searching forward from the head of the
-//      list.
-//
-//      detachFromTail
-//
-//      Detachs the given element, searching forward from the head of the
-//      list.
-//
-//      isA
-//
-//      Returns the class type of class DoubleList.
-//
-//      nameOf
-//
-//      Returns a pointer to the character string "DoubleList."
-//     
-//      hashValue
-//
-//      Inherited from Object.
-//
-//      initIterator
-//
-//      Initializes a double list iterator for a forward traversal of the
-//      list.
-//
-//      initReverseIterator
-//
-//      Initializes a double list iterator for a reverse traversal of the list.
-//
-// Inherited Members
-//
-//      printOn
-//
-//      Inherited from Container.
-//
-//      isEqual
-//
-//      Inherited from Container.
-//
-//      forEach
-//
-//      Inherited from Container.
-//
-//      firstThat
-//
-//      Inherited from Container.
-//
-//      lastThat
-//
-//      Inherited from Container.
-//
-//      isSortable
-//
-//      Inherited from Object.
-//
-//      isAssociation
-//
-//      Inherited from Object.
-//
-// End ---------------------------------------------------------------------
-
-
-// Member Function //
-
-inline void DoubleList::destroyFromHead( RCObject toDestroy )
-
-// Summary -----------------------------------------------------------------
-//
-//      Destroys an object from the head of a double list.  We remove
-//      the object from the list and call that object's destructor.
-//
-// Parameter
-//
-//      toDestroy
-//
-//      The object we are to search for and destroy from the DoubleList.
-//
-// Functional Description                     
-//
-//      Inline wrap of detach which deleteObjectToo parameter set to 1.
-//
-// Remarks
-//
-//  warnings:
-//      No error condition is generated if the object which was specified
-//      isn't on the double list.
-//
-// End ---------------------------------------------------------------------
+class _CLASSTYPE DoubleList : 
+    public Collection, 
+    private DoubleListBlockInitializer
 {
-    detachFromHead( toDestroy, 1 );
-}
-// End Member Function DoubleList::destroyFromHead //
 
-
-// Member Function //
-
-inline void DoubleList::destroyFromTail( RCObject toDestroy )
-
-// Summary -----------------------------------------------------------------
-//
-//      Destroys an object from the tail of a double list.  We remove
-//      the object from the list and call that object's destructor.
-//
-// Parameter
-//
-//      toDestroy
-//
-//      The object we are to search for and destroy from the DoubleList.
-//
-// Functional Description                     
-//
-//      Inline wrap of detach which deleteObjectToo parameter set to 1.
-//
-// Remarks
-//
-//  warnings:
-//      No error condition is generated if the object which was specified
-//      isn't on the double list.
-//
-// End ---------------------------------------------------------------------
-{
-    detachFromTail( toDestroy, 1 );
-}
-// End Member Function DoubleList::destroyFromTail //
-
-
-// Class //
-
-class _CLASSTYPE DoubleListIterator:  public ContainerIterator
-{
 public:
-    DoubleListIterator( RCDoubleList, int = 1 );
+
+    DoubleList() :
+        headEntry( 0, &headEntry, &tailEntry ),
+        tailEntry( 0, &headEntry, &tailEntry ),
+        head( &headEntry ),
+        tail( &tailEntry ),
+        itemsInContainer(0)
+        {
+        }
+
+    ~DoubleList()
+        {
+        flush();
+        }
+
+    Object _FAR & peekAtHead() const
+        {
+        return ptrToRef(head->next->data);
+        }
+
+    Object _FAR & peekAtTail() const
+        {
+        return ptrToRef(tail->prev->data);
+        }
+
+    virtual void add( Object _FAR & toAdd )
+        {
+        addAtHead( toAdd );
+        }
+
+    virtual void detach( Object _FAR &, DeleteType = NoDelete );
+    virtual void flush( DeleteType = DefDelete );
+
+    void addAtHead( Object _FAR & );
+    void addAtTail( Object _FAR & );
+    void destroyFromHead( Object _FAR & );
+    void destroyFromTail( Object _FAR & );
+    void detachFromHead( Object _FAR &, DeleteType = NoDelete );
+    void detachFromTail( Object _FAR &, DeleteType = NoDelete );
+
+    int isEmpty() const
+        {
+        return itemsInContainer == 0;
+        }
+
+    countType getItemsInContainer() const
+        {
+        return itemsInContainer;
+        }
+
+    virtual ContainerIterator _FAR & initIterator() const;
+    ContainerIterator _FAR & initReverseIterator() const;
+
+    virtual classType isA() const
+        {
+        return doubleListClass;
+        }
+
+    virtual char _FAR *nameOf() const
+        {
+        return "DoubleList";
+        }
+
+private:
+
+    class _CLASSTYPE ListElement
+    {
+
+    public:
+
+        ListElement( Object _FAR *o,
+                     ListElement _FAR *p = 0,
+                     ListElement _FAR *n = 0
+                   )
+            {
+            data = o;
+            prev = p;
+            next = n;
+            }
+
+    private:
+
+        ListElement _FAR *next;
+        ListElement _FAR *prev;
+        Object _FAR *data;
+
+        void _FAR *operator new( size_t sz )
+            {
+            PRECONDITION( mgr != 0 );
+            return mgr->allocate( sz );
+            }
+        void operator delete( void _FAR *b )
+            {
+            PRECONDITION( mgr != 0 );
+            mgr->free( b );
+            }
+
+        static MemBlocks _FAR *mgr;
+
+        friend class DoubleList;
+        friend class DoubleListIterator;
+        friend class DoubleListBlockInitializer;
+
+    };
+
+    ListElement _FAR *head;
+    ListElement _FAR *tail;
+
+    ListElement headEntry, tailEntry;
+
+    unsigned itemsInContainer;
+
+    friend class DoubleListIterator;
+    friend class DoubleListBlockInitializer;
+
+};
+
+inline DoubleListBlockInitializer::DoubleListBlockInitializer()
+{
+    PRECONDITION( count != UINT_MAX );
+    if( count++ == 0 )
+        DoubleList::ListElement::mgr = 
+            new MemBlocks( sizeof(DoubleList::ListElement), 20 );
+}
+
+inline DoubleListBlockInitializer::~DoubleListBlockInitializer()
+{
+    PRECONDITION( count != 0 );
+    if( --count == 0 )
+        {
+        delete DoubleList::ListElement::mgr;
+        DoubleList::ListElement::mgr = 0;
+        }
+}
+
+inline void DoubleList::destroyFromHead( Object _FAR & toDestroy )
+{
+    detachFromHead( toDestroy, DefDelete );
+}
+
+inline void DoubleList::destroyFromTail( Object _FAR & toDestroy )
+{
+    detachFromTail( toDestroy, DefDelete );
+}
+
+class _CLASSTYPE DoubleListIterator : public ContainerIterator
+{
+
+public:
+
+    DoubleListIterator( const DoubleList _FAR &, int = 1 );
     virtual ~DoubleListIterator();
 
-    virtual                 operator int();
-    virtual                 operator RObject();
-    virtual RObject         operator ++();
-    RObject         operator --();
-    virtual void            restart();
+    virtual operator int();
+    virtual Object _FAR & current();
+    virtual Object _FAR & operator ++ ( int );
+    virtual Object _FAR & operator ++ ();
+    Object _FAR & operator -- ( int );
+    Object _FAR & operator -- ();
+
+    virtual void restart();
 
 private:
-    PDoubleListElement currentElement;
-    PDoubleListElement startingElement;
+
+    DoubleList::ListElement _FAR *currentElement;
+    DoubleList::ListElement _FAR *startingElement;
+
 };
 
-// Description -------------------------------------------------------------
-//
-//      Defines the double list iterator class.  Upon initialization, we 
-//      set up an internal pointer to our current position in the list.  When
-//      an increment or decrement operator is called, we update this 
-//      current position.
-//
-// Constructor
-//
-//      DoubleListIterator( RCDoubleList, int = 1 )
-//
-//      Constructor for an iterator.  Note that this isn't a copy
-//      constructor, since it takes an object from a different class.
-//
-// Destructor
-//
-//      ~DoubleListIterator
-//
-// Public Members
-//
-//      operator int
-//
-//      We are allowed one cast operator to a predefined type.  This
-//      operator defines an explicit or an implicit cast from a
-//      DoubleListIterator to an integer.
-//
-//      operator RObject
-//
-//      Converts a double list iterator to an Object reference.
-//
-//      operator ++
-//
-//      The increment operator.
-//
-//      operator --
-//
-//      The decrement operator.  This makes sense for double lists.
-//
-//      restart
-//
-//      DoubleList iterator restart mechanism.
-//
-// Private Members
-//
-//      currentElement
-//
-//      The current position in the iteration sequence.
-//
-//      startingElement
-//
-//      The starting position in the iteration sequence.
-//
-// End ---------------------------------------------------------------------
-
-
-// Constructor //
-
-inline DoubleListIterator::DoubleListIterator( RCDoubleList toIterate, int atHead )
-
-// Summary -----------------------------------------------------------------
-//
-//      Constructor for a list iterator object.
-//
-// Parameters
-//
-//      toIterate
-//
-//      The double list we are to iterate.
-//
-//      atHead
-//
-//      Indicates whether we are to start at the head of the list.  If this is
-//      not 1, we will start at the tail.
-//
-// End ---------------------------------------------------------------------
+inline
+DoubleListIterator::DoubleListIterator( const DoubleList _FAR & toIterate,
+                                        int atHead
+                                      )
 {
     if ( atHead == 1 )
-    {
-        startingElement = currentElement = toIterate.head;
-    }
+        {
+        startingElement = currentElement = toIterate.head->next;
+        }
     else
-    {
-        startingElement = currentElement = toIterate.tail;
-    }
+        {
+        startingElement = currentElement = toIterate.tail->prev;
+        }
 }
-// End Constructor DoubleListIterator::DoubleListIterator //
 
+#if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+#pragma option -po.
+#endif
+#pragma option -Vo.
 
-#endif // ifndef __DBLLIST_H //
+#endif  // __DBLLIST_H
+

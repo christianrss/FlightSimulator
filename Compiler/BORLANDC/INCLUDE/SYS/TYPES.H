@@ -2,7 +2,7 @@
 
     Types for dealing with time.
 
-        Copyright (c) Borland International 1987,1988,1990,1991
+    Copyright (c) 1987, 1992 by Borland International
     All Rights Reserved.
 */
 

@@ -1,354 +1,106 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+/*------------------------------------------------------------------------*/
+/*                                                                        */
+/*  LIST.CPP                                                              */
+/*                                                                        */
+/*  Copyright Borland International 1991, 1992                            */
+/*  All Rights Reserved                                                   */
+/*                                                                        */
+/*------------------------------------------------------------------------*/
 
-// Contents ----------------------------------------------------------------
-//
-//      List::add
-//      List::destroy
-//      List::detach
-//      List::initIterator
-//	List::hashValue
-//
-//      ListIterator::operator int
-//      ListIterator::operator Object&
-//      ListIterator::operator ++
-//      ListIterator::restart
-//
-// Description
-//
-//      Implementation of class List member functions.
-//
-// End ---------------------------------------------------------------------
+#if !defined( __RESOURCE_H )
+#include <Resource.h>
+#endif  // __RESOURCE_H
 
-// Interface Dependencies ---------------------------------------------------
+#if !defined( __LIST_H )
+#include <List.h>
+#endif  // __LIST_H
 
-#ifndef __IOSTREAM_H
-#include <iostream.h>
-#define __IOSTREAM_H
-#endif
+unsigned ListBlockInitializer::count = 0;
 
-#ifndef __CLSTYPES_H
-#include <clstypes.h>
-#endif
-
-#ifndef __OBJECT_H
-#include <object.h>
-#endif
-
-#ifndef __CONTAIN_H
-#include <contain.h>
-#endif
-
-#ifndef __LIST_H
-#include <list.h>
-#endif
-
-// End Interface Dependencies ------------------------------------------------
-
-
-// Implementation Dependencies ----------------------------------------------
-
-#ifndef __LSTELEM_H
-#include <lstelem.h>
-#endif
-
-// End Implementation Dependencies -------------------------------------------
-
-// Member Function //
-
-List::~List()
-
-// Summary -----------------------------------------------------------------
-//
-//      Destructor for a List object.
-//
-// End ---------------------------------------------------------------------
-{
-	while( head != 0 )
-		{
-		ListElement *temp = head;
-		head = head->next;
-		delete temp;
-		}
-}
-// End Destructor //
-
-RObject List::peekHead() const
-{ 
-      if(head)
-         return *(head->data);
-      else
-         return NOOBJECT;
-}
-
-// Member Function //
+MemBlocks *List::ListElement::mgr = 0;
 
 void List::add( Object& toAdd )
-
-// Summary -----------------------------------------------------------------
-//
-//      Adds the given object on the list.
-//
-// Parameters
-//
-//      toAdd
-//
-//      The object we are to add to the list.  Once the object is
-//      added, it is owned by the list.
-//
-// End ---------------------------------------------------------------------
 {
-	ListElement *newElement = new ListElement( &toAdd );
-
-	newElement->next = head;
-	head = newElement;
-	itemsInContainer++;
+    ListElement *newElement = new ListElement( &toAdd, head->next );
+    CHECK( newElement != 0 );
+    head->next = newElement;
+    itemsInContainer++;
 }
-// End Member Function List::add //
 
-
-// Member Function //
-
-void    List::detach( const Object& toDetach, int deleteObjectToo )
-
-// Summary -----------------------------------------------------------------
-//
-//      Detaches an object from the list.
-//
-// Parameter
-//
-//      toDetach
-//
-//      The object we are to search for and detach from the List.
-//
-//      deleteObjectToo
-//
-//      Specifies whether we are to delete the object.
-//
-// Functional Description                     
-//
-//      If the object specified is at the head of the list, we remove
-//      the reference right away.  Otherwise, we iterate through the list until
-//      we find it, then remove the reference.
-//
-// Remarks
-//
-//  warnings:
-//      No error condition is generated if the object which was specified
-//      isn't in the list.
-//
-// End ---------------------------------------------------------------------
+List::ListElement *List::findPred( const Object& o )
 {
-    if(head == 0)
-      return;
-
+    tail->data = (Object *)&o;
     ListElement *cursor = head;
-
-    if ( *(head->data) == toDetach )
-	{
-		head = head->next;
-	}
-	else  // the object isn't at the head of the list.
-	{
-
-// Body Comment
-//
-// 	Normally we would do this iteration with a list iterator.
-// 	Since we need to keep track of not only the objects in the
-// 	list but also the list elements, i.e. the pointer nodes,
-// 	we don't use the iterator.
-//
-// End
-
-		ListElement *trailer = head;
-
-		while ( (cursor = cursor->next) != 0 )
-		{
-			if ( *(cursor->data) == toDetach )
-			{
-    			trailer->next = cursor->next;
-				break;
-			}
-			else // the object isn't the one we want.
-			{
-				trailer = trailer->next;
-			}
-		} // end while
-
-	} // end else the object wasn't at the head of the list.
-
-// Body Comment
-//
-//  Now cursor points to the object that we've found
-//
-// End
-
-   if( cursor != 0 )
-   {
-      itemsInContainer--;
-      if ( !deleteObjectToo )
-         cursor->data = 0;       // insure that we don't delete the data
-
-      delete cursor;
-   }
+    while( o != *(cursor->next->data) )
+        cursor = cursor->next;
+    tail->data = 0;
+    return cursor;
 }
-// End Member Function List::detach //
 
-
-// Member Function //
-
-classType List::isA() const
-
-// Summary -----------------------------------------------------------------
-//
-//      Returns a predefined value for the class List.
-//
-// Parameters
-//
-//      none
-//
-// End ---------------------------------------------------------------------
+void List::detach( Object& toDetach, DeleteType dt )
 {
-    return listClass;
+    ListElement *pred = findPred( toDetach );
+    ListElement *item = pred->next;
+    if( delObj(dt) && pred->next != tail )
+        delete item->data;
+    pred->next = pred->next->next;
+    if( item != tail )
+        {
+        itemsInContainer--;
+        delete item;
+        }
 }
-// End Member Function List::isA //
 
-// Member Function //
-
-char *List::nameOf() const
-
-// Summary -----------------------------------------------------------------
-//
-//      Returns the string "List".
-//
-// Parameters
-//
-//      none
-//
-// End ---------------------------------------------------------------------
+void List::flush( DeleteType dt )
 {
-    return "List";
+    ListElement *current = head->next;
+    while( current != tail )
+        {
+        ListElement *temp = current;
+        current = current->next;
+        if( delObj(dt) )
+            delete temp->data;
+        delete temp;
+        }
+    head->next = tail;
+    itemsInContainer = 0;
 }
-// End Member Function List::nameOf //
-
-
-// Member Function //
-
-hashValueType List::hashValue() const
-
-// Summary -----------------------------------------------------------------
-//
-//      Returns the hash value of a list.
-//
-// End ---------------------------------------------------------------------
-{
-	return hashValueType(0);
-}
-// End Member Function List::hashValue //
-
-// Member Function //
 
 ContainerIterator& List::initIterator() const
-
-// Summary -----------------------------------------------------------------
-//
-//      Initializes an iterator for a list.
-//
-// End ---------------------------------------------------------------------
 {
-	return *( (ContainerIterator *)new ListIterator( *this ) );
+    return *( (ContainerIterator *)new ListIterator( *this ) );
 }
-// End Member Function List::initIterator //
-
-
-// Member Function //
 
 ListIterator::~ListIterator()
-
-// Summary -----------------------------------------------------------------
-//
-//
-//
-// End ---------------------------------------------------------------------
 {
 }
-// End Destructor //
-
-
-// Member Function //
 
 ListIterator::operator int()
-
-// Summary -----------------------------------------------------------------
-//
-//  Returns an integer value indicating whether the iteration is complete.
-//
-//    1 indicates not complete, 0 indicates complete.
-//
-// End ---------------------------------------------------------------------
 {
-    return currentElement != 0;
+    return currentElement->next != currentElement;
 }
-// End Member Function ListIterator::operator int //
 
-
-// Member Function //
-
-ListIterator::operator Object&()
-
-// Summary -----------------------------------------------------------------
-//
-//      Object reference conversion operator.
-//
-// End ---------------------------------------------------------------------
+Object& ListIterator::current()
 {
-    if ( currentElement == 0 )
-    {
-        return NOOBJECT;
-    }
-    else
-    {
-        return ( (Object&)(*(currentElement->data)) );
-    }
+    return currentElement->data == 0 ? NOOBJECT : *(currentElement->data);
 }
-// End Member Function ListIterator::operator Object& //
 
-
-// Member Function //
-
-Object& ListIterator::operator ++()
-
-// Summary -----------------------------------------------------------------
-//
-// 	Increments the list iterator and returns the next object.
-//
-// End ---------------------------------------------------------------------
+Object& ListIterator::operator ++ ( int )
 {
-	ListElement *trailer = currentElement;
-
-	if ( currentElement != 0 )
-	{
-		currentElement = currentElement->next;
-        return ( (Object&)(*(trailer->data)) );
-	}
-    else // no more elements in the list.
-    {
-        return NOOBJECT;
-    }
-
+    Object *data = currentElement->data;
+    currentElement = currentElement->next;
+    return data == 0 ? NOOBJECT : *data;
 }
-// End Member Function ListIterator::operator ++ //
 
-
-// Member Function //
+Object& ListIterator::operator ++ ()
+{
+    currentElement = currentElement->next;
+    return currentElement->data == 0 ? NOOBJECT : *(currentElement->data);
+}
 
 void ListIterator::restart()
-
-// Summary -----------------------------------------------------------------
-//
-//      Restart function for a list iterator object.
-//
-// End ---------------------------------------------------------------------
 {
-	currentElement = startingElement;
+    currentElement = startingElement;
 }
-// End Member Function ListIterator::restart //
+
+

@@ -1,196 +1,98 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+/*------------------------------------------------------------------------*/
+/*                                                                        */
+/*  SORTARRY.H                                                            */
+/*                                                                        */
+/*  Copyright Borland International 1991, 1992                            */
+/*  All Rights Reserved                                                   */
+/*                                                                        */
+/*------------------------------------------------------------------------*/
 
-// Contents ----------------------------------------------------------------
-//
-//      SortedArray
-//      SortedArray::SortedArray                    constructor
-// 	    SortedArray::operator []
-//
-// Description
-//
-//      Defines the class SortedArray.
-//
-// End ---------------------------------------------------------------------
-
-// Interface Dependencies ---------------------------------------------------
-
-#ifndef __SORTARRY_H
+#if !defined( __SORTARRY_H )
 #define __SORTARRY_H
 
-#ifndef __IOSTREAM_H
-#include <iostream.h>
-#define __IOSTREAM_H
+#if defined( TEMPLATES )
+
+    #if !defined( __ARRAYS_H )
+    #include <Arrays.h>
+    #endif  // __ARRAYS_H
+
+    #pragma option -Vo-
+    #if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+    #pragma option -po-
+    #endif
+
+    #define SortedArray   BI_TCSArrayAsVector
+    #define PSortedArray  PBI_TCSArrayAsVector
+    #define RSortedArray  RBI_TCSArrayAsVector
+    #define RPSortedArray RPBI_TCSArrayAsVector
+    #define PCSortedArray PCBI_TCSArrayAsVector
+    #define RCSortedArray RCBI_TCSArrayAsVector
+
+    _CLASSDEF( BI_TCSArrayAsVector )
+
+    #define SortedArrayIterator   BI_TCSArrayAsVectorIterator
+    #define PSortedArrayIterator  PBI_TCSArrayAsVectorIterator
+    #define RSortedArrayIterator  RBI_TCSArrayAsVectorIterator
+    #define RPSortedArrayIterator RPBI_TCSArrayAsVectorIterator
+    #define PCSortedArrayIterator PCBI_TCSArrayAsVectorIterator
+    #define RCSortedArrayIterator RCBI_TCSArrayAsVectorIterator
+
+    _CLASSDEF( BI_TCSArrayAsVectorIterator )
+
+#else   // TEMPLATES
+
+    #if !defined( __CLSTYPES_H )
+    #include <ClsTypes.h>
+    #endif  // __CLSTYPES_H
+
+    #if !defined( __SORTABLE_H )
+    #include <Sortable.h>
+    #endif  // __SORTABLE_H
+
+    #if !defined( __ABSTARRY_H )
+    #include <AbstArry.h>
+    #endif  // __ABSTARRY_H
+
+    #pragma option -Vo-
+    #if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+    #pragma option -po-
+    #endif
+
+    _CLASSDEF(SortedArray)
+
+    class _CLASSTYPE SortedArray : public AbstractArray
+    {
+
+    public:
+
+        SortedArray( int upper, int lower = 0, sizeType aDelta = 0 );
+
+        virtual void add( Object _FAR & );
+        virtual void detach( Object _FAR &, DeleteType = NoDelete );
+
+        virtual classType isA() const
+            {
+            return sortedArrayClass;
+            }
+
+        virtual char _FAR *nameOf() const
+            {
+            return "SortedArray";
+            }
+
+    };
+
+    inline SortedArray::SortedArray( int upper, int lower, sizeType aDelta ) :
+        AbstractArray( upper, lower, aDelta )
+    {
+    }
+
+#endif  // TEMPLATES
+
+#if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+#pragma option -po.
 #endif
+#pragma option -Vo.
 
-#ifndef __CLSTYPES_H
-#include <clstypes.h>
-#endif
+#endif  // __SORTARRY_H
 
-#ifndef __OBJECT_H
-#include <object.h>
-#endif
-
-#ifndef __SORTABLE_H
-#include <sortable.h>
-#endif
-
-#ifndef __ABSTARRY_H
-#include <abstarry.h>
-#endif
-
-// End Interface Dependencies ------------------------------------------------
-
-
-// Class //
-
-_CLASSDEF(SortedArray)
-
-class _CLASSTYPE SortedArray:  public AbstractArray
-{
-public:
-    SortedArray( int upper, int lower = 0, sizeType aDelta = 0 );
-    virtual ~SortedArray();
-
-    RCSortable operator []( int ) const;
-
-    virtual void            add( RObject );
-    virtual void            detach( RCObject, int = 0 );
-    virtual classType       isA() const;
-    virtual Pchar nameOf() const;
-
-private:
-    int             lastElementIndex;
-};
-
-// Description -------------------------------------------------------------
-//
-//      Defines the class SortedArray.  The SortedArray class is an
-// 	array in which any elements which are added are added in sorted
-// 	order.  
-//
-// Constructor
-//
-// 	SortedArray
-//
-// 	Constructor.  Uses the AbstractArray class constructor.
-//
-// Public Members
-//
-// 	    operator []
-//      
-// 	    Subscript operator.  The subscript operator for sorted array
-//      returns a constant object.  Allowing assignments to an object 
-//      at a particular index might violate the sorting of the array.
-//
-//      add
-//
-//      Appends an object to the array, keeping the array elements sorted
-//      and expanding the array if necessary.
-// 	
-// 	    detach
-//
-// 	    Removes a reference to the object from the array.
-//
-// 	    isA
-//
-// 	    Returns the class type of a sorted array.
-//
-// 	    nameOf
-//
-// 	    Returns a character pointer to the string "SortedArray."
-//
-// Inherited Members
-//
-// 	lowerBound
-//
-// 	Inherited from class AbstractArray.
-//
-// 	upperBound
-//
-// 	Inherited from class AbstractArray.
-//
-// 	arraySize
-//
-// 	Inherited from class AbstractArray.
-//
-//      destroy
-//
-//      Removes an object reference from the array.
-//
-//      hashValue
-//
-// 	Inherited from AbstractArray.
-//
-// 	isEqual
-//
-// 	Inherited from AbstractArray.
-//
-// 	    printOn
-//
-// 	    Inherited from Container.
-//
-// Protected Members
-//
-//      delta
-//
-// 	Inherited from Array and made protected.
-//
-//      lowerbound
-//
-// 	Inherited from Array and made protected.
-//
-//      upperbound
-//
-// 	Inherited from Array and made protected.
-//
-//      array
-//
-// 	Inherited from Array and made protected.
-//
-// Private Members
-//
-//      lastElementIndex
-//
-//      The index of the last element in the sorted array.
-//
-// End ---------------------------------------------------------------------
-
-
-// Constructor //
-
-inline  SortedArray::SortedArray( int upper, int lower, sizeType aDelta ) :
-		      AbstractArray( upper, lower, aDelta )
-
-// Summary -----------------------------------------------------------------
-//
-//      Constructor for a sorted array object.
-//
-// End ---------------------------------------------------------------------
-{
-    lastElementIndex = lowerbound - 1;
-}
-// End Constructor SortedArray::SortedArray //
-
-
-// Member Function //
-
-inline RCSortable SortedArray::operator []( int atIndex ) const
-
-// Summary -----------------------------------------------------------------
-//
-//      Subscript operator for sorted arrays.
-//
-// Return Value
-//
-// 	sortableAt
-//
-// 	Reference to the sortable object at the given index.
-//
-// End ---------------------------------------------------------------------
-{
-    return (RSortable)objectAt( atIndex );
-}
-// End Member Function SortedArray::operator [] //
-
-
-#endif // ifndef __SORTARRY_H //

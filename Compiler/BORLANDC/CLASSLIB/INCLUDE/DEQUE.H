@@ -1,181 +1,204 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+/*------------------------------------------------------------------------*/
+/*                                                                        */
+/*  DEQUE.H                                                               */
+/*                                                                        */
+/*  Copyright Borland International 1991, 1992                            */
+/*  All Rights Reserved                                                   */
+/*                                                                        */
+/*------------------------------------------------------------------------*/
 
-// Contents ----------------------------------------------------------------
-//
-//      Deque
-//
-// Description
-//
-//      Defines the class Deque.
-//
-// End ---------------------------------------------------------------------
-
-// Interface Dependencies ---------------------------------------------------
-
-#ifndef __DEQUE_H
+#if !defined( __DEQUE_H )
 #define __DEQUE_H
 
-#ifndef __IOSTREAM_H
-#include <iostream.h>
-#define __IOSTREAM_H
+#if defined( TEMPLATES )
+
+    #if !defined( __DEQUES_H )
+    #include <Deques.h>
+    #endif  // __DEQUES_H
+
+    #pragma option -Vo-
+    #if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+    #pragma option -po-
+    #endif
+
+    #define Deque   BI_TCDequeAsDoubleList
+    #define PDeque  PBI_TCDequeAsDoubleList
+    #define RDeque  RBI_TCDequeAsDoubleList
+    #define RPDeque RPBI_TCDequeAsDoubleList
+    #define PCDeque PCBI_TCDequeAsDoubleList
+    #define RCDeque RCBI_TCDequeAsDoubleList
+
+    _CLASSDEF( BI_TCDequeAsDoubleList )
+
+    #define DequeIterator   BI_TCDequeAsDoubleListIterator
+    #define PDequeIterator  PBI_TCDequeAsDoubleListIterator
+    #define RDequeIterator  RBI_TCDequeAsDoubleListIterator
+    #define RPDequeIterator RPBI_TCDequeAsDoubleListIterator
+    #define PCDequeIterator PCBI_TCDequeAsDoubleListIterator
+    #define RCDequeIterator RCBI_TCDequeAsDoubleListIterator
+
+    _CLASSDEF( BI_TCDequeAsDoubleListIterator )
+
+#else   // TEMPLATES
+
+    #if !defined( __CLSTYPES_H )
+    #include <ClsTypes.h>
+    #endif  // __CLSTYPES_H
+
+    #if !defined( __CONTAIN_H )
+    #include <Contain.h>
+    #endif  // __CONTAIN_H
+
+    #if !defined( __DBLLIST_H )
+    #include <DblList.h>
+    #endif  // __DBLLIST_H
+
+    #pragma option -Vo-
+    #if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+    #pragma option -po-
+    #endif
+
+    _CLASSDEF(Deque)
+
+    class _CLASSTYPE Deque : public Container
+    {
+
+    public:
+
+        ~Deque()
+            {
+            flush();
+            }
+
+        Object& peekLeft() const
+            {
+            return list.peekAtHead();
+            }
+
+        Object& peekRight() const
+            {
+            return list.peekAtTail();
+            }
+
+        Object& getLeft();
+        Object& getRight();
+
+        void putLeft( Object& o )
+            {
+            list.addAtHead( o );
+            itemsInContainer++;
+            }
+
+        void putRight( Object& o )
+            {
+            list.addAtTail( o );
+            itemsInContainer++;
+            }
+
+        virtual void flush( DeleteType dt = DefDelete )
+            {
+            list.flush( dt );
+            }
+
+        virtual int isEmpty() const
+            {
+            return list.isEmpty();
+            }
+
+        virtual countType getItemsInContainer() const
+            {
+            return list.getItemsInContainer();
+            }
+
+        virtual void forEach( iterFuncType f, void _FAR *arg )
+            {
+            list.forEach( f, arg );
+            }
+
+        virtual Object _FAR & firstThat( condFuncType f, void _FAR *arg ) const
+            {
+            return list.firstThat( f, arg );
+            }
+
+        virtual Object _FAR & lastThat( condFuncType f, void _FAR *arg ) const
+            {
+            return list.lastThat( f, arg );
+            }
+
+        virtual classType isA() const
+            {
+            return dequeClass;
+            }
+
+        virtual char _FAR *nameOf() const
+            {
+            return "Deque";
+            }
+
+        virtual hashValueType hashValue() const
+            {
+            return list.hashValue();
+            }
+
+        virtual int isEqual( const Object& obj ) const
+            {
+            return list.isEqual( obj );
+            }
+
+        virtual int isSortable() const
+            {
+            return list.isSortable();
+            }
+
+        virtual int isAssociation() const
+            {
+            return list.isAssociation();
+            }
+
+        virtual void printOn( ostream& os ) const
+            {
+            list.printOn( os );
+            }
+
+        virtual void printHeader( ostream& os ) const
+            {
+            list.printHeader( os );
+            }
+
+        virtual void printSeparator( ostream& os ) const
+            {
+            list.printSeparator( os );
+            }
+
+        virtual void printTrailer( ostream& os ) const
+            {
+            list.printTrailer( os );
+            }
+
+        virtual ContainerIterator& initIterator() const;
+
+        int ownsElements()
+            {
+            return list.ownsElements();
+            }
+
+        void ownsElements( int del )
+            { 
+            list.ownsElements( del );
+            }
+
+    private:
+
+        DoubleList list;
+
+    };
+
+#endif  // TEMPLATES
+
+#if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+#pragma option -po.
 #endif
+#pragma option -Vo.
 
-#ifndef __CLSTYPES_H
-#include <clstypes.h>
-#endif
+#endif  // __DEQUE_H
 
-#ifndef __OBJECT_H
-#include <object.h>
-#endif
-
-#ifndef __CONTAIN_H
-#include <contain.h>
-#endif
-
-#ifndef __DBLLIST_H
-#include <dbllist.h>
-#endif
-
-// End Interface Dependencies ------------------------------------------------
-
-_CLASSDEF(Deque)
-
-// Class //
-
-class _CLASSTYPE Deque:  public Container
-{
-public:
-    virtual ~Deque();
-
-    RObject         peekLeft() const
-	    { return theDeque.peekAtHead(); }
-    RObject         peekRight() const
-	    { return theDeque.peekAtTail(); }
-    RObject         getLeft();
-    RObject         getRight();
-    void            putLeft( RObject o )
-            { theDeque.addAtHead( o ); itemsInContainer++; }
-    void            putRight( RObject o )
-            { theDeque.addAtTail( o ); itemsInContainer++; }
-
-    virtual RContainerIterator initIterator() const;
-    RContainerIterator initReverseIterator() const;
-
-    virtual classType       isA() const;
-    virtual Pchar nameOf() const;
-    virtual hashValueType   hashValue() const;
-
-private:
-	DoubleList    theDeque;
-};
-
-// Description -------------------------------------------------------------
-//
-// 	    Defines the container class Deque.  A deque is a double-ended queue.
-//      You may inspect, add, and remove elements at either end of the 
-//      deque.
-//
-// Public Members
-//
-//      peekLeft
-//
-//      Returns a reference to the object at the left end of the deque.
-//      The object is still owned by the deque.
-//
-//      peekRight
-//
-//      Returns a reference to the object at the right end of the deque.
-//      The object is still owned by the deque.
-//
-//      putLeft
-//
-//      Enqueues an object at the left end.
-//
-//      putRight
-//
-//      Enqueues an object at the right end.
-//
-//      getLeft
-//
-//      Dequeues an object from the left end.
-//
-//      getRight
-//
-//      Dequeues an object from the right end.
-//
-//      initIterator
-//
-//      Left-to-right Deque iterator initializer.
-//
-//      initReverseIterator
-//
-//      Right-to-left Deque iterator initializer.
-//
-// 	    isA
-//
-// 	    Returns the class type for a deque.
-//
-// 	    nameOf
-//
-// 	    Returns a pointer to the character string "Deque."
-// 	
-// 	    hashValue
-//
-// 	    Returns a pre-defined value for deques.
-//
-// Inherited Members
-//
-//      Deque( Deque& )
-//
-//      Copy constructor.  Inherited from Container.
-//
-//      isEmpty
-//
-// 	    Inherited from Container.
-//
-// 	    isEqual
-//
-// 	    Inherited from Container.
-//
-//      forEach
-//
-// 	    Inherited from Container.
-//
-//      firstThat
-//
-// 	    Inherited from Container.
-//
-//      lastThat
-//
-// 	    Inherited from Container.
-//
-//      getItemsInContainer
-//
-// 	    Inherited from Container.
-//
-//      printOn
-//
-// 	    Inherited from Container.
-//
-//      printHeader
-//
-// 	    Inherited from Container.
-//
-//      printSeparator
-//
-// 	    Inherited from Container.
-//
-//      printTrailer
-//
-// 	    Inherited from Container.
-//
-// Private Members
-//
-//      theDeque
-//
-//      The implementation of the deque.
-//
-// End ---------------------------------------------------------------------
-
-
-#endif // ifndef __DEQUE_H //

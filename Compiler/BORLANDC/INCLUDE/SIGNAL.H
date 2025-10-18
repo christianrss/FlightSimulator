@@ -1,15 +1,15 @@
-/*      signal.h
-  
-        Definitions for ANSI defined signaling capability
+/*  signal.h
 
-        Copyright (c) Borland International 1988,1990,1991
-        All Rights Reserved.
+    Definitions for ANSI defined signaling capability
+
+    Copyright (c) 1988, 1992 by Borland International
+    All Rights Reserved.
 */
 
 #ifndef __SIGNAL_H
 #define __SIGNAL_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 
@@ -19,10 +19,6 @@ typedef void _Cdecl (_FARFUNC * _CatcherPTR)();
 #define SIG_DFL ((_CatcherPTR)0)   /* Default action   */
 #define SIG_IGN ((_CatcherPTR)1)   /* Ignore action    */
 #define SIG_ERR ((_CatcherPTR)-1)  /* Error return     */
-
-// #define SIG_DFL ((void (* _Cdecl _FARFUNC)(int))0)   /* Default action   */
-// #define SIG_IGN ((void (* _Cdecl _FARFUNC)(int))1)   /* Ignore action    */
-// #define SIG_ERR ((void (* _Cdecl _FARFUNC)(int))-1)  /* Error return     */
 
 #define SIGABRT 22
 #define SIGFPE  8       /* Floating point trap  */

@@ -2,28 +2,28 @@
 
     Definitions for stream input/output.
 
-        Copyright (c) Borland International 1987,1988,1990,1991
+    Copyright (c) 1987, 1992 by Borland International
     All Rights Reserved.
 */
 
 #ifndef __STDIO_H
 #define __STDIO_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
+#endif
+
+#if !defined(___NFILE_H)
+#include <_nfile.h>
+#endif
+
+#ifndef NULL
+#include <_null.h>
 #endif
 
 #ifndef _SIZE_T
 #define _SIZE_T
 typedef unsigned size_t;
-#endif
-
-#ifndef NULL
-#if defined(__TINY__) || defined(__SMALL__) || defined(__MEDIUM__)
-#define NULL    0
-#else
-#define NULL    0L
-#endif
 #endif
 
 /* Definition of the file position type
@@ -34,11 +34,11 @@ typedef long    fpos_t;
 /* Definition of the control structure for streams
 */
 typedef struct  {
-        short           level;          /* fill/empty level of buffer */
+        int             level;          /* fill/empty level of buffer */
         unsigned        flags;          /* File status flags          */
         char            fd;             /* File descriptor            */
         unsigned char   hold;           /* Ungetc char if no buffer   */
-        short           bsize;          /* Buffer size                */
+        int             bsize;          /* Buffer size                */
         unsigned char   _FAR *buffer;   /* Data transfer buffer       */
         unsigned char   _FAR *curp;     /* Current active pointer     */
         unsigned        istemp;         /* Temporary file indicator   */
@@ -72,10 +72,10 @@ typedef struct  {
 /* Number of files that can be open simultaneously
 */
 #if __STDC__
-#define FOPEN_MAX 18        /* Able to have 18 files (20 - stdaux & stdprn) */
+#define FOPEN_MAX (_NFILE_ - 2) /* (_NFILE_ - stdaux & stdprn) */
 #else
-#define FOPEN_MAX 20        /* Able to have 20 files */
-#define SYS_OPEN  20
+#define FOPEN_MAX (_NFILE_)     /* Able to have 20 files */
+#define SYS_OPEN  (_NFILE_)
 #endif
 
 #define FILENAME_MAX 80
@@ -87,6 +87,7 @@ typedef struct  {
 /* Size of an arry large enough to hold a temporary file name string
 */
 #define L_ctermid   5       /* CON: plus null byte */
+#define P_tmpdir    ""      /* temporary directory */
 #define L_tmpnam    13      /* tmpnam buffer size */
 
 /* Constants to be used as 3rd argument for "fseek" function
@@ -101,8 +102,10 @@ typedef struct  {
 
 /* Standard I/O predefined streams
 */
+
 #if !defined( _RTLDLL )
 extern  FILE    _Cdecl _streams[];
+extern  unsigned    _Cdecl _nfile;
 
 #define stdin   (&_streams[0])
 #define stdout  (&_streams[1])
@@ -134,11 +137,11 @@ FILE far * far __getStream(int);
 #ifdef __cplusplus
 extern "C" {
 #endif
-void    _Cdecl clearerr(FILE *__stream);
+void    _Cdecl clearerr(FILE _FAR *__stream);
 int     _Cdecl _FARFUNC fclose(FILE _FAR *__stream);
 int     _Cdecl _FARFUNC fflush(FILE _FAR *__stream);
 int     _Cdecl _FARFUNC fgetc(FILE _FAR *__stream);
-int     _Cdecl fgetpos(FILE *__stream, fpos_t *__pos);
+int     _Cdecl fgetpos(FILE _FAR *__stream, fpos_t _FAR *__pos);
 char   _FAR *_Cdecl _FARFUNC fgets(char _FAR *__s, int __n, FILE _FAR *__stream);
 FILE   _FAR *_Cdecl _FARFUNC fopen(const char _FAR *__path, const char _FAR *__mode);
 int     _Cdecl _FARFUNC fprintf(FILE _FAR *__stream, const char _FAR *__format, ...);
@@ -150,31 +153,19 @@ FILE   _FAR *_Cdecl _FARFUNC freopen(const char _FAR *__path, const char _FAR *_
                             FILE _FAR *__stream);
 int     _Cdecl _FARFUNC fscanf(FILE _FAR *__stream, const char _FAR *__format, ...);
 int     _Cdecl _FARFUNC fseek(FILE _FAR *__stream, long __offset, int __whence);
-int     _Cdecl fsetpos(FILE *__stream, const fpos_t *__pos);
+int     _Cdecl fsetpos(FILE _FAR *__stream, const fpos_t _FAR *__pos);
 long    _Cdecl _FARFUNC ftell(FILE _FAR *__stream);
 size_t  _Cdecl _FARFUNC fwrite(const void _FAR *__ptr, size_t __size, size_t __n,
                       FILE _FAR *__stream);
-
-#if !defined( _Windows )
 char   _FAR *_Cdecl gets(char _FAR *__s);
-#endif
-
 void    _Cdecl perror(const char _FAR *__s);
-
-#if !defined( _Windows )
 int     _Cdecl printf(const char _FAR *__format, ...);
 int     _Cdecl puts(const char _FAR *__s);
-#endif
-
 int     _CType remove(const char _FAR *__path);
-int     _Cdecl _FARFUNC rename(const char _FAR *__oldname,const char _FAR *__newname);
+int     _CType _FARFUNC rename(const char _FAR *__oldname,const char _FAR *__newname);
 void    _Cdecl _FARFUNC rewind(FILE _FAR *__stream);
-
-#if !defined( _Windows )
 int     _Cdecl scanf(const char _FAR *__format, ...);
-#endif
-
-void    _Cdecl setbuf(FILE *__stream, char *__buf);
+void    _Cdecl setbuf(FILE _FAR *__stream, char _FAR *__buf);
 int     _Cdecl _FARFUNC setvbuf(FILE _FAR *__stream, char _FAR *__buf,
                        int __type, size_t __size);
 int     _Cdecl _FARFUNC sprintf(char _FAR *__buffer, const char _FAR *__format, ...);
@@ -188,27 +179,21 @@ int     _Cdecl _FARFUNC vfprintf(FILE _FAR *__stream, const char _FAR *__format,
                         void _FAR *__arglist);
 int     _Cdecl _FARFUNC vfscanf(FILE _FAR *__stream, const char _FAR *__format,
                         void _FAR *__arglist);
-
-#if !defined( _Windows )
 int     _CType vprintf(const char _FAR *__format, void _FAR *__arglist);
 int     _Cdecl vscanf(const char _FAR *__format, void _FAR *__arglist);
-#endif
-
 int     _Cdecl _FARFUNC vsprintf(char _FAR *__buffer, const char _FAR *__format,
                         void _FAR *__arglist);
 int     _Cdecl _FARFUNC vsscanf(const char _FAR *__buffer, const char _FAR *__format,
                         void _FAR *__arglist);
-int     _CType unlink(const char *__path);
-int     _Cdecl getc(FILE *__fp);
+int     _CType unlink(const char _FAR *__path);
+int     _Cdecl getc(FILE _FAR *__fp);
 
-#if !defined( _Windows )
 int     _Cdecl getchar(void);
 int     _Cdecl putchar(const int __c);
-#endif
 
-int     _Cdecl putc(const int __c, FILE *__fp);
-int     _Cdecl feof(FILE *__fp);
-int     _Cdecl ferror(FILE *__fp);
+int     _Cdecl putc(const int __c, FILE _FAR *__fp);
+int     _Cdecl feof(FILE _FAR *__fp);
+int     _Cdecl ferror(FILE _FAR *__fp);
 
 
 #if !__STDC__
@@ -217,14 +202,26 @@ FILE   _FAR *_Cdecl _FARFUNC fdopen(int __handle, char _FAR *__type);
 int     _Cdecl _FARFUNC fgetchar(void);
 int     _Cdecl _FARFUNC flushall(void);
 int     _Cdecl _FARFUNC fputchar(int __c);
-int     _Cdecl getw(FILE *__stream);
-int     _Cdecl _FARFUNC putw(int __w, FILE _FAR *__stream);
-char   _FAR *_Cdecl _FARFUNC _strerror(const char _FAR *__s);
+FILE   _FAR * _Cdecl _fsopen (const char _FAR *__path, const char _FAR *__mode,
+                  int __shflag);
+int     _Cdecl getw(FILE _FAR *__stream);
+int     _Cdecl putw(int __w, FILE _FAR *__stream);
+int     _Cdecl rmtmp(void);
+char   _FAR * _Cdecl _FARFUNC _strerror(const char _FAR *__s);
+char   _FAR * _Cdecl _FARFUNC tempnam(char _FAR *__dir, char _FAR *__pfx);
+
 #define fileno(f)       ((f)->fd)
+#ifdef __MSC
+#define _fileno(f)  fileno(f)
 #endif
+
+#endif  /* !__STDC__ */
 
 int      _Cdecl _FARFUNC _fgetc(FILE _FAR *__stream);           /* used by getc() macro */
 int      _Cdecl _FARFUNC _fputc(char __c, FILE _FAR *__stream); /* used by putc() macro */
+
+void    _Cdecl _InitEasyWin(void);  /* Initialization call for Easy Windows */
+
 #ifdef  __cplusplus
 }
 #endif

@@ -1,13 +1,13 @@
-/* iostream.h -- basic stream I/O declarations
+/*  iostream.h -- basic stream I/O declarations
 
-    Copyright (c) 1990,1991 by Borland International    
+    Copyright (c) 1990, 1992 by Borland International
     All rights reserved.
 
     There are some inline functions here which generate a LOT of code
     (as much as 300 bytes), but are available inline because AT&T did
     it that way.  We have also made them true functions in the library
     and conditionally deleted the inline code from this header.
-    
+
     If you really want these big functions to be inline, #define the
     macro name _BIG_INLINE_ before including this header.
 
@@ -22,12 +22,17 @@
 #ifndef __IOSTREAM_H
 #define __IOSTREAM_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 
-#if !defined( __MEM_H )
+#if !defined(__MEM_H)
 #include <mem.h>    // to get memcpy and NULL
+#endif
+
+#pragma option -Vo-
+#if defined(__BCOPT__) && !defined(_RTL_ALLOW_po)
+#pragma option -po-
 #endif
 
 // Definition of EOF must match the one in <stdio.h>
@@ -82,7 +87,7 @@ public:
         internal  = 0x0008, // padding after sign or base indicator
         dec   = 0x0010,     // decimal conversion
         oct   = 0x0020,     // octal conversion
-        hex   = 0x0040,     // hexidecimal conversion
+        hex   = 0x0040,     // hexadecimal conversion
         showbase  = 0x0080, // use base indicator on output
         showpoint = 0x0100, // force decimal point (floating output)
         uppercase = 0x0200, // upper-case hex output
@@ -174,7 +179,7 @@ protected:
  */
 
             _Cdecl ios();       // null constructor, does not initialize
-            
+
     void    _Cdecl init(streambuf _FAR *);  // the actual initialization
 
     void    _Cdecl setstate(int);       // set all status bits
@@ -195,33 +200,33 @@ static  int usercount;
 
 };
 inline streambuf _FAR * _Cdecl ios::rdbuf() { return bp; }
-inline ostream _FAR * _Cdecl ios::tie() { return x_tie; }    
+inline ostream _FAR * _Cdecl ios::tie() { return x_tie; }
 inline char     _Cdecl ios::fill() { return x_fill; }
 inline int      _Cdecl ios::precision() { return x_precision; }
 inline int      _Cdecl ios::rdstate() { return state; }
 inline int      _Cdecl ios::eof() { return state & eofbit; }
-inline int      _Cdecl ios::fail() 
+inline int      _Cdecl ios::fail()
                         { return state & (failbit | badbit | hardfail); }
 inline int      _Cdecl ios::bad() { return state & (badbit | hardfail); }
 inline int      _Cdecl ios::good() { return state == 0; }
 inline long     _Cdecl ios::flags() { return x_flags; }
 inline int      _Cdecl ios::width() { return x_width; }
-inline int      _Cdecl ios::width(int _w) 
+inline int      _Cdecl ios::width(int _w)
                         { int _i = x_width; x_width = _w; return _i; }
-inline char     _Cdecl ios::fill(char _c) 
+inline char     _Cdecl ios::fill(char _c)
                         { char _x = x_fill; x_fill = _c; return _x; }
-inline int      _Cdecl ios::precision(int _p) 
+inline int      _Cdecl ios::precision(int _p)
                         { int _x = x_precision; x_precision = _p; return _x; }
-inline          _Cdecl ios::operator void _FAR *() 
+inline          _Cdecl ios::operator void _FAR *()
                         { return fail() ? 0 : this; }
 inline int      _Cdecl ios::operator! () { return fail(); }
-
+
 
 class _CLASSTYPE streambuf {
 public:
     // constructors and destructors
         _Cdecl streambuf();                 // make empty streambuf
-        _Cdecl streambuf(char _FAR *, int); // make streambuf with 
+        _Cdecl streambuf(char _FAR *, int); // make streambuf with
                                             // given char array
 virtual _Cdecl ~streambuf();
 
@@ -253,7 +258,7 @@ virtual int _Cdecl overflow(int = EOF); // flush buffer and make more room
     int     _Cdecl out_waiting();       // number of unflushed chars
 
     // moving around in stream
-virtual streampos _Cdecl seekoff(streamoff, seek_dir, 
+virtual streampos _Cdecl seekoff(streamoff, ios::seek_dir,
                                  int = (ios::in | ios::out));
 virtual streampos _Cdecl seekpos(streampos, int = (ios::in | ios::out));
 virtual int _Cdecl sync();
@@ -308,16 +313,16 @@ inline char _FAR * _Cdecl streambuf::eback() { return eback_; }
 inline char _FAR * _Cdecl streambuf::ebuf()  { return ebuf_; }
 inline int   _Cdecl streambuf::unbuffered()  { return unbuf_; }
 inline int   _Cdecl streambuf::blen() { return (int)(ebuf_ - base_);}
-inline streambuf _FAR * 
-            _Cdecl streambuf::setbuf(unsigned char _FAR * _p, int _len) 
+inline streambuf _FAR *
+            _Cdecl streambuf::setbuf(unsigned char _FAR * _p, int _len)
                 { // call the virtual function
                     return setbuf((signed char _FAR *)_p, _len); }
 inline void _Cdecl streambuf::pbump(int _n) { pptr_ += _n; }
 inline void _Cdecl streambuf::gbump(int _n) { gptr_ += _n; }
 inline void _Cdecl streambuf::unbuffered(int _unb) { unbuf_ = (_unb != 0); }
-inline int  _Cdecl streambuf::in_avail() 
+inline int  _Cdecl streambuf::in_avail()
                 { return (egptr_ > gptr_) ? (int)(egptr_ - gptr_) : 0; }
-inline int  _Cdecl streambuf::out_waiting() 
+inline int  _Cdecl streambuf::out_waiting()
                 { return pptr_ ? (int)(pptr_ - pbase_) : 0; }
 inline int  _Cdecl streambuf::allocate() {
                 return (base_ || unbuf_) ? 0 : doallocate();
@@ -368,7 +373,7 @@ inline int  _Cdecl streambuf::sgetn(char _FAR * _s, int _n) {
                 return do_sgetn(_s, _n);
                 }
 #endif
-
+
 
 class _CLASSTYPE istream : virtual public ios {
 public:
@@ -391,7 +396,7 @@ virtual _Cdecl ~istream();
 
     // set/read the get pointer's position
     istream _FAR & _Cdecl seekg(streampos);
-    istream _FAR & _Cdecl seekg(streamoff, seek_dir);
+    istream _FAR & _Cdecl seekg(streamoff, ios::seek_dir);
     streampos _Cdecl tellg();
 
     int _Cdecl sync();
@@ -416,7 +421,7 @@ virtual _Cdecl ~istream();
     istream _FAR & _Cdecl get(unsigned char _FAR &);
     istream _FAR & _Cdecl get(  signed char _FAR &);
     int      _Cdecl get();
-                     
+
     int      _Cdecl peek();     // return next char without extraction
     int      _Cdecl gcount();   // number of unformatted chars last extracted
     istream _FAR & _Cdecl putback(char);  // push back char into input
@@ -515,7 +520,7 @@ inline int      _Cdecl istream::get() {
                 }
 #endif
 inline int  _Cdecl istream::peek() { return ipfx1() ? bp->sgetc() : EOF; }
-
+
 
 class _CLASSTYPE ostream : virtual public ios {
 public:
@@ -532,7 +537,7 @@ virtual _Cdecl ~ostream();
 
     // set/read the put pointer's position
     ostream _FAR & _Cdecl seekp(streampos);
-    ostream _FAR & _Cdecl seekp(streamoff, seek_dir);
+    ostream _FAR & _Cdecl seekp(streamoff, ios::seek_dir);
     streampos _Cdecl tellp();
 
     /*
@@ -603,21 +608,21 @@ inline ostream _FAR & _Cdecl ostream::operator<< (const unsigned char _FAR * _s)
                 outstr((const signed char _FAR *)_s, (const signed char _FAR *)0);
                 return *this;
                 }
-inline ostream _FAR & _Cdecl ostream::operator<< (short _i) 
+inline ostream _FAR & _Cdecl ostream::operator<< (short _i)
                 { return *this << (long) _i; }
-inline ostream _FAR & _Cdecl ostream::operator<< (unsigned short _i) 
+inline ostream _FAR & _Cdecl ostream::operator<< (unsigned short _i)
                 { return *this << (unsigned long) _i; }
-inline ostream _FAR & _Cdecl ostream::operator<< (int _i) 
+inline ostream _FAR & _Cdecl ostream::operator<< (int _i)
                 { return *this << (long) _i; }
-inline ostream _FAR & _Cdecl ostream::operator<< (unsigned int _i) 
+inline ostream _FAR & _Cdecl ostream::operator<< (unsigned int _i)
                 { return *this << (unsigned long) _i; }
-inline ostream _FAR & _Cdecl ostream::operator<< (float _f) 
+inline ostream _FAR & _Cdecl ostream::operator<< (float _f)
                 { return *this << (long double) _f; }
-inline ostream _FAR & _Cdecl ostream::operator<< (double _d) 
+inline ostream _FAR & _Cdecl ostream::operator<< (double _d)
                 { return *this << (long double) _d; }
-inline ostream _FAR & _Cdecl ostream::operator<< (ostream _FAR & (_Cdecl *_f)(ostream _FAR &)) 
+inline ostream _FAR & _Cdecl ostream::operator<< (ostream _FAR & (_Cdecl *_f)(ostream _FAR &))
                 { return (*_f)(*this); }
-inline ostream _FAR & _Cdecl ostream::write(const unsigned char _FAR * _s, int _n) 
+inline ostream _FAR & _Cdecl ostream::write(const unsigned char _FAR * _s, int _n)
                 { return write((const signed char _FAR *)_s, _n); }
 inline ostream _FAR & _Cdecl ostream::put(char _c) {
                 if( bp->sputc(_c) == EOF ) setstate(badbit);
@@ -631,7 +636,7 @@ inline ostream _FAR & _Cdecl ostream::write(const signed char _FAR * _s, int _n)
                 return *this;
                 }
 #endif
-
+
 
 class _CLASSTYPE iostream : public istream, public ostream {
 public:
@@ -703,8 +708,18 @@ ostream _FAR & _Cdecl endl(ostream _FAR &); // insert newline and flush
 ostream _FAR & _Cdecl ends(ostream _FAR &); // insert null to terminate string
 ostream _FAR & _Cdecl flush(ostream _FAR &);// flush the ostream
 ios _FAR &     _Cdecl dec(ios _FAR &);      // set conversion base to decimal
-ios _FAR &     _Cdecl hex(ios _FAR &);      // set conversion base to hexidecimal
+ios _FAR &     _Cdecl hex(ios _FAR &);      // set conversion base to hexadecimal
 ios _FAR &     _Cdecl oct(ios _FAR &);      // set conversion base to octal
 istream _FAR & _Cdecl ws(istream _FAR &);   // extract whitespace characters
+
+/*
+ * Initialization call for Easy Windows
+ */
+extern "C" void  _Cdecl _InitEasyWin(void);
+
+#pragma option -Vo.
+#if defined(__BCOPT__)
+#pragma option -po.
+#endif
 
 #endif

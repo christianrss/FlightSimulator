@@ -1,58 +1,20 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+#if !defined( __ASSOC_H )
+#include <Assoc.h>
+#endif	// __ASSOC_H
 
-// Contents ----------------------------------------------------------------
-//
-//      CLASSDEFINITIONS
-//      classNames
-//      classDefs
-//
-//      main
-//
-// Description
-//
-//      C++ class library example program.  Creates a dictionary from
-//      the descriptions of each of the classes in the class Object
-//      hierarchy.
-//
-// End ---------------------------------------------------------------------
+#if !defined( __DICT_H )
+#include <Dict.h>
+#endif	// __DICT_H
 
-// Interface Dependencies ---------------------------------------------------
-// End Interface Dependencies ------------------------------------------------
-
-// Implementation Dependencies ----------------------------------------------
+#if !defined( __STRNG_H )
+#include <Strng.h>
+#endif	// __STRNG_H
 
 #ifndef __IOSTREAM_H
-#include <iostream.h>    // stream i/o
-#define __IOSTREAM_H
+#include <iostream.h>    
 #endif
-
-#ifndef __DICT_H
-#include <dict.h>        // class Dictionary
-#endif
-
-#ifndef __ASSOC_H
-#include <assoc.h>        // class Association
-#endif
-
-#ifndef __STRNG_H
-#include <strng.h>        // class String
-#endif
-
-// End Implementation Dependencies -------------------------------------------
-
-
-// Macro //
 
 #define CLASSDEFINITIONS 23
-
-// Description -------------------------------------------------------------
-//
-//     Defines the number of definitions in the dictionary.
-//
-// End ---------------------------------------------------------------------
-
-
-// Variable //
 
 static char *classNames[CLASSDEFINITIONS] =
     {
@@ -81,16 +43,6 @@ static char *classNames[CLASSDEFINITIONS] =
         "DoubleListIterator"
     };
 
-
-// Description -------------------------------------------------------------
-//
-//     Used by the main routine to create the dictionary.
-//
-// End ---------------------------------------------------------------------
-
-
-// Variable //
-
 static char *classDefs[CLASSDEFINITIONS] =
     {
         "The abstract base class of the hierarchy.\n",
@@ -118,76 +70,33 @@ static char *classDefs[CLASSDEFINITIONS] =
         "An iterator which is used on double list objects.\n"
     };
 
-
-// Description -------------------------------------------------------------
-//
-//     Used by the main routine to create the dictionary.
-//
-// End ---------------------------------------------------------------------
-
-
-// Function //
-
 int main( int argc, char *argv[] )
-
-// Summary -----------------------------------------------------------------
-//
-//     Dictionary example program.  This program creates a dictionary
-//     and inserts strings into the dictionary, then looks up a given
-//     string.
-//
-// Parameters
-//
-//     argc
-//
-//     The number of arguments passed to our program from the command line.
-//
-//     argv
-//
-//     The array of character pointers which was given on the command line.
-//
-// Functional Description
-//
-//     A dictionary object is a container class for association objects.
-//     An association is an object which keeps together a key and
-//     a value.  In our example, both the key and the value will be
-//     String objects.
-//
-//     We make a dictionary object on the heap, then add associations
-//     to the dictionary.  When these associations have been added, we
-//     look up the given string in the dictionary and display its
-//     definition.
-//
-// End ---------------------------------------------------------------------
 {
-    if ( argc != 2 )
-    {
+    if( argc != 2 )
+        {
         cerr << "Usage:  lookup classname\n";
         return 1;
-    }
+        }
 
-    Dictionary& classDefinitions = *( new Dictionary );
+    Dictionary classDefinitions;
 
-    for ( int i = 0; i < CLASSDEFINITIONS; i++ )
-    {
-        String& className = *( new String( classNames[i] ) );
-        String& classDef = *( new String( classDefs[i] ) );
-        Association& entry = *(new Association( className, classDef ) );
-
-        classDefinitions.add( entry );
-
-    } // end for all class definitions
+    for( int i = 0; i < CLASSDEFINITIONS; i++ )
+        {
+        String *className = new String( classNames[i] );
+        String *classDef = new String( classDefs[i] );
+        Association *entry = new Association( *className, *classDef );
+        classDefinitions.add( *entry );
+        }
 
     Association& definition =
-                    classDefinitions.lookup ( *(new String ( argv[1] ) ) );
-    if ( definition == NOOBJECT )
-    {
+                    classDefinitions.lookup ( *new String ( argv[1] ) );
+    if( definition == NOOBJECT )
+        {
         cout << "A definition for " << argv[1] << " was not found in the dictionary.\n";
-    }
+        }
     else
-    {
+        {
         cout << definition;
-    }
+	}
+    return 0;
 }
-// End Function main //
-

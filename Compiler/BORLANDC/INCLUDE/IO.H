@@ -2,20 +2,24 @@
 
     Definitions for low level I/O functions.
 
-        Copyright (c) Borland International 1987,1988,1990,1991
+    Copyright (c) 1987, 1992 by Borland International
     All Rights Reserved.
 */
 
 #ifndef __IO_H
 #define __IO_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 
-#define HANDLE_MAX  20U
+#if !defined(___NFILE_H)
+#include <_nfile.h>
+#endif
 
-extern  unsigned int    _Cdecl _openfd[];
+#define HANDLE_MAX  (_NFILE_)
+
+extern  unsigned int    _Cdecl _nfile;
 
 struct  ftime   {
     unsigned    ft_tsec  : 5;   /* Two second interval */
@@ -51,7 +55,7 @@ int  _Cdecl dup      (int __handle);
 int  _Cdecl dup2     (int __oldhandle, int __newhandle);
 int  _Cdecl _FARFUNC eof      (int __handle);
 long _Cdecl _FARFUNC filelength   (int __handle);
-int  _Cdecl getftime     (int __handle, struct ftime *__ftimep);
+int  _Cdecl getftime     (int __handle, struct ftime _FAR *__ftimep);
 #ifdef __IN_IOCTL
 int  _Cdecl ioctl    ();
 #else
@@ -61,6 +65,7 @@ int  _Cdecl _FARFUNC ioctl    (int __handle, int __func, ...);
 
 int  _Cdecl isatty   (int __handle);
 int  _Cdecl _FARFUNC lock     (int __handle, long __offset, long __length);
+int  _Cdecl _FARFUNC locking  (int __handle, int __mode, long __length);
 long _CType lseek    (int __handle, long __offset, int __fromwhere);
 char _FAR * _FARFUNC _Cdecl mktemp( char _FAR *__template );
 #ifdef __IN_OPEN
@@ -69,23 +74,33 @@ int  _Cdecl _FARFUNC open();
 int _Cdecl _FARFUNC open(const char _FAR *__path, int __access,... /*unsigned mode*/);
 #endif
 int  _CType _FARFUNC _open    (const char _FAR *__path, int __oflags);
-int  _CType _FARFUNC read     (int __handle, void *__buf, unsigned __len);
-int  _CType _read    (int __handle, void *__buf, unsigned __len);
+int  _CType _FARFUNC read     (int __handle, void _FAR *__buf, unsigned __len);
+int  _CType _read    (int __handle, void _FAR *__buf, unsigned __len);
 int  _CType remove   (const char _FAR *__path);
-int  _Cdecl _FARFUNC rename   (const char _FAR *__oldname,const char _FAR *__newname);
-int  _Cdecl setftime (int __handle, struct ftime *__ftimep);
+int  _CType _FARFUNC rename   (const char _FAR *__oldname,const char _FAR *__newname);
+int  _Cdecl setftime (int __handle, struct ftime _FAR *__ftimep);
 int  _Cdecl _FARFUNC setmode  (int __handle, int __amode);
+
+#ifdef __IN_SOPEN
+int  _Cdecl sopen();
+#else
+int  _Cdecl sopen    (const char _FAR *__path, int __access, int __shflag,
+                      ... /* unsigned mode */);
+#endif
 long _Cdecl tell     (int __handle);
 unsigned _Cdecl umask    (unsigned __cmask);
-int  _CType unlink   (const char *__path);
+int  _CType unlink   (const char _FAR *__path);
 int  _Cdecl _FARFUNC unlock   (int __handle, long __offset, long __length);
-int  _CType _FARFUNC _write   (int __handle, void _FAR *__buf, unsigned __len);
-int  _CType _FARFUNC write    (int __handle, void _FAR *__buf, unsigned __len);
+int  _CType _FARFUNC _write   (int __handle, const void _FAR *__buf, unsigned __len);
+int  _CType _FARFUNC write    (int __handle, const void _FAR *__buf, unsigned __len);
+void _Cdecl _InitEasyWin(void);  /* Initialization call for Easy Windows */
+
+#ifdef __MSC
+#define _dup(h) dup(h)
+#endif
+
 #ifdef __cplusplus
 }
 #endif
-
-/* macros for compatibility with earlier versions & other compilers. */
-#define sopen(path,access,shflag,mode)   open (path, (access)|(shflag), mode)
 
 #endif  /* __IO_H */

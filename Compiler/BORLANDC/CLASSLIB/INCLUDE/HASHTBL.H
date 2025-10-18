@@ -1,316 +1,133 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+/*------------------------------------------------------------------------*/
+/*                                                                        */
+/*  HASHTBL.H                                                             */
+/*                                                                        */
+/*  Copyright Borland International 1991, 1992                            */
+/*  All Rights Reserved                                                   */
+/*                                                                        */
+/*------------------------------------------------------------------------*/
 
-// Contents ----------------------------------------------------------------
-//
-//      HashTable
-//      HashTable::HashTable
-//      HashTable::getHashValue
-//
-// Description
-//
-//      Defines the abstract class HashTable and associated inline
-// 	    functions.  A hash table is a "container-container," that is,
-// 	    it contains a number of container objects.
-//
-// End ---------------------------------------------------------------------
-
-// Interface Dependencies ---------------------------------------------------
-
-#ifndef __HASHTBL_H
+#if !defined( __HASHTBL_H )
 #define __HASHTBL_H
 
-#ifndef __IOSTREAM_H
-#include <iostream.h>
-#define __IOSTREAM_H
+#if !defined( __RESOURCE_H )
+#include <Resource.h>
+#endif  // __RESOURCE_H
+
+#if !defined( __CLSTYPES_H )
+#include <ClsTypes.h>
+#endif  // __CLSTYPES_H
+
+#if !defined( __CLSDEFS_H )
+#include <ClsDefs.h>
+#endif  // __CLSDEFS_H
+
+#if !defined( __COLLECT_H )
+#include <Collect.h>
+#endif  // __COLLECT_H
+
+#if !defined( __LIST_H )
+#include <List.h>
+#endif  // __LIST_H
+
+#if !defined( __VECTIMP_H )
+#include <VectImp.h>
+#endif  // __VECTIMP_H
+
+#pragma option -Vo-
+#if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+#pragma option -po-
 #endif
 
-#ifndef __CLSTYPES_H
-#include <clstypes.h>
-#endif
-
-#ifndef __RESOURCE_H
-#include <resource.h>
-#endif
-
-#ifndef __OBJECT_H
-#include <object.h>
-#endif
-
-#ifndef __CONTAIN_H
-#include <contain.h>
-#endif
-
-#ifndef __COLLECT_H
-#include <collect.h>
-#endif
-
-#ifndef __LIST_H
-#include <list.h>
-#endif
-
-#ifndef __ARRAY_H
-#include <array.h>
-#endif
-
-// End Interface Dependencies ------------------------------------------------
-
+_CLASSDEF(ContainerIterator)
 _CLASSDEF(HashTable)
 _CLASSDEF(HashTableIterator)
 
-// Class //
-
-class _CLASSTYPE HashTable:  public Collection
+class _CLASSTYPE HashTable : public Collection
 {
+
 public:
-            HashTable( sizeType = DEFAULT_HASH_TABLE_SIZE );
-    virtual ~HashTable();
 
-    virtual void	    add( RObject );
-    virtual void            detach( RCObject, int = 0 );
+    friend class HashTableIterator;
 
-    virtual RContainerIterator initIterator() const;
-    virtual RObject   findMember( RCObject ) const;
+    HashTable( sizeType = DEFAULT_HASH_TABLE_SIZE );
+    virtual ~HashTable() { flush(); }
 
-    virtual classType       isA() const;
-    virtual Pchar nameOf() const;
-    virtual hashValueType   hashValue() const;
+    virtual void add( Object _FAR & );
+    virtual void detach( Object _FAR &, DeleteType = NoDelete );
+    virtual void flush( DeleteType = DefDelete );
+
+    virtual int isEmpty() const
+        {
+        return itemsInContainer == 0;
+        }
+
+    virtual countType getItemsInContainer() const
+        {
+        return itemsInContainer;
+        }
+
+    virtual Object _FAR & findMember( Object _FAR & ) const;
+
+    virtual ContainerIterator& initIterator() const;
+
+    virtual classType isA() const
+        {
+        return hashTableClass;
+        }
+
+    virtual char _FAR *nameOf() const
+        {
+        return "HashTable";
+        }
 
 private:
-    hashValueType   getHashValue( RCObject ) const;
-            sizeType        size;
-            Array           table;
+
+    hashValueType getHashValue( Object _FAR & ) const;
+    sizeType size;
+    BI_IVectorImp<Object> table;
+
+    unsigned itemsInContainer;
+
+    DeleteType delItem( DeleteType dt )
+        {
+        return delObj(dt) ? Delete : NoDelete;
+        }
+
 };
 
-// Description -------------------------------------------------------------
-//
-// 	    Defines the class HashTable. 
-//      
-// Constructors
-//
-//      HashTable( sizeType )
-//
-//      Constructs a hash table of the given size.
-//
-// Destructors
-//
-//      ~HashTable()
-//
-//      We provide the destructor for the sole purpose of forcing a call
-//      to the destructor for the private member objects of the class.
-//
-// Public Members
-//
-//
-// 	    initIterator
-//
-// 	    Initializes an iterator for a hash table.
-//
-//      add
-//
-//      Adds an object to the hash table.
-//
-//      destroy
-//
-//      Removes an object reference from the hash table and
-//      destroys the object.
-//
-// 	    detach
-//
-// 	    Removes all references to the object in the hash table.
-//      Does not delete the object.  Use this function when the hash table
-//      elements are not owned by the hash table.
-//
-// 	    findMember
-//
-// 	    Returns a reference to the object which is associated with the
-// 	    given key.
-//
-// 	    hashValue
-//
-// 	    Returns a pre-defined value for a hash table.
-//
-// 	    isA
-//
-// 	    Returns the class type of class HashTable.
-//
-// 	    nameOf
-//
-// 	    Returns a pointer to the character string "HashTable."
-// 	
-// Inherited Members
-//
-//      hasMember
-//
-// 	    Inherited from Collection.
-//
-// 	    isEmpty
-//
-// 	    Inherited from Container.
-//
-//      firstThat
-//
-// 	    Inherited from Container.
-//
-//      lastThat
-//
-// 	    Inherited from Container.
-//
-// 	    printOn
-//
-// 	    Inherited from Container.
-//
-// Protected Members
-//
-// 	    itemsInCollection
-//
-// 	    Inherited from Container.
-//
-// Private Members
-//
-//      getHashValue
-//
-//      Private member function to return the hash value of an object.
-//
-//      size
-//
-//      Container for the size of the hash table.
-//
-//      table
-//
-//      An array of lists which implements the hash table.
-//
-// End ---------------------------------------------------------------------
-
-
-// Constructor //
-
-inline HashTable::HashTable( sizeType aPrime ) : size( aPrime ), table( aPrime )
-
-// Summary -----------------------------------------------------------------
-//
-//      Construct a hash table of the given size.
-//
-// Parameters
-//
-//      aPrime
-//
-//      The size of the hash table.  To make the hashing algorithm work
-//      efficiently, you should make this a prime number.
-//
-// Functional Description
-//
-//      We store the passed size and create an array object of that size.
-//
-// End ---------------------------------------------------------------------
-{
-}
-// End Constructor //
-
-
-// Member Function //
-
-inline sizeType HashTable::getHashValue( RCObject ofObject ) const
-
-// Summary -----------------------------------------------------------------
-//
-//      Returns the hash value of the given object.
-//
-// Parameters
-//
-//      ofObject
-//
-//      The object we are to hash.
-//
-// Functional Description
-//
-//      We ask the object to hash itself, then modulo that value by the
-//      size of our hash table.
-//
-// End ---------------------------------------------------------------------
+inline sizeType HashTable::getHashValue( Object _FAR & ofObject ) const
 {
     return ofObject.hashValue() % size;
 }
-// End Member Function //
 
-
-// Class //
-
-class _CLASSTYPE HashTableIterator:  public ContainerIterator
+class _CLASSTYPE HashTableIterator : public ContainerIterator
 {
+
 public:
-    HashTableIterator( RCArray );
-    virtual ~HashTableIterator();
-    
-    virtual			operator int();
-    virtual	RObject	operator ++();
-    virtual             operator RObject();
-    virtual	void		restart();
+
+    HashTableIterator( const HashTable _FAR & );
+    ~HashTableIterator();
+
+    virtual operator int();
+    virtual Object _FAR & current();
+    virtual Object _FAR & operator ++ ( int );
+    virtual Object _FAR & operator ++ ();
+    virtual void restart();
 
 private:
-    int         preIterate();
-    PArrayIterator indexIterator;
-    PListIterator listIterator;
-    RCArray beingIterated;
+
+    BI_IVectorIteratorImp<Object> _FAR *arrayIterator;
+    ContainerIterator _FAR *listIterator;
+    const HashTable _FAR & beingIterated;
+
+    void scan();
 };
 
-// Description -------------------------------------------------------------
-//
-// 	    Defines the hash table iterator class.  Upon initialization, we set up
-// 	    an internal pointer to our current position in the hash table.  As
-//      the increment operator is called, we update this current position.
-//
-// Constructor
-//
-//      HashTableIterator( RCArray )
-//
-// 	    Constructor for an iterator.  Note that this isn't a copy
-// 	    constructor, since it takes an object from a different class.
-//
-// Destructor
-//
-// 	    ~HashTableIterator
-//
-// Public Members
-//
-// 	    operator int
-//
-// 	    We are allowed one cast operator to a predefined type.  This
-// 	    operator defines an explicit or an implicit cast from a
-// 	    HashTableIterator to an integer.
-//
-//      operator Object&
-//
-//      Conversion operator from HashTableIterator to Object.
-//
-// 	    operator ++
-//
-//      The increment operator.
-//
-// 	    restart
-//
-// 	    Restarts an hash table iterator.
-//
-// Private Members
-//
-//      preIterate
-//
-//      Begins a step in the iteration.
-//
-// 	    indexIterator
-//
-// 	    Maintains the position information in the array for this iterator.
-//
-// 	    listIterator
-//
-// 	    Maintains the position information in the lists of the array 
-//      for this iterator.
-//
-//      beingIterated
-//
-//      A reference to the array hash table which is being iterated.  Used
-//      when restarting the iteration.
-//
-// End ---------------------------------------------------------------------
+#if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+#pragma option -po.
+#endif
+#pragma option -Vo.
 
+#endif  // __HASHTBL_H
 
-#endif // ifndef __HASHTBL_H //

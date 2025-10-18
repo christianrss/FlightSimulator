@@ -1,205 +1,58 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+/*------------------------------------------------------------------------*/
+/*                                                                        */
+/*  SORTARRY.CPP                                                          */
+/*                                                                        */
+/*  Copyright Borland International 1991, 1992                            */
+/*  All Rights Reserved                                                   */
+/*                                                                        */
+/*------------------------------------------------------------------------*/
 
-// Contents ----------------------------------------------------------------
-//
-//      SortedArray::~SortedArray
-//      SortedArray::add
-//      SortedArray::detach
-//
-// Description
-//
-//      Implementation of class SortedArray.
-//
-// End ---------------------------------------------------------------------
-
-// Interface Dependencies ---------------------------------------------------
+#if !defined( __SORTARRY_H )
+#include <SortArry.h>
+#endif  // __SORTARRY_H
 
 #ifndef __STDLIB_H
 #include <stdlib.h>
-#define __STDLIB_H
 #endif
 
-#ifndef __OBJECT_H
-#include <object.h>
-#endif
+#if !defined( __IOSTREAM_H )
+#include <iostream.h>
+#endif  // __IOSTREAM_H
 
-#ifndef __SORTARRY_H
-#include <sortarry.h>
-#endif
-
-// End Interface Dependencies ------------------------------------------------
-
-// Implementation Dependencies ----------------------------------------------
-
-#ifndef __CLSTYPES_H
-#include <clstypes.h>
-#endif
-
-#ifndef __SORTABLE_H
-#include <sortable.h>
-#endif
-
-#ifndef __CONTAIN_H
-#include <contain.h>
-#endif
-
-#if !defined( __ERREXIT_H )
-#include <errexit.h>
-#endif
-
-// End Implementation Dependencies -------------------------------------------
-
-
-// Member Function //
-
-SortedArray::~SortedArray()
-
-// Summary -----------------------------------------------------------------
-//
-//      Destructor for a SortedArray object.
-//
-//		We don't do anything here, because the destructor for Array
-//		will take care of destroying the contained objects.
-//
-// End ---------------------------------------------------------------------
+void SortedArray::add( Object& toAdd )
 {
-}
-// End Destructor //
-
-
-// Member Function //
-
-void    SortedArray::add( Object& toAdd )
-
-// Summary -----------------------------------------------------------------
-//
-//      Adds an object to the sorted array.
-//
-// Parameter
-//
-//      toAdd
-//
-//      The object we are to add to SortedArray.
-//
-// Functional Description
-//
-//      We check that the object we are adding is indeed sortable, then
-//      expand the array if needed.  We then search for the point to
-//      insert the object and move the succeeding objects down the array
-//      to make room for the new object.
-//  
-// End ---------------------------------------------------------------------
-{
-
-    if ( toAdd.isSortable() )
-    {
-        if ( lastElementIndex == upperbound )
+    if( toAdd.isSortable() )
         {
+        if( lastElementIndex == upperbound )
+            {
             reallocate( arraySize() + 1 );
-        }
-
-        int insertionPoint = 0;
-        while ( insertionPoint <= lastElementIndex - lowerbound &&
-                ((Sortable&)(*(theArray[ insertionPoint ])) < (Sortable&)toAdd) )
-        {
+            }
+        int insertionPoint = lowerbound;
+        while( insertionPoint <= lastElementIndex &&
+               (Sortable&)objectAt( insertionPoint ) < (Sortable&)toAdd
+             )
             insertionPoint++;
+
+        insertEntry( insertionPoint );
+        setData( insertionPoint, &toAdd );
+        itemsInContainer++;
+        lastElementIndex++;
         }
-
-		for ( int i = lastElementIndex - lowerbound; i >= insertionPoint; i-- )
-		{
-			theArray[i+1] = theArray[i];
-		}
-		theArray[ insertionPoint ] = &toAdd;
-		itemsInContainer++;
-		lastElementIndex++;
-
-    }
-    else // the object we are to add isn't sortable.
-        ClasslibErrorExit("Error:  Object must be sortable.",
-                          __ENOTSORT);
+    else
+        ClassLib_error( __ENOTSORT );
 }
-// End Member Function SortedArray::add //
 
-
-// Member Function //
-
-void    SortedArray::detach( const Object& toDetach, int deleteObjectToo )
-
-// Summary -----------------------------------------------------------------
-//
-//      Detachs an object to the sorted array.
-//
-// Parameter
-//
-//      toDetach
-//
-//      The object we are to detach to SortedArray.
-//
-// Functional Description
-//
-// End ---------------------------------------------------------------------
+void SortedArray::detach( Object& toDetach, DeleteType dt )
 {
-	if ( toDetach == NOOBJECT )
-        return;
-
-    int detachPoint, moveCount;
-
-    for ( detachPoint = lowerbound; detachPoint <= upperbound; detachPoint++ )
-    {
-		if ( *theArray[ detachPoint ] == toDetach )
+    int detachPoint = find( toDetach );
+    if( detachPoint != INT_MIN )
         {
-            if ( deleteObjectToo )
-            {
-                delete theArray[ detachPoint ];
-            }
-            for ( moveCount = detachPoint; 
-                  moveCount < lastElementIndex;
-                  moveCount++ )
-            {
-				theArray[ moveCount ] = theArray[ moveCount + 1 ];
-            }
-            theArray[ lastElementIndex-- ] = ZERO;
-            itemsInContainer--;
-            return;
+        if( delObj(dt) )
+            delete ptrAt( detachPoint );
+        removeEntry( detachPoint );
+        itemsInContainer--;
+        if( detachPoint <= lastElementIndex )
+            lastElementIndex--;
         }
-    } // end for //
 }
-// End Member Function SortedArray::detach //
 
-
-// Member Function //
-
-classType SortedArray::isA() const
-
-// Summary -----------------------------------------------------------------
-//
-//      Returns a predefined value for the class SortedArray.
-//
-// Parameters
-//
-//      none
-//
-// End ---------------------------------------------------------------------
-{
-    return sortedArrayClass;
-}
-// End Member Function SortedArray::isA //
-
-
-// Member Function //
-
-char *SortedArray::nameOf() const
-
-// Summary -----------------------------------------------------------------
-//
-//      Returns the string "SortedArray".
-//
-// Parameters
-//
-//      none
-//
-// End ---------------------------------------------------------------------
-{
-    return "SortedArray";
-}
-// End Member Function SortedArray::nameOf //

@@ -4,14 +4,14 @@
     numbers set by system calls. Errors which exist in Unix(tm)
     but not MSDOS have value -1.
 
-    Copyright (c) Borland International 1987,1988,1990,1991
+    Copyright (c) 1987, 1992 by Borland International
     All Rights Reserved.
 */
 
 #ifndef __ERRNO_H
 #define __ERRNO_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 
@@ -37,36 +37,37 @@
 #define EACCES   5      /* Permission denied        */
 #define EBADF    6      /* Bad file number          */
 #define ENOMEM   8      /* Not enough core          */
+#define EFAULT  14      /* Unknown error            */
 #define ENODEV  15      /* No such device           */
 #define EINVAL  19      /* Invalid argument         */
 #define E2BIG   20      /* Arg list too long        */
 #define ENOEXEC 21      /* Exec format error        */
 #define EXDEV   22      /* Cross-device link        */
+#define ENFILE  23      /* UNIX - not MSDOS         */
+#define ECHILD  24      /* Unix/DOS                 */
+#define ENOTTY  25      /* UNIX - not MSDOS         */
+#define ETXTBSY 26      /* UNIX - not MSDOS         */
+#define EFBIG   27      /* UNIX - not MSDOS         */
+#define ENOSPC  28      /* UNIX - not MSDOS         */
+#define ESPIPE  29      /* UNIX - not MSDOS         */
+#define EROFS   30      /* UNIX - not MSDOS         */
+#define EMLINK  31      /* UNIX - not MSDOS         */
+#define EPIPE   32      /* UNIX - not MSDOS         */
 #define EDOM    33      /* Math argument            */
 #define ERANGE  34      /* Result too large         */
 #define EEXIST  35      /* File already exists      */
-#define ECHILD  -1      /* Unix/DOS                 */
-#define EFAULT  -1      /* Unknown error            */
-#define EPERM   -1      /* UNIX - not MSDOS         */
-#define ESRCH   -1      /* UNIX - not MSDOS         */
-#define EINTR   -1      /* UNIX - not MSDOS         */
-#define EIO     -1      /* UNIX - not MSDOS         */
-#define ENXIO   -1      /* UNIX - not MSDOS         */
-#define EAGAIN  -1      /* UNIX - not MSDOS         */
-#define ENOTBLK -1      /* UNIX - not MSDOS         */
-#define EBUSY   -1      /* UNIX - not MSDOS         */
-#define ENOTDIR -1      /* UNIX - not MSDOS         */
-#define EISDIR  -1      /* UNIX - not MSDOS         */
-#define ENFILE  -1      /* UNIX - not MSDOS         */
-#define ENOTTY  -1      /* UNIX - not MSDOS         */
-#define ETXTBSY -1      /* UNIX - not MSDOS         */
-#define EFBIG   -1      /* UNIX - not MSDOS         */
-#define ENOSPC  -1      /* UNIX - not MSDOS         */
-#define ESPIPE  -1      /* UNIX - not MSDOS         */
-#define EROFS   -1      /* UNIX - not MSDOS         */
-#define EMLINK  -1      /* UNIX - not MSDOS         */
-#define EPIPE   -1      /* UNIX - not MSDOS         */
-#define EUCLEAN -1      /* UNIX - not MSDOS         */
+#define EDEADLOCK 36    /* Locking violation        */
+#define EPERM   37      /* UNIX - not MSDOS         */
+#define ESRCH   38      /* UNIX - not MSDOS         */
+#define EINTR   39      /* UNIX - not MSDOS         */
+#define EIO     40      /* UNIX - not MSDOS         */
+#define ENXIO   41      /* UNIX - not MSDOS         */
+#define EAGAIN  42      /* UNIX - not MSDOS         */
+#define ENOTBLK 43      /* UNIX - not MSDOS         */
+#define EBUSY   44      /* UNIX - not MSDOS         */
+#define ENOTDIR 45      /* UNIX - not MSDOS         */
+#define EISDIR  46      /* UNIX - not MSDOS         */
+#define EUCLEAN 47      /* UNIX - not MSDOS         */
 
 #if !defined( _RTLDLL )
 extern  int _Cdecl  errno;
@@ -89,10 +90,8 @@ int far * far _Cdecl __getDOSErrno(void);
 
 #endif
 
-extern  unsigned _Cdecl _localseg; 
-
 #if !__STDC__
-#define _sys_nerr   35      /* highest defined system error number */
+#define _sys_nerr   48      /* highest defined system error number + 1 */
 #endif
 
 #endif

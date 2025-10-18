@@ -2,19 +2,21 @@
 
     Definitions for the math floating point package.
 
-    Copyright (c) Borland International 1987,1988,1990,1991
+    Copyright (c) 1987, 1992 by Borland International
     All Rights Reserved.
 */
 
 #ifndef  __MATH_H
 #define  __MATH_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 
 #define HUGE_VAL    _huge_dble
 extern double _Cdecl _huge_dble;
+#define _LHUGE_VAL   _huge_ldble
+extern long double _Cdecl _huge_ldble;
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,6 +30,7 @@ double  _Cdecl _FARFUNC cos   (double __x);
 double  _Cdecl _FARFUNC cosh  (double __x);
 double  _Cdecl _FARFUNC exp   (double __x);
 double  _Cdecl fabs  (double __x);
+double  _Cdecl __fabs__  (double __x);          /* Intrinsic */
 double  _Cdecl _FARFUNC floor (double __x);
 double  _Cdecl _FARFUNC fmod  (double __x, double __y);
 double  _Cdecl _FARFUNC frexp (double __x, int _FAR *__exponent);
@@ -42,10 +45,28 @@ double  _Cdecl _FARFUNC sqrt  (double __x);
 double  _Cdecl _FARFUNC tan   (double __x);
 double  _Cdecl _FARFUNC tanh  (double __x);
 
-/*  The customary matherr() exception handler for math functions is
-    not compatible with the x3j11 draft standard for C.  _matherr() is
-    provided as a compromise.
-*/
+long double _Cdecl _FARFUNC acosl  (long double __x);
+long double _Cdecl _FARFUNC asinl  (long double __x);
+long double _Cdecl _FARFUNC atan2l (long double __x, long double __y);
+long double _Cdecl atanl  (long double __x);
+long double _Cdecl _FARFUNC ceill  (long double __x);
+long double _Cdecl _FARFUNC coshl  (long double __x);
+long double _Cdecl _FARFUNC cosl   (long double __x);
+long double _Cdecl _FARFUNC expl   (long double __x);
+long double _Cdecl fabsl  (long double __x);
+long double _Cdecl _FARFUNC floorl (long double __x);
+long double _Cdecl _FARFUNC fmodl  (long double __x, long double __y);
+long double _Cdecl _FARFUNC frexpl (long double __x, int _FAR *__exponent);
+long double _Cdecl _FARFUNC ldexpl (long double __x, int __exponent);
+long double _Cdecl _FARFUNC log10l (long double __x);
+long double _Cdecl _FARFUNC logl   (long double __x);
+long double _Cdecl _FARFUNC modfl  (long double __x, long double _FAR *__ipart);
+long double _Cdecl _FARFUNC powl   (long double __x, long double __y);
+long double _Cdecl _FARFUNC sinhl  (long double __x);
+long double _Cdecl _FARFUNC sinl   (long double __x);
+long double _Cdecl _FARFUNC sqrtl  (long double __x);
+long double _Cdecl _FARFUNC tanhl  (long double __x);
+long double _Cdecl _FARFUNC tanl   (long double __x);
 
 typedef enum
 {
@@ -58,8 +79,6 @@ typedef enum
     STACKFAULT     /* floating point unit stack overflow       */
 }   _mexcep;
 
-double _Cdecl _FARFUNC _matherr(_mexcep __why, char _FAR *__fun, double _FAR *__arg1p,
-                       double  _FAR *__arg2p, double  __retval);
 #ifdef __cplusplus
 }
 #endif
@@ -67,23 +86,36 @@ double _Cdecl _FARFUNC _matherr(_mexcep __why, char _FAR *__fun, double _FAR *__
 
 #if !__STDC__
 
-struct  exception 
+struct  exception
 {
     int type;
     char   _FAR *name;
     double  arg1, arg2, retval;
 };
 
+struct  _exceptionl
+{
+    int type;
+    char   _FAR *name;
+    long double  arg1, arg2, retval;
+};
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 int     _Cdecl abs   (int __x);
-double  _Cdecl atof  (const char *__s);
+double  _Cdecl atof  (const char _FAR *__s);
 double  _Cdecl _FARFUNC hypot (double __x, double __y);
 long    _Cdecl labs  (long __x);
 int     _Cdecl _FARFUNC matherr (struct exception _FAR *__e);
-double  _Cdecl _FARFUNC poly  (double __x, int __degree, double coeffs []);
+double  _Cdecl _FARFUNC poly  (double __x, int __degree, double _FAR *__coeffs);
 double  _Cdecl _FARFUNC pow10 (int __p);
+int     _Cdecl _FARFUNC _matherrl (struct _exceptionl _FAR *__e);
+
+long double _Cdecl _atold (const char _FAR *__s);
+long double _Cdecl _FARFUNC hypotl (long double __x, long double __y);
+long double _Cdecl _FARFUNC polyl  (long double __x, int __degree, long double _FAR *__coeffs);
+long double _Cdecl _FARFUNC pow10l (int __p);
 
 #ifdef __cplusplus
     /* use class complex instead of cabs in C++ */
@@ -93,7 +125,13 @@ struct complex      /* as used by "cabs" function */
     double  x, y;
 };
 
-#define cabs(z)     (hypot ((z).x, (z).y))
+struct _complexl    /* as used by "cabsl" function */
+{
+    long double  x, y;
+};
+
+#define cabs(z)     (hypot  ((z).x, (z).y))
+#define cabsl(z)    (hypotl ((z).x, (z).y))
 #endif
 
 #ifdef __cplusplus

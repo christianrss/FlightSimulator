@@ -1,169 +1,102 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+/*------------------------------------------------------------------------*/
+/*                                                                        */
+/*  QUEUE.H                                                               */
+/*                                                                        */
+/*  Copyright Borland International 1991, 1992                            */
+/*  All Rights Reserved                                                   */
+/*                                                                        */
+/*------------------------------------------------------------------------*/
 
-// Contents ----------------------------------------------------------------
-//
-//      Queue
-//
-// Description
-//
-//      Defines the class Queue.
-//
-// End ---------------------------------------------------------------------
-
-// Interface Dependencies ---------------------------------------------------
-
-#ifndef __QUEUE_H
+#if !defined( __QUEUE_H )
 #define __QUEUE_H
 
-#ifndef __IOSTREAM_H
-#include <iostream.h>
-#define __IOSTREAM_H
+#if defined( TEMPLATES )
+
+    #if !defined( __QUEUES_H )
+    #include <Queues.h>
+    #endif  // __QUEUES_H
+
+    #pragma option -Vo-
+    #if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+    #pragma option -po-
+    #endif
+
+    #define Queue   BI_TCQueueAsDoubleList
+    #define PQueue  PBI_TCQueueAsDoubleList
+    #define RQueue  RBI_TCQueueAsDoubleList
+    #define RPQueue RPBI_TCQueueAsDoubleList
+    #define PCQueue PCBI_TCQueueAsDoubleList
+    #define RCQueue RCBI_TCQueueAsDoubleList
+
+    _CLASSDEF( BI_TCQueueAsDoubleList )
+
+    #define QueueIterator   BI_TCQueueAsDoubleListIterator
+    #define PQueueIterator  PBI_TCQueueAsDoubleListIterator
+    #define RQueueIterator  RBI_TCQueueAsDoubleListIterator
+    #define RPQueueIterator RPBI_TCQueueAsDoubleListIterator
+    #define PCQueueIterator PCBI_TCQueueAsDoubleListIterator
+    #define RCQueueIterator RCBI_TCQueueAsDoubleListIterator
+
+    _CLASSDEF( BI_TCQueueAsDoubleListIterator )
+
+#else   // TEMPLATES
+
+    #if !defined( __CLSTYPES_H )
+    #include <ClsTypes.h>
+    #endif  // __CLSTYPES_H
+
+    #if !defined( __DEQUE_H )
+    #include <Deque.h>
+    #endif  // __DEQUE_H
+
+    #pragma option -Vo-
+    #if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+    #pragma option -po-
+    #endif
+
+    _CLASSDEF(Queue)
+
+    class _CLASSTYPE Queue : public Deque
+    {
+
+    public:
+
+        Object _FAR & get()
+            {
+            return Deque::getRight();
+            }
+
+        void put( Object _FAR & o )
+            {
+            Deque::putLeft( o );
+            }
+
+        virtual classType isA() const
+            {
+            return queueClass;
+            }
+
+        virtual char _FAR *nameOf() const
+            {
+            return "Queue";
+            }
+
+    private:
+
+        Object _FAR & getLeft();
+        Object _FAR & getRight();
+
+        void putLeft( Object _FAR & );
+        void putRight( Object _FAR & );
+
+    };
+
+#endif  // TEMPLATES
+
+#if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+#pragma option -po.
 #endif
+#pragma option -Vo.
 
-#ifndef __CLSTYPES_H
-#include "clstypes.h"
-#endif
+#endif  // __QUEUE_H
 
-#ifndef __OBJECT_H
-#include "object.h"
-#endif
-
-#ifndef __CONTAIN_H
-#include "contain.h"
-#endif
-
-#ifndef __DBLLIST_H
-#include "dbllist.h"
-#endif
-
-// End Interface Dependencies ------------------------------------------------
-
-// Class //
-
-_CLASSDEF(Queue)
-
-class _CLASSTYPE Queue:  public Container
-{
-public:
-    virtual ~Queue();
-
-    RObject         peekLeft() const { return theQueue.peekAtHead(); }
-    RObject         peekRight() const { return theQueue.peekAtTail(); }
-    RObject         get();
-    void put( RObject o )
-	    { theQueue.addAtHead( o ); itemsInContainer++; }
-
-    virtual RContainerIterator initIterator() const;
-
-    virtual classType       isA() const;
-    virtual Pchar nameOf() const;
-    virtual hashValueType   hashValue() const;
-
-private:
-    DoubleList    theQueue;
-};
-
-// Description -------------------------------------------------------------
-//
-// 	Defines the container class Queue.  A queue is a FIFO object.
-//      You may inspect elements at either end of the queue, however,
-//      you may only remove objects at one end and add objects at the
-//      other.  The left end is the end at which objects are enqueued.
-//      The right end is where objects may be retrieved.
-//
-// Public Members
-//
-//      peekLeft
-//
-//      Returns a reference to the object at the left end of the queue.
-//      The object is still owned by the queue.
-//
-//      peekRight
-//
-//      Returns a reference to the object at the right end of the queue.
-//      The object is still owned by the queue.
-//
-//      put
-//
-//      Enqueues an object.
-//
-//      get
-//
-//      Dequeues an object.
-//
-//      initIterator
-//
-//      Left-to-right Queue iterator initializer.
-//
-// 	isA
-//
-// 	Returns the class type for a queue.
-//
-// 	nameOf
-//
-// 	Returns a pointer to the character string "Queue."
-// 	
-// 	hashValue
-//
-// 	Returns a pre-defined value for queues.
-//
-// Inherited Members
-//
-//      Queue( Queue& )
-//
-//      Copy constructor.  Inherited from Container.
-//
-//      isEmpty
-//
-// 	Inherited from Container.
-//
-// 	operator ==
-//
-// 	Inherited from Container.
-//
-//      forEach
-//
-// 	Inherited from Container.
-//
-//      firstThat
-//
-// 	Inherited from Container.
-//
-//      lastThat
-//
-// 	Inherited from Container.
-//
-//      getItemsInContainer
-//
-// 	Inherited from Container.
-//
-//      itemsInContainer
-//
-// 	Inherited from Container.
-//
-//      printOn
-//
-// 	Inherited from Container.
-//
-//      printHeader
-//
-// 	Inherited from Container.
-//
-//      printSeparator
-//
-// 	Inherited from Container.
-//
-//      printTrailer
-//
-// 	Inherited from Container.
-//
-// Private Members
-//
-//      theQueue
-//
-//      The implementation of the queue.
-//
-// End ---------------------------------------------------------------------
-
-
-#endif // ifndef __QUEUE_H //

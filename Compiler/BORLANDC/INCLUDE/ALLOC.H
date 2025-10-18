@@ -1,16 +1,20 @@
 /*  alloc.h
 
-  memory management functions and variables.
+    memory management functions and variables.
 
-  Copyright (c) Borland International 1987,1988,1990,1991
-  All Rights Reserved.
+    Copyright (c) 1987, 1992 by Borland International
+    All Rights Reserved.
 */
 
-#if     !defined(__ALLOC_H)
+#if !defined(__ALLOC_H)
 #define __ALLOC_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
+#endif
+
+#ifndef NULL
+#include <_null.h>
 #endif
 
 #define _HEAPEMPTY      1
@@ -55,65 +59,57 @@ struct heapinfo
   int in_use;
   };
 #else
-#define heapinfo farheapinfo 
-#endif
-
-#ifndef NULL
-#if defined(__TINY__) || defined(__SMALL__) || defined(__MEDIUM__)
-#define NULL  0
-#else
-#define NULL  0L
-#endif
+#define heapinfo farheapinfo
 #endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void  _FAR *_Cdecl _FARFUNC calloc  (size_t __nitems, size_t __size);
-void        _Cdecl _FARFUNC free  (void _FAR *__block);
-void  _FAR *_Cdecl _FARFUNC malloc  (size_t  __size);
-void  _FAR *_Cdecl _FARFUNC realloc (void _FAR *__block, size_t __size);
+void  _FAR *_Cdecl calloc(size_t __nitems, size_t __size);
+void        _Cdecl free(void _FAR *__block);
+void  _FAR *_Cdecl malloc(size_t __size);
+void  _FAR *_Cdecl realloc(void _FAR *__block, size_t __size);
 
-#if !defined( _Windows )
+#if !defined(_Windows)
 
-int         _Cdecl brk  (void _FAR *__addr);
-void  _FAR *_Cdecl sbrk  (int __incr);
+int         _Cdecl brk(void *__addr);
+void       *_Cdecl sbrk(int __incr);
 
-int         _Cdecl heapcheck( void );
-int         _Cdecl heapfillfree( unsigned int __fillvalue );
-int         _Cdecl heapcheckfree( unsigned int __fillvalue );
+int         _Cdecl heapcheck(void);
+int         _Cdecl heapfillfree(unsigned int __fillvalue);
+int         _Cdecl heapcheckfree(unsigned int __fillvalue);
 
 #if defined(__COMPACT__) || defined(__LARGE__) || defined(__HUGE__)
 
 unsigned long _Cdecl coreleft (void);
 
 #if !__STDC__
-int         _Cdecl heapchecknode( void far *__node );
-int         _Cdecl heapwalk( struct farheapinfo far *__hi );
+int         _Cdecl heapchecknode(void far *__node);
+int         _Cdecl heapwalk(struct farheapinfo far *__hi);
 #endif
 
 #else
 
-unsigned    _Cdecl coreleft  (void);
-int         _Cdecl heapchecknode( void _FAR *__node );
-int         _Cdecl heapwalk( struct heapinfo _FAR *__hi );
+unsigned    _Cdecl coreleft(void);
+int         _Cdecl heapchecknode(void *__node);
+int         _Cdecl heapwalk(struct heapinfo *__hi);
 
 #endif
 
 #endif  /* WINDOWS */
 
-#if !__STDC__
-void far  * _Cdecl _FARFUNC farcalloc(unsigned long __nunits, unsigned long __unitsz);
-unsigned long _Cdecl farcoreleft( void );
-void        _Cdecl _FARFUNC farfree( void far *__block);
-void far  * _Cdecl _FARFUNC farmalloc( unsigned long __nbytes);
-void far  * _Cdecl _FARFUNC farrealloc( void far *__oldblock, unsigned long __nbytes);
-int         _Cdecl farheapcheck( void );
-int         _Cdecl farheapchecknode( void far *__node );
-int         _Cdecl farheapfillfree( unsigned int __fillvalue );
-int         _Cdecl farheapcheckfree( unsigned int __fillvalue );
-int         _Cdecl farheapwalk( struct farheapinfo *__hi );
+#if !defined(__STDC__)
+void far  * _Cdecl farcalloc(unsigned long __nunits, unsigned long __unitsz);
+unsigned long _Cdecl farcoreleft(void);
+void        _Cdecl farfree(void far *__block);
+void far  * _Cdecl farmalloc(unsigned long __nbytes);
+void far  * _Cdecl farrealloc(void far *__oldblock, unsigned long __nbytes);
+int         _Cdecl farheapcheck(void);
+int         _Cdecl farheapchecknode(void far *__node);
+int         _Cdecl farheapfillfree(unsigned int __fillvalue);
+int         _Cdecl farheapcheckfree(unsigned int __fillvalue);
+int         _Cdecl farheapwalk(struct farheapinfo *__hi);
 #endif
 
 #ifdef __cplusplus

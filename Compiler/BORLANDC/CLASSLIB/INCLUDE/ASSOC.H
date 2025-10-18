@@ -1,100 +1,97 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+/*------------------------------------------------------------------------*/
+/*                                                                        */
+/*  ASSOC.H                                                               */
+/*                                                                        */
+/*  Copyright Borland International 1991, 1992                            */
+/*  All Rights Reserved                                                   */
+/*                                                                        */
+/*------------------------------------------------------------------------*/
 
-// Contents ----------------------------------------------------------------
-//
-// 	    Association
-// 	    Association::Association
-// 	    Association::Association	copy constructor
-//
-// Description
-//
-// 	    Defines the class Association, which is an object that can
-// 	    be stored in a Dictionary.  An Association contains references
-// 	    to two Objects, a Key and a Value.
-//
-// End ---------------------------------------------------------------------
-
-// Interface Dependencies ---------------------------------------------------
-
-#ifndef __ASSOC_H
+#if !defined( __ASSOC_H )
 #define __ASSOC_H
 
-#ifndef __IOSTREAM_H
-#include <iostream.h>
-#define __IOSTREAM_H
+#if !defined( __CLSTYPES_H )
+#include <ClsTypes.h>
+#endif  // __CLSTYPES_H
+
+#if !defined( __OBJECT_H )
+#include <Object.h>
+#endif  // __OBJECT_H
+
+#if !defined( __SHDDEL_H )
+#include <ShdDel.h>
+#endif  // __SHDDEL_H
+
+#pragma option -Vo-
+#if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+#pragma option -po-
 #endif
 
-#ifndef __CLSTYPES_H
-#include <clstypes.h>
-#define __CLSTYPES_H
-#endif
-
-#ifndef __OBJECT_H
-#include <object.h>
-#define __OBJECT_H
-#endif
-
-// End Interface Dependencies ------------------------------------------------
-
-// Class //
+_CLASSDEF(ostream)
 _CLASSDEF(Association)
 
-class _CLASSTYPE Association : public Object
+class _CLASSTYPE Association : public Object, public virtual TShouldDelete
 {
+
 public:
-	Association( RObject k, RObject v ) : aKey( k ), aValue( v ) {}
-	Association( RCAssociation a ) :
-                                    aKey( a.key() ), aValue( a.value() ) {}
+
+    Association( Object _FAR & k, Object _FAR & v ) :
+        aKey( k ),
+        aValue( v )
+        {
+        }
+
+    Association( const Association _FAR & a ) :
+        aKey(a.aKey),
+        aValue(a.aValue)
+        {
+        }
+
     virtual ~Association();
 
-    RObject key() const { return aKey; }
-    RObject         value() const { return aValue; }
+    Object _FAR & key() const
+        {
+        return aKey;
+        }
 
-    virtual classType       isA() const;
-    virtual Pchar nameOf() const;
-    virtual hashValueType   hashValue() const;
-    virtual int             isEqual( RCObject ) const;
-    virtual int             isAssociation() const;
-    virtual void            printOn( Rostream ) const;
+    Object _FAR & value() const
+        {
+        return aValue;
+        }
+
+    virtual classType isA() const
+        {
+        return associationClass;
+        }
+
+    virtual char _FAR *nameOf() const
+        {
+        return "Association";
+        }
+
+    virtual hashValueType hashValue() const
+        {
+        return aKey.hashValue();
+        }
+
+    virtual int isEqual( const Object _FAR & ) const;
+    virtual int isAssociation() const
+        {
+        return 1;
+        }
+
+    virtual void printOn( ostream _FAR & ) const;
 
 private:
-			RObject			aKey;
-			RObject			aValue;
+
+    Object _FAR & aKey;
+    Object _FAR & aValue;
+
 };
 
-// Description -------------------------------------------------------------
-//
-// 	    Defines an association class.  An association keeps two objects
-// 	    together and treats them as a single object.
-//
-// Constructors
-//
-// 	    Association( RObject k, RObject v )
-//
-// 	    Constructor from two objects.
-//
-// 	    Association( Association& a )
-//
-// 	    Copy constructor.
-//
-// Public Members
-//
-// 	    key
-//
-// 	    Returns a reference to the key
-//
-// 	    value
-//
-// 	    Returns a reference to the value of the association.
-//
-// Private Members
-//
-//      aKey
-//
-//      aValue
-//
-// End ---------------------------------------------------------------------
+#if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+#pragma option -po.
+#endif
+#pragma option -Vo.
 
-
-#endif // ifndef __ASSOC_H //
-
+#endif

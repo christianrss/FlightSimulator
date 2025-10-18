@@ -3,7 +3,7 @@
     Definitions for accessing parameters in functions that accept
     a variable number of arguments.
 
-        Copyright (c) Borland International 1987,1988,1990,1991
+    Copyright (c) 1987, 1992 by Borland International
     All Rights Reserved.
 */
 
@@ -14,19 +14,21 @@
 #error Can't include both STDARG.H and VARARGS.H
 #endif
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 
 typedef void _FAR *va_list;
 
-#ifdef  __cplusplus
+#define __size(x) ((sizeof(x)+sizeof(int)-1) & ~(sizeof(int)-1))
+
+#if defined(__cplusplus) && !defined(__STDC__)
 #define va_start(ap, parmN) (ap = ...)
 #else
-#define va_start(ap, parmN) ((void)((ap) = (va_list)((char _FAR *)(&parmN)+((sizeof(parmN)+1) & 0xFFFE))))
+#define va_start(ap, parmN) ((void)((ap) = (va_list)((char _FAR *)(&parmN)+__size(parmN))))
 #endif
 
-#define va_arg(ap, type) (*(type _FAR *)(((*(char _FAR *_FAR *)&(ap))+=((sizeof(type)+1) & 0xFFFE))-(((sizeof(type)+1) & 0xFFFE))))
+#define va_arg(ap, type) (*(type _FAR *)(((*(char _FAR *_FAR *)&(ap))+=__size(type))-(__size(type))))
 #define va_end(ap)          ((void)0)
 
 #if !__STDC__

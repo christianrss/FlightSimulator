@@ -1,256 +1,190 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+/*------------------------------------------------------------------------*/
+/*                                                                        */
+/*  LIST.H                                                                */
+/*                                                                        */
+/*  Copyright Borland International 1991, 1992                            */
+/*  All Rights Reserved                                                   */
+/*                                                                        */
+/*------------------------------------------------------------------------*/
 
-// Contents ----------------------------------------------------------------
-//
-//      List
-//
-// 	    ListIterator
-//      ListIterator::ListIterator                  constructor
-//
-// Description
-//
-//      Defines the class List.  Lists are used to link other objects
-// 	together.
-// 	Defines the ListIterator class.  A list iterator visits each
-// 	of the items in a list.
-//
-// End ---------------------------------------------------------------------
-
-// Interface Dependencies ---------------------------------------------------
-
-#ifndef __LIST_H
+#if !defined( __LIST_H )
 #define __LIST_H
 
-#ifndef __IOSTREAM_H
-#include <iostream.h>
-#define __IOSTREAM_H
-#endif
+#if !defined( __MEMMGR_H )
+#include <MemMgr.h>
+#endif  // __MEMMGR_H
 
-#ifndef __CLSTYPES_H
-#include <clstypes.h>
-#endif
+#if !defined( __COLLECT_H )
+#include <Collect.h>
+#endif  // __COLLECT_H
 
-#ifndef __OBJECT_H
-#include <object.h>
+#pragma option -Vo-
+#if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+#pragma option -po-
 #endif
-
-#ifndef __LSTELEM_H
-#include <lstelem.h>
-#endif
-
-#ifndef __COLLECT_H
-#include <collect.h>
-#endif
-
-#ifndef __CONTAIN_H
-#include <contain.h>
-#endif
-
-// End Interface Dependencies ------------------------------------------------
 
 _CLASSDEF(List)
 _CLASSDEF(ListIterator)
 
-// Class //
-
-class _CLASSTYPE List:  public Collection
+class _CLASSTYPE ListBlockInitializer
 {
-public:
-    List() { head = 0; }
-    virtual ~List();
 
-    RObject  peekHead() const;
+protected:
 
-    void            add( RObject );
-    void            detach( RCObject, int = 0 );
-    void            destroy( RCObject l ) { detach( l, 1 ); }
+    ListBlockInitializer();
+    ~ListBlockInitializer();
 
-    virtual classType       isA() const;
-    virtual Pchar nameOf() const;
-    virtual hashValueType   hashValue() const;
+    static unsigned count;
 
-    virtual RContainerIterator initIterator() const;
-
-private:
-    PListElement head;
-
-    friend  class ListIterator;
 };
 
-// Description -------------------------------------------------------------
-//
-// 	Defines the container class List. 
-//
-// 	List objects, i.e. objects instantiated of classes derived from
-// 	List, are used in sequences where insertions and deletions
-// 	are defined.  They operate soley on objects derived from
-// 	class ListElement.
-//
-// Constructor
-//
-// 	List
-//
-// 	Constructor.
-//
-// Public Members
-//
-//      peekHead
-//
-//      Returns a reference to the object at the head of the list.
-//
-//      add
-//
-//      Adds an object to the list.
-//
-//      destroy
-//
-//      Detaches an object from the list and calls that object's destructor.
-//
-//      detach
-//
-//      Removes a reference to an object from the list.
-//
-// 	hasMember
-//
-// 	Determines whether the list has a given list element.
-//
-// 	isA
-//
-// 	Returns the class type of class list.
-//
-// 	nameOf
-//
-// 	Returns a pointer to the character string "List."
-//
-// 	hashValue
-//
-// 	Returns a pre-defined value for a list object.
-//
-// Inherited Members
-//      
-// 	printOn
-//
-// 	Inherited from Container.
-//
-// 	isEmpty
-//
-// 	Inherited from Container.
-//
-// 	forEach
-//
-// 	Inherited from Container.
-//
-// 	firstThat
-//
-// 	Inherited from Container.
-//
-// 	lastThat
-//
-// 	Inherited from Container.
-//
-// 	isEqual
-//
-// 	Inherited from Container.
-//
-// 	isSortable
-//
-// 	Inherited from Object.
-//
-// 	isAssociation
-//
-// 	Inherited from Object.
-//
-// Private Members
-//
-// 	head
-//
-// 	Maintains a pointer to the list element at the head of the list.
-//
-// End ---------------------------------------------------------------------
-
-
-// Class //
-
-class _CLASSTYPE ListIterator:  public ContainerIterator
+class _CLASSTYPE List : public Collection, private ListBlockInitializer
 {
+
 public:
-    ListIterator( RCList );
+
+    List() :
+        headEntry( 0, &tailEntry ),
+        tailEntry( 0, &tailEntry ),
+        head(&headEntry),
+        tail(&tailEntry),
+        itemsInContainer(0)
+        {
+        }
+
+    virtual ~List()
+        {
+        flush();
+        }
+    
+    Object _FAR & peekHead() const
+        {
+        return ptrToRef(head->next->data);
+        }
+
+    void add( Object _FAR & );
+    virtual void detach( Object _FAR &, DeleteType = NoDelete );
+    virtual void flush( DeleteType = DefDelete );
+
+    virtual int isEmpty() const
+        {
+        return itemsInContainer == 0;
+        }
+
+    virtual countType getItemsInContainer() const
+        {
+        return itemsInContainer;
+        }
+
+    virtual ContainerIterator _FAR & initIterator() const;
+
+    virtual classType isA() const
+        {
+        return listClass;
+        }
+
+    virtual char _FAR *nameOf() const
+        {
+        return "List";
+        }
+
+private:
+
+    class _CLASSTYPE ListElement
+    {
+
+    public:
+
+        ListElement( Object _FAR *o, ListElement _FAR *n = 0 )
+            {
+            data = o; next = n;
+            }
+
+    private:
+
+        ListElement _FAR *next;
+        Object _FAR *data;
+
+        void _FAR *operator new( size_t sz )
+            {
+            PRECONDITION( mgr != 0 );
+            return mgr->allocate( sz );
+            }
+        void operator delete( void _FAR *b )
+            {
+            PRECONDITION( mgr != 0 );
+            mgr->free( b );
+            }
+
+        static MemBlocks _FAR *mgr;
+
+        friend class List;
+        friend class ListIterator;
+        friend class ListBlockInitializer;
+
+    };
+
+    ListElement _FAR *head;
+    ListElement _FAR *tail;
+
+    ListElement headEntry, tailEntry;
+
+    unsigned itemsInContainer;
+
+    ListElement _FAR *findPred( const Object _FAR & o );
+
+    friend class ListIterator;
+    friend class ListBlockInitializer;
+
+};
+
+inline ListBlockInitializer::ListBlockInitializer()
+{
+    PRECONDITION( count != UINT_MAX );
+    if( count++ == 0 )
+        List::ListElement::mgr = 
+            new MemBlocks( sizeof(List::ListElement), 20 );
+}
+
+inline ListBlockInitializer::~ListBlockInitializer()
+{
+    PRECONDITION( count != 0 );
+    if( --count == 0 )
+        {
+        delete List::ListElement::mgr;
+        List::ListElement::mgr = 0;
+        }
+}
+
+class _CLASSTYPE ListIterator : public ContainerIterator
+{
+
+public:
+
+    ListIterator( const List _FAR & );
     virtual ~ListIterator();
 
-    virtual             operator int();
-    virtual             operator RObject();
-    virtual RObject     operator ++();
-    virtual void	restart();
+    virtual operator int();
+    virtual Object _FAR & current();
+    virtual Object _FAR & operator ++ ( int );
+    virtual Object _FAR & operator ++ ();
+    virtual void restart();
 
 private:
-    PListElement currentElement;
-    PListElement startingElement;
+
+    List::ListElement _FAR *currentElement;
+    List::ListElement _FAR *startingElement;
 };
 
-// Description -------------------------------------------------------------
-//
-// 	    Defines the list iterator class.  Upon initialization, we set up
-// 	    an internal pointer to our current position in the list.  As
-// 	    the increment operator is called, we update this current position.
-//
-// Constructor
-//
-//      ListIterator( RCList )
-//
-// 	    Constructor for an iterator.  Note that this isn't a copy
-// 	    constructor, since it takes an object from a different class.
-//
-// Destructor
-//
-// 	    ~ListIterator
-//
-// Public Members
-//
-// 	    operator int
-//
-// 	    We are allowed one cast operator to a predefined type.  This
-// 	    operator defines an explicit or an implicit cast from a
-// 	    ListIterator to an integer.
-//
-//      operator RObject
-//
-//      Conversion to Object reference operator.
-//
-// 	    operator ++
-//
-//      The increment operator.
-//
-// 	    restart
-//
-// 	    List iterator restart mechanism.
-//
-// Private Members
-//
-//      currentElement
-//
-// 	    The current position in the iteration sequence.
-//
-//      startingElement
-//
-// 	    The starting position in the iteration sequence.
-//
-// End ---------------------------------------------------------------------
-
-
-// Constructor //
-
-inline  ListIterator::ListIterator( RCList toIterate )
-
-// Summary -----------------------------------------------------------------
-//
-//      Constructor for a list iterator object.
-//
-// End ---------------------------------------------------------------------
+inline ListIterator::ListIterator( const List _FAR & toIterate )
 {
-	startingElement = currentElement = toIterate.head;
-//	currentElement = toIterate.head;
+    startingElement = currentElement = toIterate.head->next;
 }
-// End Constructor ListIterator::ListIterator //
 
+#if defined( __BCOPT__ ) && !defined( _ALLOW_po )
+#pragma option -po.
+#endif
+#pragma option -Vo.
 
-#endif // ifndef __LIST_H //
+#endif  // __LIST_H
+

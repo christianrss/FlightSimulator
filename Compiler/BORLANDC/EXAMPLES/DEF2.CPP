@@ -1,4 +1,4 @@
-// Borland C++ - (C) Copyright 1991 by Borland International
+// Borland C++ - (C) Copyright 1991, 1992 by Borland International
 
 // def.cpp:    Implementation of the Definition class
 
@@ -28,3 +28,4 @@ char * Definition::get_meaning(int level, char *s)
    else
       return 0;
 }
+

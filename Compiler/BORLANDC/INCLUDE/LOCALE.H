@@ -1,22 +1,18 @@
 /*  locale.h
 
-    Copyright (c) Borland International 1987,1988,1990,1991
+    Copyright (c) 1987, 1992 by Borland International
     All Rights Reserved.
 */
 
 #ifndef __LOCALE_H
 #define __LOCALE_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 
 #ifndef NULL
-#if defined(__TINY__) || defined(__SMALL__) || defined(__MEDIUM__)
-#define NULL    0
-#else
-#define NULL    0L
-#endif
+#include <_null.h>
 #endif
 
 #define LC_ALL      0

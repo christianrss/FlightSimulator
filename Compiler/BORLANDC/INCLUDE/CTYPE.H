@@ -2,14 +2,14 @@
 
     Defines the ctype macros.
 
-    Copyright (c) Borland International 1987,1988,1990,1991
+    Copyright (c) 1987, 1992 by Borland International
     All Rights Reserved.
 */
 
 #ifndef __CTYPE_H
 #define __CTYPE_H
 
-#if !defined( __DEFS_H )
+#if !defined(___DEFS_H)
 #include <_defs.h>
 #endif
 
@@ -21,7 +21,7 @@
 #define _IS_CTL 32          /* Control */
 #define _IS_PUN 64          /* punctuation */
 
-extern  char _CType _ctype[];    /* Character type array */
+extern  char _Cdecl _ctype[];    /* Character type array */
 
 #ifdef __cplusplus
 extern "C" {
@@ -73,4 +73,4 @@ int _CType _ftoupper(int __ch);
 }
 #endif
 
-#endif 
+#endif
